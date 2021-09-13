@@ -27,17 +27,11 @@ Language: English 🇺🇸
 Any bugs in the module contact me in the support group.
 # 
 # Raiden Projects:
-
 [ https://t.me/rtksprojectz ]
-# 
-# King Projects:
 
-Github: github.com/pedrozzz0
-
-Discussion group: @kingprojectzdiscussion (Telegram)
-
-[ https://t.me/kingprojectz ]
-# 
+Sign in to follow updates on my projects.
+Future projects coming soon...
+#
 # Credits and special thanks:
 
 pedro3z0 @ (Telegram) KTSR dev.

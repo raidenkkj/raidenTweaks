@@ -1,4 +1,5 @@
-# Raiden Tweaks
+# 
+# Raiden Tweaks (PT)
 
 Idioma: Português 🇧🇷
 
@@ -12,6 +13,7 @@ Idioma: Português 🇧🇷
 
 Qualquer bug no módulo entre em contato comigo no grupo de suporte.
 # 
+# Raiden Tweaks (EN)
 Language: English 🇺🇸
 
 [*] Profiled module that you can change according to your taste in the "Raiden Tweaks" app
@@ -24,7 +26,7 @@ Language: English 🇺🇸
 
 Any bugs in the module contact me in the support group.
 # 
-# RTKS Projects:
+# Raiden Projects:
 
 [ https://t.me/rtksprojectz ]
 # 

@@ -32,7 +32,7 @@ Any bugs in the module contact me in the support group.
 
 Github: github.com/pedrozzz0
 
-Discussion group: @kingprojectzdiscussion
+Discussion group: @kingprojectzdiscussion (Telegram)
 
 [ https://t.me/kingprojectz ]
 # 

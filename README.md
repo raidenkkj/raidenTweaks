@@ -11,7 +11,7 @@ Idioma: Português 🇧🇷
 [*] Muito obrigado, antecipadamente.
 
 Qualquer bug no módulo entre em contato comigo no grupo de suporte.
-
+# 
 Language: English 🇺🇸
 
 [*] Profiled module that you can change according to your taste in the "Raiden Tweaks" app
@@ -23,12 +23,11 @@ Language: English 🇺🇸
 [*] Thank you very much in advance.
 
 Any bugs in the module contact me in the support group.
-
-
+# 
 # RTKS Projects:
 
 [ https://t.me/rtksprojectz ]
-
+# 
 # King Projects:
 
 Github: github.com/pedrozzz0
@@ -36,7 +35,7 @@ Github: github.com/pedrozzz0
 Discussion group: @kingprojectzdiscussion
 
 [ https://t.me/kingprojectz ]
-
+# 
 # Credits and special thanks:
 
 pedro3z0 @ (Telegram) KTSR dev.
@@ -48,3 +47,4 @@ Haxis_Lancelot @ (Telegram) Apollon dev.
 KiraaDeath @ (Telegram) Zeus Tweaks dev.
 
 thx all ❤️
+# 

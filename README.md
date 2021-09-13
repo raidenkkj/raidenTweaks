@@ -31,12 +31,13 @@ Any bugs in the module contact me in the support group.
 
 # King Projects:
 
-#KeepTheKing
 Github: github.com/pedrozzz0
+
 Discussion group: @kingprojectzdiscussion
+
 [ https://t.me/kingprojectz ]
 
-Credits and special thanks:
+# Credits and special thanks:
 
 pedro3z0 @ (Telegram) KTSR dev.
 

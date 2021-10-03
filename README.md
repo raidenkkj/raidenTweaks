@@ -25,7 +25,7 @@
 
 ## Requirements 
 
-* Magisk 23.0+
+* Magisk 22.0+
 
 * Latest Busybox
 
@@ -35,9 +35,7 @@
 
 * Download the module.
 
-* Go to your Magisk, enter the module menu and click in
-
-"install from storage".
+* Go to your Magisk, enter the module menu and click in "install from storage"
 
 * Go to the folder where the module was downloaded, select it and wait for the process.
 

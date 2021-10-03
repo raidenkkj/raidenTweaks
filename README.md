@@ -1,36 +1,49 @@
-# 
-# Raiden Tweaks (PT)
+## Support 
 
-Idioma: Português 🇧🇷
+<a href="https://t.me/rtksgroup"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
 
-[*] Módulo com perfis que você pode alterar de acordo com seu gosto no aplicativo "Raiden Tweaks"
+## Disclaimer
 
-[!] Se você vai postar algum vídeo no seu canal com o meu módulo, deixe os créditos na descrição.
+```
 
-[*] Divirta-se fazendo o que você mais gosta de fazer, deixe comentários.
+/**
+    EN:
+   ⚠️If you are going to use it, use it conscientiously!⚠️          
 
-[*] Muito obrigado, antecipadamente.
+   If you are going to post any video on your channel with my module please leave the credits in the description.
+   I recommend saving the logs to resolve possible bugs.
+   
+    PT:
+   ⚠️Se você for usá-lo, use-o conscienciosamente!⚠️
+   
+   Se você vai postar algum vídeo em seu canal com o meu módulo, deixe os créditos na descrição.
+     Eu recomendo salvar os logs para resolver possíveis bugs.
+     
+/**
 
-Qualquer bug no módulo entre em contato comigo no grupo de suporte.
-# 
-# Raiden Tweaks (EN)
-Language: English 🇺🇸
+```
 
-[*] Profiled module that you can change according to your taste in the "Raiden Tweaks" app
+## Requirements 
 
-[!] If you are going to post any video on your channel with my module please leave the credits in the description.
+* Magisk 23.0+
 
-[*] Have fun doing what you most enjoy doing, leave feedback
+* Latest Busybox
 
-[*] Thank you very much in advance.
+* Android 5.0+
 
-Any bugs in the module contact me in the support group.
-# 
-# Raiden Projects:
-[ https://t.me/rtksprojectz ]
+## How To Install
 
-Sign in to follow updates on my projects.
-Future projects coming soon...
+* Download the module.
+
+* Go to your Magisk, enter the module menu and click in
+
+"install from storage".
+
+* Go to the folder where the module was downloaded, select it and wait for the process.
+
+* When finished, just click restart and you're done.
+
+
 #
 # Credits and special thanks:
 

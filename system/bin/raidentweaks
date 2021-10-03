@@ -421,6 +421,14 @@ write "/sys/block/sde/queue/scheduler" "cfq"
 write "/sys/block/sdf/queue/scheduler" "cfq"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          SET MIN AND MAX CPU CLOCKS.                                                                      "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]] 
+then
+write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "0"
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                              FSYNC AND DYN TWEAKS....                                                                        "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -448,6 +456,30 @@ write "/proc/sys/fs/aio-max-nr" "131072"
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" 
 kmsg1 "                                                THERMAL SETTINGS                                                                              "
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# Set max clocks in gaming / performance profile.
+for minclk in /sys/devices/system/cpu/cpufreq/policy*/
+do
+if [[ -e "${minclk}scaling_min_freq" ]]
+then
+write "${minclk}scaling_min_freq" "$cpumxfreq"
+write "${minclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
+for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
+do
+if [[ -e "${mnclk}scaling_min_freq" ]]
+then
+write "${mnclk}scaling_min_freq" "$cpumxfreq"
+write "${mnclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          SET MIN AND MAX CPU CLOCKS.                                                                      "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
 
 if [ -d "/sys/module/msm_thermal" ]
 then
@@ -483,13 +515,14 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                           APPLYING $rtks_profile PROFILE                                                                  " 
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
 # Enable perfd, thermald and thermal-engine.
+# Enable perfd, disable thermald and thermal-engine.
 start perfd
-start thermald
-start thermal-engine
-start mpdecision
+stop thermald
+stop thermal-engine
+stop mpdecision
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED THERMAL-ENGINE, THERMALD, MPDECISION AND PERFD.                                                         "
+kmsg1 "                                          DISABLED THERMAL-ENGINE, THERMALD, MPDECISION AND ENABLED PERFD.                                               "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # Disable logd and statsd to reduce overhead.
@@ -502,7 +535,7 @@ kmsg1 "-------------------------------------------------------------------------
 
 if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]
 then
-write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "5"
+write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "50"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          TWEAKED STUNE BOOST.                                                                                  "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -512,121 +545,107 @@ for corectl in /sys/devices/system/cpu/cpu*/core_ctl
 do
 if [[ -e "${corectl}/enable" ]]
 then
-write "${corectl}/enable" "1"
+write "${corectl}/enable" "0"
 
 elif [[ -e "${corectl}/disable" ]]
 then
-write "${corectl}/disable" "0"
+write "${corectl}/disable" "1"
 fi
 done
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED CORE CONTROL.                                                                                  "
+kmsg1 "                                          DISABLED CORE CONTROL.                                                                               "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # Caf CPU Boost
-if [[ -e "/sys/module/cpu_boost/parameters/input_boost_ms" ]]
+if [[ -d "/sys/module/cpu_boost" ]]
 then
-write "/sys/module/cpu_boost/parameters/input_boost_ms" "0"
+write "/sys/module/cpu_boost/parameters/input_boost_freq" "0:$cpumxfreq 1:$cpumxfreq 2:$cpumxfreq 3:$cpumxfreq 4:$cpumxfreq 5:$cpumxfreq 6:$cpumxfreq 7:$cpumxfreq"
+write "/sys/module/cpu_boost/parameters/input_boost_ms" "128"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED CAF INPUT BOOST.                                                                            "
+kmsg1 "                                          TWEAKED CAF INPUT BOOST.                                                                            "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-fi
 
 # CPU input boost
-if [[ -e "/sys/module/cpu_input_boost/parameters/input_boost_duration" ]]
+elif [[ -d "/sys/module/cpu_input_boost" ]]
 then
-write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "0"
+write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "128"
+write "/sys/module/cpu_input_boost/parameters/input_boost_freq_hp" "$cpumxfreq"
+write "/sys/module/cpu_input_boost/parameters/input_boost_freq_lp" "$cpumxfreq"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                         DISABLED CPU INPUT BOOST.                                                                            "
+kmsg1 "                                          TWEAKED CPU INPUT BOOST.                                                                            "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED CORE CONTROL.                                                                               "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # I/O Scheduler Tweaks.
 for queue in /sys/block/*/queue/
 do
 write "${queue}add_random" 0
 write "${queue}iostats" 0
-write "${queue}read_ahead_kb" 128
-write "${queue}nomerges" 0
-write "${queue}rq_affinity" 0
-write "${queue}nr_requests" 64
+write "${queue}read_ahead_kb" 512
+write "${queue}nomerges" 2
+write "${queue}rq_affinity" 2
+write "${queue}nr_requests" 256
 done
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          TWEAKED I/O SCHEDULER.                                                                              "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# CPU Tweaks
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
 do
 avail_govs=`cat "${cpu}scaling_available_governors"`
 if [[ "$avail_govs" == *"schedutil"* ]]
 then
 write "${cpu}scaling_governor" schedutil
-write "${cpu}schedutil/up_rate_limit_us" "$((SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/down_rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/pl" "0"
-write "${cpu}schedutil/iowait_boost_enable" "0"
-write "${cpu}schedutil/rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/hispeed_load" "99"
-write "${cpu}schedutil/hispeed_freq" "$cpumfreq"
+write "${cpu}schedutil/up_rate_limit_us" "500"
+write "${cpu}schedutil/down_rate_limit_us" "20000"
+write "${cpu}schedutil/pl" "1"
+write "${cpu}schedutil/iowait_boost_enable" "1"
+write "${cpu}schedutil/rate_limit_us" "20000"
+write "${cpu}schedutil/hispeed_load" "80"
+write "${cpu}schedutil/hispeed_freq" "$UINT_MAX"
 elif [[ "$avail_govs" == *"interactive"* ]]
 then
 write "${cpu}scaling_governor" interactive
-write "${cpu}interactive/timer_rate" "50000"
-write "${cpu}interactive/boost" "0"
-write "${cpu}interactive/timer_slack" "50000"
-write "${cpu}interactive/use_migration_notif" "1" 
+write "${cpu}interactive/timer_rate" "20000"
+write "${cpu}interactive/boost" "1"
+write "${cpu}interactive/timer_slack" "20000"
+write "${cpu}interactive/use_migration_notif" "1"
 write "${cpu}interactive/ignore_hispeed_on_notif" "1"
 write "${cpu}interactive/use_sched_load" "1"
-write "${cpu}interactive/boostpulse" "0"
 write "${cpu}interactive/fastlane" "1"
-write "${cpu}interactive/fast_ramp_down" "1"
-write "${cpu}interactive/sampling_rate" "50000"
-write "${cpu}interactive/sampling_rate_min" "75000"
-write "${cpu}interactive/min_sample_time" "75000"
-write "${cpu}interactive/go_hispeed_load" "99"
-write "${cpu}interactive/hispeed_freq" "$cpumfreq"
+write "${cpu}interactive/fast_ramp_down" "0"
+write "${cpu}interactive/sampling_rate" "20000"
+write "${cpu}interactive/sampling_rate_min" "20000"
+write "${cpu}interactive/min_sample_time" "20000"
+write "${cpu}interactive/go_hispeed_load" "80"
+write "${cpu}interactive/hispeed_freq" "$UINT_MAX"
 fi
 done
-
+	
 for cpu in /sys/devices/system/cpu/cpu*
 do
-if [[ $percentage -le "20" ]]
-then
-write "/sys/devices/system/cpu/cpu1/online" "0"
-write "/sys/devices/system/cpu/cpu2/online" "0"
-write "/sys/devices/system/cpu/cpu5/online" "0"
-write "/sys/devices/system/cpu/cpu6/online" "0"
-
-elif [[ $percentage -ge "20" ]]
-then
 write "$cpu/online" "1"
-fi
 done
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                            TWEAKED CPU.                                                                                         "
+kmsg1 "                                         TWEAKED CPU.                                                                                         "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# GPU Tweaks
-write "$gpu/throttling" "1"
+# GPU Tweaks.
+write "$gpu/throttling" "0"
 write "$gpu/thermal_pwrlevel" "0"
-write "$gpu/devfreq/adrenoboost" "0"
+write "$gpu/devfreq/adrenoboost" "1"
 write "$gpu/force_no_nap" "0"
-write "$gpu/bus_split" "1"
-write "$gpu/devfreq/max_freq" "$gpumfreq"
+write "$gpu/bus_split" "0"
+write "$gpu/devfreq/max_freq" `cat $gpu/max_gpuclk`
 write "$gpu/devfreq/min_freq" "100000000"
-write "$gpu/default_pwrlevel" "$gpuminpl"
+write "$gpu/default_pwrlevel" "1"
 write "$gpu/force_bus_on" "0"
 write "$gpu/force_clk_on" "0"
 write "$gpu/force_rail_on" "0"
-write "$gpu/idle_timer" "36"
+write "$gpu/idle_timer" "146"
 
 if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]] 
 then
@@ -650,35 +669,32 @@ write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
 fi
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                         TWEAKED GPU.                                                                                        "
+kmsg1 "                                          TWEAKED GPU.                                                                                        "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# Enable and tweak adreno idler
+# Disable adreno idler
 if [[ -d "/sys/module/adreno_idler" ]]
 then
-write "/sys/module/adreno_idler/parameters/adreno_idler_active" "Y"
-write "/sys/module/adreno_idler/parameters/adreno_idler_idleworkload" "10000"
-write "/sys/module/adreno_idler/parameters/adreno_idler_downdifferential" "35"
-write "/sys/module/adreno_idler/parameters/adreno_idler_idlewait" "15"
+write "/sys/module/adreno_idler/parameters/adreno_idler_active" "N"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                         ENABLED AND TWEAKED ADRENO IDLER.                                                                 "
+kmsg1 "                                          DISABLED ADRENO IDLER.                                                                              "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Schedtune tweaks
+# Schedtune Tweaks
 if [[ -d "/dev/stune/" ]]
 then
 write "/dev/stune/background/schedtune.boost" "0"
 write "/dev/stune/background/schedtune.prefer_idle" "0"
 
-write "/dev/stune/foreground/schedtune.boost" "0"
-write "/dev/stune/foreground/schedtune.prefer_idle" "1"
+write "/dev/stune/foreground/schedtune.boost" "50"
+write "/dev/stune/foreground/schedtune.prefer_idle" "0"
 
 write "/dev/stune/rt/schedtune.boost" "0"
 write "/dev/stune/rt/schedtune.prefer_idle" "0"
 
-write "/dev/stune/top-app/schedtune.boost" "5"
-write "/dev/stune/top-app/schedtune.prefer_idle" "1"
+write "/dev/stune/top-app/schedtune.boost" "50"
+write "/dev/stune/top-app/schedtune.prefer_idle" "0"
 
 write "/dev/stune/schedtune.boost" "0"
 write "/dev/stune/schedtune.prefer_idle" "0"
@@ -697,7 +713,7 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          APPLIED FS TWEAKS.                                                                                  "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
-    
+
 # Enable dynamic_fsync.
 if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]
 then
@@ -712,15 +728,14 @@ if [[ -e "/sys/kernel/debug/sched_features" ]]
 then
 write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
 write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
-write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
 write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
-write "/sys/kernel/debug/sched_features" "ARCH_POWER" 
+write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          APPLIED SCHEDULER FEATURES.                                                                         "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
-	
-# OP Chain disable
+
+# OP Tweaks
 if [[ -d "/sys/module/opchain" ]]
 then
 write "/sys/module/opchain/parameters/chain_on" "0"
@@ -730,45 +745,46 @@ kmsg1 "-------------------------------------------------------------------------
 fi
 
 # Tweak some kernel settings to improve overall performance.
-write "/proc/sys/kernel/sched_child_runs_first" "1"
-write "/proc/sys/kernel/sched_boost" "0"
-write "/proc/sys/kernel/perf_cpu_time_max_percent" "10"
+write "/proc/sys/kernel/sched_child_runs_first" "0"
+write "/proc/sys/kernel/sched_boost" "1"
+write "/proc/sys/kernel/perf_cpu_time_max_percent" "25"
 write "/proc/sys/kernel/sched_autogroup_enabled" "1"
-write "/proc/sys/kernel/random/read_wakeup_threshold" "64"
-write "/proc/sys/kernel/random/write_wakeup_threshold" "128"
+write "/proc/sys/kernel/random/read_wakeup_threshold" "128"
+write "/proc/sys/kernel/random/write_wakeup_threshold" "1024"
 write "/proc/sys/kernel/random/urandom_min_reseed_secs" "90"
 write "/proc/sys/kernel/sched_tunable_scaling" "0"
-write "/proc/sys/kernel/sched_latency_ns" "$SCHED_PERIOD_BATTERY"
-write "/proc/sys/kernel/sched_min_granularity_ns" "$((SCHED_PERIOD_BATTERY / SCHED_TASKS_BATTERY))"
-write "/proc/sys/kernel/sched_wakeup_granularity_ns" "$((SCHED_PERIOD_BATTERY / 2))"
+write "/proc/sys/kernel/sched_latency_ns" "$SCHED_PERIOD_THROUGHPUT"
+write "/proc/sys/kernel/sched_min_granularity_ns" "$((SCHED_PERIOD_THROUGHPUT / SCHED_TASKS_THROUGHPUT))"
+write "/proc/sys/kernel/sched_wakeup_granularity_ns" "$((SCHED_PERIOD_THROUGHPUT / 2))"
 write "/proc/sys/kernel/sched_migration_cost_ns" "5000000"
 write "/proc/sys/kernel/sched_min_task_util_for_colocation" "0"
-write "/proc/sys/kernel/sched_nr_migrate" "8"
+write "/proc/sys/kernel/sched_nr_migrate" "128"
 write "/proc/sys/kernel/sched_schedstats" "0"
 write "/proc/sys/kernel/sched_sync_hint_enable" "0"
 write "/proc/sys/kernel/sched_user_hint" "0"
+write "/proc/sys/kernel/sched_conservative_pl" "0"
 write "/proc/sys/kernel/printk_devkmsg" "off"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          TWEAKED KERNEL SETTINGS.                                                                            "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# Disable fingerprint boost.
+# Enable fingerprint boost.
 if [[ -e "/sys/kernel/fp_boost/enabled" ]]
 then
-write "/sys/kernel/fp_boost/enabled" "0"
+write "/sys/kernel/fp_boost/enabled" "1"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED FINGERPRINT BOOST.                                                                         "
+kmsg1 "                                          ENABLED FINGERPRINT BOOST.                                                                          "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Set min and max clocks.
+# Set max clocks in gaming / performance profile.
 for minclk in /sys/devices/system/cpu/cpufreq/policy*/
 do
 if [[ -e "${minclk}scaling_min_freq" ]]
 then
-write "${minclk}scaling_min_freq" "100000"
-write "${minclk}scaling_max_freq" "$cpumfreq"
+write "${minclk}scaling_min_freq" "$cpumxfreq"
+write "${minclk}scaling_max_freq" "$cpumxfreq"
 fi
 done
 
@@ -776,8 +792,27 @@ for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
 do
 if [[ -e "${mnclk}scaling_min_freq" ]]
 then
-write "${mnclk}scaling_min_freq" "100000"
-write "${mnclk}scaling_max_freq" "$cpumfreq"
+write "${mnclk}scaling_min_freq" "$cpumxfreq"
+write "${mnclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
+# Set max clocks in gaming / performance profile.
+for minclk in /sys/devices/system/cpu/cpufreq/policy*/
+do
+if [[ -e "${minclk}scaling_min_freq" ]]
+then
+write "${minclk}scaling_min_freq" "$cpumxfreq"
+write "${minclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
+for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
+do
+if [[ -e "${mnclk}scaling_min_freq" ]]
+then
+write "${mnclk}scaling_min_freq" "$cpumxfreq"
+write "${mnclk}scaling_max_freq" "$cpumxfreq"
 fi
 done
 
@@ -787,31 +822,34 @@ kmsg1 "-------------------------------------------------------------------------
 
 if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]] 
 then
-write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "1"
+write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "0"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ALLOWED CPUIDLE TO USE DEEPEST STATE.                                                                  "
+kmsg1 "                                         NOT ALLOWED CPUIDLE TO USE DEEPEST STATE.                                                                  "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Disable krait voltage boost
+# Enable krait voltage boost
 if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]] 
 then
-write "/sys/module/acpuclock_krait/parameters/boost" "N"
+write "/sys/module/acpuclock_krait/parameters/boost" "Y"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED KRAIT VOLTAGE BOOST.                                                                       "
+kmsg1 "                                          ENABLED KRAIT VOLTAGE BOOST.                                                                        "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
+sync
+
 # VM settings to improve overall user experience and performance.
+write "/proc/sys/vm/drop_caches" "3"
 write "/proc/sys/vm/dirty_background_ratio" "5"
-write "/proc/sys/vm/dirty_ratio" "50"
-write "/proc/sys/vm/dirty_expire_centisecs" "3000"
+write "/proc/sys/vm/dirty_ratio" "30"
+write "/proc/sys/vm/dirty_expire_centisecs" "500"
 write "/proc/sys/vm/dirty_writeback_centisecs" "3000"
 write "/proc/sys/vm/page-cluster" "0"
 write "/proc/sys/vm/stat_interval" "60"
 write "/proc/sys/vm/swappiness" "100"
 write "/proc/sys/vm/laptop_mode" "0"
-write "/proc/sys/vm/vfs_cache_pressure" "50"
+write "/proc/sys/vm/vfs_cache_pressure" "80"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          APPLIED VM TWEAKS.                                                                                  "
@@ -820,28 +858,28 @@ kmsg1 "-------------------------------------------------------------------------
 # MSM thermal tweaks
 if [[ -d "/sys/module/msm_thermal" ]]
 then
-write /sys/module/msm_thermal/vdd_restriction/enabled "1"
-write /sys/module/msm_thermal/core_control/enabled "1"
-write /sys/module/msm_thermal/parameters/enabled "Y"
+write /sys/module/msm_thermal/vdd_restriction/enabled "0"
+write /sys/module/msm_thermal/core_control/enabled "0"
+write /sys/module/msm_thermal/parameters/enabled "N"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          APPLIED THERMAL TWEAKS.                                                                             "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Enable power efficient workqueue.
+# Disable power efficient workqueue.
 if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]
 then 
-write "/sys/module/workqueue/parameters/power_efficient" "Y"
+write "/sys/module/workqueue/parameters/power_efficient" "N" 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED POWER EFFICIENT WORKQUEUE.                                                                  "
+kmsg1 "                                          DISABLED POWER EFFICIENT WORKQUEUE.                                                                 "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
 if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]
 then
-write "/sys/devices/system/cpu/sched_mc_power_savings" "2"
+write "/sys/devices/system/cpu/sched_mc_power_savings" "0"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED AGGRESSIVE MULTICORE POWER SAVINGS.                                                          "
+kmsg1 "                                          DISABLED MULTICORE POWER SAVINGS.                                                                    "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
@@ -851,14 +889,14 @@ then
 write "/sys/touchpanel/double_tap" "1"
 write "/proc/tp_gesture" "1"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          FIXED DOUBLE TAP TO WAKEUP IF BROKEN.                                                                   "
+kmsg1 "                                          FIXED DOUBLE TAP TO WAKEUP IF BROKEN.                                                                         "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 elif [[ -e "/proc/tp_gesture" ]]
 then
 write "/proc/tp_gesture" "1"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          FIXED DOUBLE TAP TO WAKEUP IF BROKEN.                                                                  "
+kmsg1 "                                          FIXED DOUBLE TAP TO WAKEUP IF BROKEN.                                                                         "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 elif [[ -e "/sys/touchpanel/double_tap" ]]
@@ -869,19 +907,19 @@ kmsg1 "                                          FIXED DOUBLE TAP TO WAKEUP IF B
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Disable touch boost on battery and balance profile.
+# Enable touch boost on gaming and performance profile.
 if [[ -e /sys/module/msm_performance/parameters/touchboost ]]
 then
-write "/sys/module/msm_performance/parameters/touchboost" "0"
+write "/sys/module/msm_performance/parameters/touchboost" "1"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED TOUCH BOOST.                                                                               "
+kmsg1 "                                          ENABLED TOUCH BOOST.                                                                            "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 elif [[ -e /sys/power/pnpmgr/touch_boost ]]
 then
-write "/sys/power/pnpmgr/touch_boost" "0"
+write "/sys/power/pnpmgr/touch_boost" "1"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED TOUCH BOOST.                                                                               "
+kmsg1 "                                          ENABLED TOUCH BOOST.                                                                            "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
@@ -909,52 +947,69 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          APPLIED INTERNET TWEAKS.                                                                            "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# Enable battery saver
+# Disable battery saver
 if [[ -d "/sys/module/battery_saver" ]]
 then
-write "/sys/module/battery_saver/parameters/enabled" "Y"
+write "/sys/module/battery_saver/parameters/enabled" "N"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED BATTERY SAVER.                                                                              "
+kmsg1 "                                          DISABLED BATTERY SAVER.                                                                             "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Disable KSM
+# Enable KSM
 if [[ -e "/sys/kernel/mm/ksm/run" ]] 
 then
-write "/sys/kernel/mm/ksm/run" "0"
+write "/sys/kernel/mm/ksm/run" "1"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED KSM.                                                                              "
+kmsg1 "                                          ENABLED KSM.                                                                              "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# Disable UKSM
+# Enable UKSM
 elif [[ -e "/sys/kernel/mm/uksm/run" ]] 
 then
-write "/sys/kernel/mm/uksm/run" "0"
+write "/sys/kernel/mm/uksm/run" "1"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED UKSM.                                                                              "
+kmsg1 "                                          ENABLED UKSM.                                                                              "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Enable LPM sleep in latency / balanced / battery profile
+# Disable arch power
+if [[ -e "/sys/kernel/sched/arch_power" ]] 
+then
+write "/sys/kernel/sched/arch_power" "0"
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          DISABLED ARCH POWER.                                                                                "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+fi
+
+# Disable LPM sleep in extreme / gaming profile
 for lpm in /sys/module/lpm_levels/system/*/*/*/
 do
 if [[ -d "/sys/module/lpm_levels" ]]
 then
-write "/sys/module/lpm_levels/parameters/sleep_disabled" "N"
-write "${lpm}idle_enabled" "Y"
-write "${lpm}suspend_enabled" "Y"
+write "/sys/module/lpm_levels/parameters/sleep_disabled" "Y"
+write "${lpm}idle_enabled" "N"
+write "${lpm}suspend_enabled" "N"
 fi
 done
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED LPM SLEEP.                                                                                 "
+kmsg1 "                                          DISABLED LPM SLEEP.                                                                                 "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]] 
+then
+write "/sys/module/pm2/parameters/idle_sleep_mode" "N"
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          DISABLED PM2 IDLE SLEEP MODE.                                                                       "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+fi
 
 if [[ -e "/sys/class/lcd/panel/power_reduce" ]] 
 then
-write "/sys/class/lcd/panel/power_reduce" "1"
+write "/sys/class/lcd/panel/power_reduce" "0"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED LCD POWER REDUCE.                                                                          "
+kmsg1 "                                          DISABLED LCD POWER REDUCE..                                                                           "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
@@ -1200,6 +1255,29 @@ kmsg1 "-------------------------------------------------------------------------
 # POWER SUSPEND
 write "/sys/kernel/power_suspend" "3"
 
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          SET MIN AND MAX CPU CLOCKS.                                                                      "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# Set max clocks in gaming / performance profile.
+for minclk in /sys/devices/system/cpu/cpufreq/policy*/
+do
+if [[ -e "${minclk}scaling_min_freq" ]]
+then
+write "${minclk}scaling_min_freq" "$cpumxfreq"
+write "${minclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
+for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
+do
+if [[ -e "${mnclk}scaling_min_freq" ]]
+then
+write "${mnclk}scaling_min_freq" "$cpumxfreq"
+write "${mnclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                                CPU SET TWEAKS"
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -1339,7 +1417,29 @@ kmsg1 "-------------------------------------------------------------------------
 stop logd
 stop statsd
 
-        
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          SET MIN AND MAX CPU CLOCKS.                                                                      "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# Set max clocks in gaming / performance profile.
+for minclk in /sys/devices/system/cpu/cpufreq/policy*/
+do
+if [[ -e "${minclk}scaling_min_freq" ]]
+then
+write "${minclk}scaling_min_freq" "$cpumxfreq"
+write "${minclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
+for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
+do
+if [[ -e "${mnclk}scaling_min_freq" ]]
+then
+write "${mnclk}scaling_min_freq" "$cpumxfreq"
+write "${mnclk}scaling_max_freq" "$cpumxfreq"
+fi
+done
+
 write "/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor" "performance"
 write "/sys/module/workqueue/parameters/power_efficient" "N"
 write "/sys/class/kgsl/kgsl-3d0/devfreq/governor" "performance"

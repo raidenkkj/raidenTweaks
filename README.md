@@ -6,7 +6,7 @@
 
 <a href="https://t.me/rtksgroup"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
 
-In case of bugs, join the group and we will solve your problem.
+* In case of bugs, join the group and we will solve your problem.
 
 ## Disclaimer
 

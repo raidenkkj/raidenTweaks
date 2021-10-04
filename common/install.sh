@@ -18,13 +18,13 @@ ui_print "|/   \__/   )_(   |_/    \/\_______) "
 
 ui_print " "
 
-ui_print "VERSION: 3.1.1 - 04/09/2021"
+ui_print "VERSION: 3.2.2 - 04/10/2021"
 
 sleep 3
 
 ui_print " "
 
-ui_print "CODENAME: DR1FT"
+ui_print "CODENAME: T4K4H4SH1"
 
 sleep 2
 

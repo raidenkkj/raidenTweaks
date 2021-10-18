@@ -59,5 +59,7 @@
 
 * KiraaDeath @ (Telegram) Zeus Tweaks dev.
 
+* imUsiF12 @ (Telegram) ThermodX dev.
+
 thx all ❤️
 # 

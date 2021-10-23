@@ -264,7 +264,6 @@ percentage=`cat /sys/class/power_supply/battery/capacity`
 
 boot_run_once=false
 rtks_mode=$(getprop persist.raidentweaks.mode)
-setprop persist.raidentweaks.mode "3"
 
 while true
 do

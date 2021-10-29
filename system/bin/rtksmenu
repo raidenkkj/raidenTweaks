@@ -123,7 +123,7 @@ fi
     echo "${R}[0] Go out.${N}"
     echo " "
     echo -e '\n'
-    echo "${C}↓- Choose option: ${N}"
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Opcao1 ;; 
@@ -311,7 +311,7 @@ Opcao9 () {
     clear
     echo "${G}Clearing battery status, please wait. >.<${N}"
     sleep 1
-     r m   - f / d a t a / s y s t e m / b a t t e r y s t a t s . b i n 
+    rm -f /data/system/batterystats.bin
     echo " "
     echo "${G}Process finished!${N}"
     echo " "

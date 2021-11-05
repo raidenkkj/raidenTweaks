@@ -12,7 +12,7 @@ ls /data >/dev/null 2>&1 || { echo "$ID needs to run as root!"; echo "type 'su' 
 # Magisk Mod Directory
 [ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules"
 MODDIR="$MOUNTPATH/$ID"
-[ ! -d $MODDIR ] && { echo "Module not detected!"; exit 1; }
+[ ! -d $MODDIR ] && { echo "[!] Raiden Tweaks missing..."; exit 1; }
 
 # Set path to your busybox if applicable
 _bb=
@@ -114,11 +114,19 @@ fi
     echo " "
     echo "${Y}[8] Optimize application package (may take time)${N}"
     echo " "
-    echo "${Y}[9] Clear battery status (must be at 100%)${N}"
+    echo "${Y}[9] Clear RAM [ BASIC ] (This one will just drop all caches)${N}"
     echo " "
-    echo "${Y}[10] Telegram group. (to answer your questions.)${N}"
+    echo "${Y}[10] Clear RAM [ HEAVY ] (This will drop cache and kill background apps)${N}"
     echo " "
-    echo "${C}[11] About the module (information!)${N}"
+    echo "${Y}[11] Clear RAM [ ADVANCED ] (This will drop cache and kill all apps)${N}"
+    echo " "
+    echo "${Y}[12] Clean up unnecessary files. (I.e. System logs, logs, debug...)${N}"
+    echo " "
+    echo "${Y}[13] Clear battery status (must be at 100%)${N}"
+    echo " "
+    echo "${Y}[14] Telegram group. (to answer your questions.)${N}"
+    echo " "
+    echo "${C}[15] About the module (information!)${N}"
     echo " "
     echo "${R}[0] Go out.${N}"
     echo " "
@@ -137,8 +145,12 @@ fi
     9) Opcao9 ;;
     10) Opcao10 ;;
     11) Opcao11 ;;
+    12) Opcao12 ;;
+    13) Opcao13 ;;
+    14) Opcao14 ;;
+    15) Opcao15 ;;
     0) GoOut ;;
-    *) "${R}Unknown command, sorry.${N}" ; echo ; Menu;;
+    *) Menu;;
     esac
     }
 
@@ -309,9 +321,10 @@ Opcao8 () {
 
 Opcao9 () {
     clear
-    echo "${G}Clearing battery status, please wait. >.<${N}"
+    echo "${G}Dropping all caches, wait, it's very fast ^^${N}"
     sleep 1
-    rm -f /data/system/batterystats.bin
+    sync
+    echo "3" > "/proc/sys/vm/drop_caches"
     echo " "
     echo "${G}Process finished!${N}"
     echo " "
@@ -327,10 +340,14 @@ Opcao9 () {
 
 Opcao10 () {
     clear
-    echo "${G}Access telegram group (support)${N}"
-    sleep 2
-    am start -a android.intent.action.VIEW -d https://t.me/rtksgroup
-    clear
+    echo "${G}Dropping caches and killing background processes, wait patiently... ^^${N}"
+    sleep 1
+    sync
+    echo "3" > "/proc/sys/vm/drop_caches"
+    am kill-all
+    echo " "
+    echo "${G}Process finished!${N}"
+    echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     read opcao
@@ -343,6 +360,82 @@ Opcao10 () {
 
 Opcao11 () {
     clear
+    echo "${G}Dropping all caches and killing all processes, wait there. ^^${N}"
+    sleep 1
+    sync
+    echo "3" > "/proc/sys/vm/drop_caches"
+    am kill-all
+    sleep 3
+    while IFS= read -r pkg_nm; do
+    [[ "${pkg_nm}" != "com.termux" ]] && [[ "${pkg_nm}" != "jackpal.androidterm" ]] && [[ "${pkg_nm}" != "yarolegovich.materialterminal" ]] && [[ "${pkg_nm}" != "com.google.android.inputmethod.latin" ]] && [[ "${pkg_nm}" != "com.termoneplus" ]] && am force-stop "${pkg_nm}"
+    done <<< "$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
+    echo " "
+    echo "${G}Process finished!${N}"
+    echo " "
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "${R}Unknown command, sorry.${N}" ; echo ; Opcao11  ;;
+    esac
+}
+
+Opcao12 () {
+    clear
+    echo "${G}CLEAN TRASH${N}"
+    sleep 1
+    cleaner 2>/dev/null
+    echo " "
+    echo "${G}Process finished!${N}"
+    echo " "
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "${R}Unknown command, sorry.${N}" ; echo ; Opcao12  ;;
+    esac
+}
+
+Opcao13 () {
+    clear
+    echo "${G}Clearing battery status, please wait. >.<${N}"
+    sleep 1
+    rm -f /data/system/batterystats.bin
+    echo " "
+    echo "${G}Process finished!${N}"
+    echo " "
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "${R}Unknown command, sorry.${N}" ; echo ; Opcao13  ;;
+    esac
+}
+
+Opcao14 () {
+    clear
+    echo "${G}Access telegram group (support)${N}"
+    sleep 2
+    am start -a android.intent.action.VIEW -d https://t.me/rtksgroup
+    clear
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "${R}Unknown command, sorry.${N}" ; echo ; Opcao14  ;;
+    esac
+}
+
+Opcao15 () {
+    clear
     echo "${G}Module informations:${N}"
     echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste, enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
     echo " "
@@ -352,7 +445,7 @@ Opcao11 () {
     case $opcao in
     1) Return ;;
     0) GoOut ;;
-    *) "Unknown command, sorry." ; echo ; Opcao11  ;;
+    *) "Unknown command, sorry." ; echo ; Opcao15  ;;
     esac
 }
 
@@ -364,6 +457,7 @@ Return() {
 
 GoOut() {
     clear
+    echo "${B}Bye bye, see you next time.${N}"
     exit
 }
 clear

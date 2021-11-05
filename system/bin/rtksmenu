@@ -104,29 +104,29 @@ Menu() {
     echo "--------------------------------------------"
     echo " "
     if [[ "$ts" == "On" ]]; then
-    echo "${Y}[6] Disable thermal-engine (may heat the device)${N}"
+    echo "${Y}[6] Disable thermal-engine ${C}(may heat the device)${N}"
     echo " "
 elif [[ "$ts" == "Off" ]]; then
       echo "${Y}[6] Enable thermal-engine${N}"
       echo " "
 fi
-    echo "${Y}[7] Fstrim on some partitions (improves fluidity)${N}"
+    echo "${Y}[7] Fstrim on some partitions ${C}(improves fluidity)${N}"
     echo " "
-    echo "${Y}[8] Optimize application package (may take time)${N}"
+    echo "${Y}[8] Optimize application package ${C}(may take time)${N}"
     echo " "
-    echo "${Y}[9] Clear RAM [ BASIC ] (This one will just drop all caches)${N}"
+    echo "${Y}[9] Clear RAM [ ${B}BASIC ${Y}] ${C}(This one will just drop all caches)${N}"
     echo " "
-    echo "${Y}[10] Clear RAM [ HEAVY ] (This will drop cache and kill background apps)${N}"
+    echo "${Y}[10] Clear RAM [ ${B}HEAVY ${Y}] ${C}(This will drop cache and kill background apps)${N}"
     echo " "
-    echo "${Y}[11] Clear RAM [ ADVANCED ] (This will drop cache and kill all apps)${N}"
+    echo "${Y}[11] Clear RAM [ ${B}ADVANCED ${Y}] ${C}(This will drop cache and kill all apps)${N}"
     echo " "
-    echo "${Y}[12] Clean up unnecessary files. (I.e. System logs, logs, debug...)${N}"
+    echo "${Y}[12] Clean up unnecessary files. ${C}(I.e. System logs, logs, debug...)${N}"
     echo " "
-    echo "${Y}[13] Clear battery status (must be at 100%)${N}"
+    echo "${Y}[13] Clear battery status ${C}(must be at 100%)${N}"
     echo " "
-    echo "${Y}[14] Telegram group. (to answer your questions.)${N}"
+    echo "${Y}[14] Telegram group ${C}(to answer your questions)${N}"
     echo " "
-    echo "${C}[15] About the module (information!)${N}"
+    echo "${B}[15] About the module ${C}(information!)${N}"
     echo " "
     echo "${R}[0] Go out.${N}"
     echo " "
@@ -166,6 +166,8 @@ Opcao1 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -186,6 +188,8 @@ Opcao2 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -206,6 +210,8 @@ Opcao3 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -224,6 +230,8 @@ Opcao4 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -242,6 +250,8 @@ Opcao5 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -269,6 +279,8 @@ elif [[ "$ts" == "Off" ]]; then
 fi
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -290,6 +302,8 @@ Opcao7 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -311,6 +325,8 @@ Opcao8 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -330,6 +346,8 @@ Opcao9 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -350,6 +368,8 @@ Opcao10 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -374,6 +394,8 @@ Opcao11 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -384,7 +406,7 @@ Opcao11 () {
 
 Opcao12 () {
     clear
-    echo "${G}CLEAN TRASH${N}"
+    echo "${G}Cleaning up all unnecessary junk, wait a minute ;)${N}"
     sleep 1
     cleaner 2>/dev/null
     echo " "
@@ -392,6 +414,8 @@ Opcao12 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -410,6 +434,8 @@ Opcao13 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -426,6 +452,8 @@ Opcao14 () {
     clear
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -441,6 +469,8 @@ Opcao15 () {
     echo " "
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
@@ -452,12 +482,12 @@ Opcao15 () {
 Return() {
     clear
     rtksmenu
-    clear
 }
 
 GoOut() {
     clear
     echo "${B}Bye bye, see you next time.${N}"
+    echo " "
     exit
 }
 clear

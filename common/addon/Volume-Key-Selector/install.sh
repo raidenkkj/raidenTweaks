@@ -6,9 +6,9 @@ alias keycheck="$MODPATH/common/addon/Volume-Key-Selector/tools/$ARCH32/keycheck
 
 keytest() {
 
-  ui_print "   [*] Vol Key Test"
+  ui_print "  [*] Vol Key Test"
 
-  ui_print "   Press a Vol Key:"
+  ui_print "  Press a Vol Key:"
 
   ui_print ""
 
@@ -18,7 +18,7 @@ keytest() {
 
   else
 
-    ui_print "   Try again:"
+    ui_print "  Try again:"
 
     timeout 3 keycheck
 

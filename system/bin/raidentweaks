@@ -1,6 +1,7 @@
 #!/system/bin/sh
 # Some script credits go to @pedro3z0 ktsr dev, thx pedro
-# Edited by raidenkk @ telegram
+# Modified by raidenkk @ telegram
+
 LOG=/sdcard/RTKS/RTKS.log
 
 if [[ -e $LOG ]] 
@@ -26,6 +27,22 @@ kmsg() {
 kmsg1() {
 	echo -e "$@" >> $LOG
 	echo -e "$@"
+}
+
+toasteua() {
+	am start -a android.intent.action.MAIN -e toasttext "Applying $rtks_profile profile..." -n bellavita.toast/.MainActivity
+}
+	
+toasteua1() {
+	am start -a android.intent.action.MAIN -e toasttext "$rtks_profile profile applied" -n bellavita.toast/.MainActivity
+}
+
+toastbr() {
+	am start -a android.intent.action.MAIN -e toasttext "Aplicando perfil $rtks_profilebr..." -n bellavita.toast/.MainActivity
+}
+
+toastbr1() {
+	am start -a android.intent.action.MAIN -e toasttext "Perfil $rtks_profilebr aplicado" -n bellavita.toast/.MainActivity
 }
 
 write() {
@@ -63,7 +80,7 @@ write() {
 # Check for root permissions and bail if not granted
 if [[ "`id -u`" -ne 0 ]]
 then
-kmsg1 "No root permissions. Exiting."
+kmsg1 "[!] No root permissions. Exiting."
 exit 1
 fi
 
@@ -262,59 +279,41 @@ totalram=`free -m | awk '/Mem:/{print $2}'`
 # Variable to battery actual capacity
 percentage=`cat /sys/class/power_supply/battery/capacity`
 
-boot_run_once=false
-rtks_mode=$(getprop persist.raidentweaks.mode)
-
-while true
-do
-sleep 15
-if $boot_run_once
-then
-[ $(getprop persist.raidentweaks.mode) == "$rtks_mode" ] && continue
-else
-boot_run_once=true
-fi
-rtks_mode=$(getprop persist.raidentweaks.mode)
-
-if [[ "$rtks_mode" == "1" ]]
-then
-rtks_profile=Thermal
-
-elif [[ "$rtks_mode" == "2" ]]
-then
-rtks_profile=Battery
-
-elif [[ "$rtks_mode" == "3" ]]
-then
-rtks_profile=Balanced
-
-elif [[ "$rtks_mode" == "4" ]]
-then
-rtks_profile=Performance
-
-elif [[ "$rtks_mode" == "5" ]]
-then
-rtks_profile=Gaming
-fi
-
-case "$rtks_mode" in
-        "1") {
-kmsg1 "---------- Info -----------"
-kmsg1 "Date of execution: $(date)                                                                                   " 
-kmsg1 "Kernel: `uname -a`                                                                                           "
-kmsg1 "SOC: $mf, $soc                                                                                               "
-kmsg1 "SDK: $sdk                                                                                                    "
-kmsg1 "CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "CPU AArch: $aarch                                                                                            "
-kmsg1 "GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "Android Version: $arv                                                                                          "
-kmsg1 "GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "Device: $dm                                                                                                  "
-kmsg1 "RTKS Version: 3.2.2                                                                                           "
-kmsg1 "Battery charge level: $percentage%                                                                           "
-kmsg1 "Device total RAM: $totalram MB                                                                               "
-kmsg1 "Magisk: $magisk                                                                                              "
-kmsg1 "---------------------------"
+# Thermal Profile
+thermal() {
+     	init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr
+     	
+     	else
+     	toasteua
+     	fi
+     	
+kmsg1 "-------------- Info --------------"
+kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
+kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
+kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
+kmsg1 "⭐ SDK: $sdk                                                                                                    "
+kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
+kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ Android Version: $arv                                                                                          "
+kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "⭐ Device: $dm                                                                                                  "
+kmsg1 "⭐ RTKS Version: 3.2.2                                                                                           "
+kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
+kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
+kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "----------------------------------"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                         ENABLING $rtks_profile PROFILE                                                                          "
@@ -456,24 +455,70 @@ fi
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" 
 kmsg1 "                                         $rtks_profile PROFILE APPLIED                                                                   "
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-};;
-        "2") { 
-kmsg1 "---------- Info -----------"
-kmsg1 "Date of execution: $(date)                                                                                   " 
-kmsg1 "Kernel: `uname -a`                                                                                           "
-kmsg1 "SOC: $mf, $soc                                                                                               "
-kmsg1 "SDK: $sdk                                                                                                    "
-kmsg1 "CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "CPU AArch: $aarch                                                                                            "
-kmsg1 "GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "Android Version: $arv                                                                                          "
-kmsg1 "GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "Device: $dm                                                                                                  "
-kmsg1 "RTKS Version: 3.2.2                                                                                           "
-kmsg1 "Battery charge level: $percentage%                                                                           "
-kmsg1 "Device total RAM: $totalram MB                                                                               "
-kmsg1 "Magisk: $magisk                                                                                              "
-kmsg1 "---------------------------"
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          END OF EXECUTION: $(date)                                                                              "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+exit=`date +%s`
+
+exectime=$((exit - init))
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          EXECUTION DONE IN $exectime SECONDS.                                                                   "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+     	init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua1
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua1
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr1
+     	
+     	else
+     	toasteua1
+     	fi
+}
+# Battery Profile
+battery() {
+         init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr
+     	
+     	else
+     	toasteua
+     	fi
+     	
+kmsg1 "-------------- Info --------------"
+kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
+kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
+kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
+kmsg1 "⭐ SDK: $sdk                                                                                                    "
+kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
+kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ Android Version: $arv                                                                                          "
+kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "⭐ Device: $dm                                                                                                  "
+kmsg1 "⭐ RTKS Version: 3.2.2                                                                                           "
+kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
+kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
+kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "----------------------------------"
+
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          ENABLING $rtks_profile PROFILE...                                                                       "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -960,27 +1005,74 @@ kmsg1 "                                          DISABLED GENTLE FAIR SLEEPERS. 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
+  
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          $rtks_profile PROFILE APPLIED WITH SUCCESS.                                                             "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-};;
-        "3") {
-kmsg1 "---------- Info -----------"
-kmsg1 "Date of execution: $(date)                                                                                   " 
-kmsg1 "Kernel: `uname -a`                                                                                           "
-kmsg1 "SOC: $mf, $soc                                                                                               "
-kmsg1 "SDK: $sdk                                                                                                    "
-kmsg1 "CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "CPU AArch: $aarch                                                                                            "
-kmsg1 "GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "Android Version: $arv                                                                                          "
-kmsg1 "GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "Device: $dm                                                                                                  "
-kmsg1 "RTKS Version: 3.2.2                                                                                           "
-kmsg1 "Battery charge level: $percentage%                                                                           "
-kmsg1 "Device total RAM: $totalram MB                                                                               "
-kmsg1 "Magisk: $magisk                                                                                              "
-kmsg1 "---------------------------"
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          END OF EXECUTION: $(date)                                                                              "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+exit=`date +%s`
+
+exectime=$((exit - init))
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          EXECUTION DONE IN $exectime SECONDS.                                                                   "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+         init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua1
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua1
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr1
+     	
+     	else
+     	toasteua1
+     	fi
+}
+# Balanced Profile
+balanced() {
+        	init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr
+     	
+     	else
+     	toasteua
+     	fi
+     	
+kmsg1 "-------------- Info --------------"
+kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
+kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
+kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
+kmsg1 "⭐ SDK: $sdk                                                                                                    "
+kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
+kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ Android Version: $arv                                                                                          "
+kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "⭐ Device: $dm                                                                                                  "
+kmsg1 "⭐ RTKS Version: 3.2.2                                                                                           "
+kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
+kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
+kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "----------------------------------"
+
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          ENABLING $rtks_profile PROFILE...                                                                       "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"       	
@@ -1440,24 +1532,69 @@ fi
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          $rtks_profile PROFILE APPLIED WITH SUCCESS.                                                             "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-};;
-        "4") {
-kmsg1 "---------- Info -----------"
-kmsg1 "Date of execution: $(date)                                                                                   " 
-kmsg1 "Kernel: `uname -a`                                                                                           "
-kmsg1 "SOC: $mf, $soc                                                                                               "
-kmsg1 "SDK: $sdk                                                                                                    "
-kmsg1 "CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "CPU AArch: $aarch                                                                                            "
-kmsg1 "GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "Android Version: $arv                                                                                          "
-kmsg1 "GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "Device: $dm                                                                                                  "
-kmsg1 "RTKS Version: 3.2.2                                                                                           "
-kmsg1 "Battery charge level: $percentage%                                                                           "
-kmsg1 "Device total RAM: $totalram MB                                                                               "
-kmsg1 "Magisk: $magisk                                                                                              "
-kmsg1 "---------------------------"
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          END OF EXECUTION: $(date)                                                                              "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+exit=`date +%s`
+
+exectime=$((exit - init))
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          EXECUTION DONE IN $exectime SECONDS.                                                                   "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+         init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua1
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua1
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr1
+     	
+     	else
+     	toasteua1
+     	fi
+}
+# Performance Profile
+performance() {
+        	init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr
+     	
+     	else
+     	toasteua
+     	fi
+     	
+kmsg1 "-------------- Info --------------"
+kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
+kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
+kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
+kmsg1 "⭐ SDK: $sdk                                                                                                    "
+kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
+kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ Android Version: $arv                                                                                          "
+kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "⭐ Device: $dm                                                                                                  "
+kmsg1 "⭐ RTKS Version: 3.2.2                                                                                           "
+kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
+kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
+kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "----------------------------------"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          ENABLING $rtks_profile PROFILE.                                                                       "
@@ -1951,24 +2088,70 @@ fi
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          $rtks_profile PROFILE APPLIED SUCCESS.                                                             "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-};;
-        "5") {
-kmsg1 "---------- Info -----------"
-kmsg1 "Date of execution: $(date)                                                                                   " 
-kmsg1 "Kernel: `uname -a`                                                                                           "
-kmsg1 "SOC: $mf, $soc                                                                                               "
-kmsg1 "SDK: $sdk                                                                                                    "
-kmsg1 "CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "CPU AArch: $aarch                                                                                            "
-kmsg1 "GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "Android Version: $arv                                                                                          "
-kmsg1 "GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "Device: $dm                                                                                                  "
-kmsg1 "RTKS Version: 3.2.2                                                                                           "
-kmsg1 "Battery charge level: $percentage%                                                                           "
-kmsg1 "Device total RAM: $totalram MB                                                                               "
-kmsg1 "Magisk: $magisk                                                                                              "
-kmsg1 "---------------------------"
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          END OF EXECUTION: $(date)                                                                              "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+exit=`date +%s`
+
+exectime=$((exit - init))
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          EXECUTION DONE IN $exectime SECONDS.                                                                   "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+         init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua1
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua1
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr1
+     	
+     	else
+     	toasteua1
+     	fi
+}
+# Gaming Profile
+gaming() {
+        	init=`date +%s`
+     	if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr
+     	
+     	else
+     	toasteua
+     	fi
+     	
+kmsg1 "-------------- Info --------------"
+kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
+kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
+kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
+kmsg1 "⭐ SDK: $sdk                                                                                                    "
+kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
+kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "⭐ Android Version: $arv                                                                                          "
+kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "⭐ Device: $dm                                                                                                  "
+kmsg1 "⭐ RTKS Version: 3.2.2                                                                                           "
+kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
+kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
+kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "----------------------------------"
+
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          ENABLING $rtks_profile PROFILE...                                                                       "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -2463,6 +2646,115 @@ fi
 kmsg1 "------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          $rtks_profile PROFILE APPLIED WITH SUCCESS.                                                            "
 kmsg1 "------------------------------------------------------------------------------------------------------------------------------------------------"
-};;
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          END OF EXECUTION: $(date)                                                                              "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+exit=`date +%s`
+
+exectime=$((exit - init))
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          EXECUTION DONE IN $exectime SECONDS.                                                                   "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+         if [[ `getprop persist.sys.locale` == "en-US" ]]
+     	then
+     	toasteua1
+     	
+     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
+         then
+         toasteua1
+         
+     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
+     	then
+     	toastbr1
+
+     	else
+     	toasteua1
+     	fi
+}
+boot_run_once=false
+rtks_mode=$(getprop persist.raidentweaks.mode)
+[ -z "$rtks_mode" ] && setprop persist.raidentweaks.mode "3"
+
+while true
+do
+sleep 3
+if $boot_run_once
+then
+[ "$(getprop persist.raidentweaks.mode)" == "$rtks_mode" ] && continue
+else
+boot_run_once=true
+fi
+rtks_mode=$(getprop persist.raidentweaks.mode)
+loc=/data/adb/modules
+
+if [[ "$rtks_mode" == "1" ]]
+then
+rtks_profilebr=Thermal
+
+elif [[ "$rtks_mode" == "2" ]]
+then
+rtks_profilebr=Bateria
+        	
+elif [[ "$rtks_mode" == "3" ]]
+then
+rtks_profilebr=Balanceado
+        	
+elif [[ "$rtks_mode" == "4" ]]
+then
+rtks_profilebr=Performance
+        	
+elif [[ "$rtks_mode" == "5" ]]
+then
+rtks_profilebr=Gaming
+fi
+	 	
+if [[ "$rtks_mode" == "1" ]]
+then
+rtks_profile=Thermal
+
+elif [[ "$rtks_mode" == "2" ]]
+then
+rtks_profile=Battery
+        	
+elif [[ "$rtks_mode" == "3" ]]
+then
+rtks_profile=Balanced
+        	
+elif [[ "$rtks_mode" == "4" ]]
+then
+rtks_profile=Performance
+
+elif [[ "$rtks_mode" == "5" ]]
+then
+rtks_profile=Gaming
+fi
+
+case "$rtks_profile" in
+ "Thermal") {
+ 	sleep 5
+     thermal
+	 };;
+	 
+	 "Battery") {
+	 	sleep 5
+	 	battery
+	 	};;
+	
+	 	"Balanced") {
+	 		sleep 5
+	 		balanced
+	 		};;
+	 		
+	 		"Performance") {
+	 			sleep 5
+	 			performance
+	 			};;
+
+	 			"Gaming") {
+	 				sleep 5
+	 				gaming
+	 				};;
 esac
 done

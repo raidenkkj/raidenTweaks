@@ -1,4 +1,4 @@
-<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/b5994553a9c9cafe3fc45.jpg" width="1000"></a></p> 
+<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/db31c2fa48d246231b6eb.jpg" width="1000"></a></p> 
 <h1 align="center"><b>Raiden Tweaks </b></h1>
 <h4 align="center">A tweaker kernel to improve user experience on your device.</h4>
 

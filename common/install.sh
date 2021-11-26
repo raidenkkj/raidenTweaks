@@ -1,20 +1,13 @@
 set_perm_recursive "$MODPATH/system/bin" root root 0777 0755
-ui_print " _______ _________ _        _______ "
-ui_print "(  ____ )\__   __/| \    /\(  ____ \ "
-ui_print "| (    )|   ) (   |  \  / /| (    \/ "
-ui_print "| (____)|   | |   |  (_/ / | (_____ "
-ui_print "|     __)   | |   |   _ (  (_____  ) "
-ui_print "| (\ (      | |   |  ( \ \       ) | "
-ui_print "| ) \ \__   | |   |  /  \ \/\____) | "
-ui_print "|/   \__/   )_(   |_/    \/\_______) "
-ui_print " "
-ui_print "VERSION: 3.3.3 - 23/11/2021"
+awk '{print}' "${MODPATH}/common/rtks_banner" 
+ui_print "VERSION: 3.3.3 - 25/11/2021"
 ui_print " "
 ui_print " "
-ui_print "CODENAME: BETA-TESTER"
+ui_print "CODENAME: SKYL1N3"
 sleep 2
 ui_print " "
-ui_print "With this module you can choose one of his profiles and improve your user experience."
+ui_print "With this module you can choose one of "
+ui_print " his profiles and improve your user experience."
 sleep 3
 ui_print " "
 ui_print "[*] Do you want to optimize application packages?"
@@ -124,6 +117,92 @@ fstrim -v /data
 fstrim -v /cache
 ui_print " "
 fi
+
+ui_print "[*] Checking for possible conflicts..."
+ui_print " "
+
+if [ -d $MODDIR/FDE ]; then
+ui_print "[!] FDE.AI Module detected, removing for security reasons."
+touch $MODDIR/FDE/disable
+
+elif [ -d $MODDIR/ktweak ]; then
+ui_print "[!] KTweak Module detected, removing for security reasons."
+touch $MODDIR/ktweak/disable
+
+elif [ -d $MODDIR/ZeetaaTweaks ]; then
+ui_print "[!] ZeetaaTweaks Module detected, removing for security reasons."
+touch $MODDIR/ZeetaaTweaks/disable
+
+elif [ -d $MODDIR/lv-gpu-performance ]; then
+ui_print "[!] Lv-gpu-performance Module detected, removing for security reasons."
+touch $MODDIR/lv-gpu-performance/disable
+
+elif [ -d $MODDIR/R.kashyap ]; then
+ui_print "[!] Gamers Edition Module detected, removing for security reasons."
+touch $MODDIR/R.kashyap/disable
+
+elif [ -d $MODDIR/ZTS ]; then
+ui_print "[!] ZTS Module detected, removing for security reasons."
+touch $MODDIR/ZTS/disable
+
+elif [ -d $MODDIR/MAGNETAR ]; then
+ui_print "[!] MAGNETAR Module detected, removing for security reasons."
+touch $MODDIR/MAGNETAR/disable
+
+elif [ -d $MODDIR/Apollon ]; then
+ui_print "[!] Apollon Module detected, removing for security reasons."
+touch $MODDIR/Apollon/disable
+
+elif [ -d $MODDIR/Apollon-plus ]; then
+ui_print "[!] Apollon Plus Module detected, removing for security reasons."
+touch $MODDIR/Apollon-plus/disable
+
+elif [ -d $MODDIR/gameexp ]; then
+ui_print "[!] Improve Game Xperience Module detected, removing for security reasons."
+touch $MODDIR/gameexp/disable
+
+elif [ -d $MODDIR/lspeed ]; then
+ui_print "[!] LSpeed Module detected, removing for security reasons."
+touch $MODDIR/lspeed/disable
+
+elif [ -d $MODDIR/fkm_spectrum_injector ]; then
+ui_print "[!] FKM Injector Module detected, removing for security reasons."
+touch $MODDIR/fkm_spectrum_injector/disable
+
+elif [ -d $MODDIR/KTSR ]; then
+ui_print "[!] KTSR Module detected, removing for security reasons."
+touch $MODDIR/KSTR/disable
+
+elif [ -d $MODDIR/lazy ]; then
+ui_print "[!] Lazy Tweaks Module detected, removing for security reasons."
+touch $MODDIR/lazy/disable
+
+elif [ -d $MODDIR/injector ]; then
+ui_print "[!] NFS Injector Module detected, removing for security reasons."
+touch $MODDIR/injector/disable
+
+elif [ "$(pm list package magnetarapp)" ]; then
+ui_print "[!] MAGNETAR App has been detected, I recommend removing the app to avoid conflicts."
+
+elif [ "$(pm list package ktweak)" ]; then
+ui_print "[!] KTweak App has been detected, I recommend removing the app to avoid conflicts."
+
+
+elif [ "$(pm list package lsandroid)" ]; then
+ui_print "[!] LSpeed App has been detected, I recommend removing the app to avoid conflicts."
+
+elif [ "$(pm list package feravolt)" ]; then
+ui_print "[!] FDE.AI App has been detected, I recommend removing the app to avoid conflicts."
+
+elif [ "$(pm list package kitana)" ]; then
+ui_print "[!] Kitana Tweak App has been detected, I recommend removing the app to avoid conflicts."
+
+elif [ "$(pm list package nfs)" ]; then
+ui_print "[!] NFS Manager App has been detected, I recommend removing the app to avoid conflicts."
+
+    fi
+sleep 1.5
+
 SC="/storage/emulated/0/Android/data/com.lnrgame.roguelike/files/SettingDatas.dat"
 LIFE="/storage/emulated/0/Android/data/com.netease.mrzhna/files/netease/g66/Documents/configs/qualityconfig"
 APEX="/data/data/com.ea.gp.apexlegendsmobilefps/files/UE4Game/AClient/AClient/Saved/Config/Android/UserCustom.ini"
@@ -132,29 +211,43 @@ awk '{print}' "${MODPATH}/common/ru_banner"
 sleep 3
 ui_print " [!] Important: These settings can cause  "
 ui_print "                errors in system applications.  "
+sleep 0.5
 ui_print " "
 ui_print "     Might not work if you are using "
 ui_print "     magiskhideprops or other like module. "
 ui_print " "
 ui_print " "
+sleep 0.5
 ui_print " 1- None"
 ui_print " "
+sleep 0.5
 ui_print " 2- CODM 120 FPS Settings"
 ui_print " "
+sleep 0.5
 ui_print " 3- PUBGM 90 FPS Settings "
 ui_print " "
+sleep 0.5
 ui_print " 4- ML Max Settings "
 ui_print " "
+sleep 0.5
 ui_print " 5- Asphalt 9 and Sky Children of the Light 60 FPS Settings"
 ui_print " "
+sleep 0.5
 ui_print " 6- Game for Peace 90 FPS Settings"
 ui_print " "
+sleep 0.5
 ui_print " 7- LifeAfter 120 FPS Settings"
 ui_print " "
+sleep 0.5
 ui_print " 8- Apex Legends 120 FPS Settings"
 ui_print " "
+sleep 0.5
 ui_print " 9- Super Clone 120 FPS Settings"
 ui_print " "
+sleep 0.5
+ui_print " 10- Apply Asphalt 9 and Sky Children of the Light 60 FPS Settings"
+ui_print " "
+sleep 0.5
 ui_print "[*] Select which you want: "
 ui_print " "
 KU=1
@@ -166,12 +259,11 @@ do
   else 
       break
   fi
-if [[ "${KU}" -gt "9" ]]; then
+if [[ "${KU}" -gt "10" ]]; then
     KU=1
 fi
 done
 
-for dir in /sdcard/Android/data/com.riotgames.league.wildrift/files/SaveData/Local/*; do
 case "${KU}" in
 1 ) FCTEXTAD2="None";;
 2 ) FCTEXTAD2="CODM 120 FPS"; sed -i '/ro.product.model/s/.*/ro.product.model=XQ-AS72/' "${MODPATH}/system.prop"; sed -i '/ro.product.model/s/.*/ro.product.model=XQ-AS72/' "${MODPATH}/system1.prop";;
@@ -182,43 +274,49 @@ case "${KU}" in
 7 ) FCTEXTAD2="LifeAfter 120 FPS"; sed -i 's/"frame": 1,/"frame": 4,/g' "${LIFE}"; sed -i 's/"frame": 2,/"frame": 4,/g' "${LIFE}"; sed -i 's/"frame": 3,/"frame": 4,/g' "${LIFE}";;
 8 ) FCTEXTAD2="Apex Legends 120 FPS"; sed -i 's/SpecialFPS=30/SpecialFPS=120/g' "${APEX}"; sed -i 's/BRFPS=40/BRFPS=120/g' "${APEX}"; sed -i 's/SpecialFPS=60/SpecialFPS=120/g' "${APEX}"; sed -i 's/BRFPS=30/BRFPS=120/g' "${APEX}";;
 9 ) FCTEXTAD2="Super Clone 120 FPS"; sed -i 's/{"isFPSOn":true,"isEffectSoundOn":true,"isMusicSoundOn":true,"targetFPS":30,"isFixTouchJoystickPosition":true,"isFixTouchJoystickCompletely":true}/{"isFPSOn":true,"isEffectSoundOn":true,"isMusicSoundOn":true,"targetFPS":120,"isFixTouchJoystickPosition":true,"isFixTouchJoystickCompletely":true}/g' "${SC}"; sed -i 's/{"isFPSOn":true,"isEffectSoundOn":true,"isMusicSoundOn":true,"targetFPS":45,"isFixTouchJoystickPosition":true,"isFixTouchJoystickCompletely":true}/{"isFPSOn":true,"isEffectSoundOn":true,"isMusicSoundOn":true,"targetFPS":120,"isFixTouchJoystickPosition":true,"isFixTouchJoystickCompletely":true}/g' "${SC}"; sed -i 's/{"isFPSOn":true,"isEffectSoundOn":true,"isMusicSoundOn":true,"targetFPS":60,"isFixTouchJoystickPosition":true,"isFixTouchJoystickCompletely":true}/{"isFPSOn":true,"isEffectSoundOn":true,"isMusicSoundOn":true,"targetFPS":120,"isFixTouchJoystickPosition":true,"isFixTouchJoystickCompletely":true}/g' "${SC}";;
+10 ) FCTEXTAD2="Asphalt 9 and Sky Children of the Light 60 FPS"; sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${MODPATH}/system.prop"; sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${MODPATH}/system1.prop";;
 esac
 break
-done
 ui_print " "
 ui_print "Selected: ${FCTEXTAD2} "
 ui_print " "
-sleep 3
+sleep 1
 ui_print " - [*] Created by raidenkk @ (Telegram)"
-sleep 3
+sleep 2
 ui_print " "
 ui_print " - Contributors, credits:"
-sleep 2
+sleep 1
 ui_print " "
 ui_print " - King Tweaks dev: pedro3z0 @ (Telegram)"
-sleep 2
+sleep 1
 ui_print " "
 ui_print " - Spectrum dev: frap129 @ (GitHub)"
-sleep 2
+sleep 1
 ui_print " "
 ui_print " - Zeus Tweaks dev: KiraaDeath @ (Telegram)"
-sleep 2
+sleep 1
 ui_print " "
 ui_print " - Apollon dev: Haxis_Lancelot @ (Telegram)"
-sleep 2
+sleep 1
 ui_print " "
 ui_print " - ThermodX dev: imUsiF12 @ (Telegram)"
-sleep 2
+sleep 1
+ui_print " "
+ui_print " - Mod Utils dev: Veez21 @ (GitHub)"
+sleep 1
+ui_print " "
+ui_print " - MMT-Extended dev: Zackptg5 @ (GitHub)"
+sleep 1
 ui_print " "
 ui_print " - [!] Join my support group: @rtksgroup (Telegram)"
-sleep 2
+sleep 1
 ui_print " "
 ui_print " - Thanks to everyone for the feedback, it helps a lot. ❤️"
-sleep 2
+sleep 1
 ui_print " "
 ui_print " - Logs are at the root of internal memory RTKS/RTKS.log"
-sleep 2
+sleep 1
 ui_print " "
-ui_print " - [*] RTKS Module has been installed successfuly!"
+ui_print " - [*] Raiden Tweaks Module has been installed successfuly!"
 ui_print " "
 sleep 2

@@ -14,11 +14,12 @@ wait_until_login() {
     done
     rm "$test_file"
 }
-# init script
-setprop raiden.tweaks.support "1"
+wait_until_login
+# Readme
+wget -O "${MODPATH}/storage/emulated/0/RTKS/README.md" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/README.md"
 
-sleep 60
 # Setup tweaks
+sleep 60
 raidentweaks
 
 # set swappiness to 100 (zram

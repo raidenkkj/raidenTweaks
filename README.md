@@ -61,5 +61,9 @@
 
 * imUsiF12 @ (Telegram) ThermodX dev.
 
+* Veez21 @ (GitHub) Mod Utils dev.
+
+* Zackptg5 @ (GitHub) MMT-Extended dev.
+
 thx all ❤️
 # 

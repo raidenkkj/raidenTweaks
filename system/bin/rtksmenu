@@ -70,14 +70,13 @@ else
     ts=Unknown
 fi
 
-clear
 Menu() {
     echo -e '\n'
-    clear
+    printf "\033c"
     echo "${Y}|   This is the official Raiden Tweaks menu.   |${N}"
     echo "${Y}|  Created and written by raidenkk @ telegram  |${N}"
     echo " "
-    echo "${Y}[*] Your current rom:${B} $(getprop ro.build.display.id) ${N}"
+    echo "${Y}[*] Your device:${B} $(getprop ro.product.model) ${N}"
     echo " "
     echo "${Y}[*] Your current profile:${B} $rtks_prof ${N}"
     echo " "
@@ -104,15 +103,15 @@ Menu() {
     echo "--------------------------------------------"
     echo " "
     if [[ "$ts" == "On" ]]; then
-    echo "${Y}[6] Disable thermal-engine ${C}(may heat the device)${N}"
+    echo "${Y}[6] Disable thermal-engine ${C}(May heat the device)${N}"
     echo " "
-elif [[ "$ts" == "Off" ]]; then
-      echo "${Y}[6] Enable thermal-engine${N}"
-      echo " "
-fi
-    echo "${Y}[7] Fstrim on some partitions ${C}(improves fluidity)${N}"
+    elif [[ "$ts" == "Off" ]]; then
+    echo "${Y}[6] Enable thermal-engine${N}"
     echo " "
-    echo "${Y}[8] Optimize application package ${C}(may take time)${N}"
+    fi
+    echo "${Y}[7] Fstrim on some partitions ${C}(Improves fluidity)${N}"
+    echo " "
+    echo "${Y}[8] Optimize application package ${C}(May take time)${N}"
     echo " "
     echo "${Y}[9] Clear RAM [ ${B}BASIC ${Y}] ${C}(This one will just drop all caches)${N}"
     echo " "
@@ -122,11 +121,13 @@ fi
     echo " "
     echo "${Y}[12] Clean up unnecessary files. ${C}(I.e. System logs, logs, debug...)${N}"
     echo " "
-    echo "${Y}[13] Clear battery status ${C}(must be at 100%)${N}"
+    echo "${Y}[13] Clear battery status ${C}(Must be at 100%)${N}"
     echo " "
-    echo "${Y}[14] Telegram group ${C}(to answer your questions)${N}"
+    echo "${Y}[14] Telegram group ${C}(To answer your questions)${N}"
     echo " "
-    echo "${B}[15] About the module ${C}(information!)${N}"
+    echo "${B}[15] About the module ${C}(Information!)${N}"
+    echo " "
+    echo "${R}[U] Uninstall Raiden Tweaks ${C}(Will remove the module from your system)${N}"
     echo " "
     echo "${R}[0] Go out.${N}"
     echo " "
@@ -149,13 +150,14 @@ fi
     13) Opcao13 ;;
     14) Opcao14 ;;
     15) Opcao15 ;;
+    U) Uninstall ;;
     0) GoOut ;;
     *) Menu;;
     esac
     }
 
 Opcao1 () {
-    clear
+    printf "\033c"
     echo "${G}Putting the profile in thermal mode...${N}"
     sleep 2
     echo " "
@@ -177,7 +179,7 @@ Opcao1 () {
 }
 
 Opcao2 () {
-    clear
+    printf "\033c"
     echo "${G}Putting the profile in battery mode...${N}"
     sleep 2
     echo " "
@@ -199,7 +201,7 @@ Opcao2 () {
 }
 
 Opcao3 () {
-    clear
+    printf "\033c"
     echo "${G}Putting the profile in balanced mode...${N}"
     sleep 2
     echo " "
@@ -221,7 +223,7 @@ Opcao3 () {
 }
 
 Opcao4 () {
-    clear
+    printf "\033c"
     echo "${G}Putting the profile in performance mode...${N}"
     sleep 2
     echo " "
@@ -241,7 +243,7 @@ Opcao4 () {
 }
 
 Opcao5 () {
-    clear
+    printf "\033c"
     echo "${G}Putting the profile in gaming mode...${N}"
     sleep 2
     echo " "
@@ -261,7 +263,7 @@ Opcao5 () {
 }
 
 Opcao6 () {
-    clear
+    printf "\033c"
     if [[ "$ts" == "On" ]]; then
     echo "${G}Disabling thermal...${N}"
     sleep 2
@@ -290,7 +292,7 @@ fi
 }
     
 Opcao7 () {
-    clear
+    printf "\033c"
     echo "${G}Fstrim initializing, please wait. >.<${N}"
     echo " "
     fstrim -v /system
@@ -313,7 +315,7 @@ Opcao7 () {
 }
 
 Opcao8 () {
-    clear
+    printf "\033c"
     echo "${G}Optimizing application packages, please wait. >.<${N}"
     sleep 2
     echo " "
@@ -336,8 +338,9 @@ Opcao8 () {
 }
 
 Opcao9 () {
-    clear
-    echo "${G}Dropping all caches, wait, it's very fast ^^${N}"
+    am start -a android.intent.action.MAIN -e toasttext "Clear RAM [ BASIC ]" -n bellavita.toast/.MainActivity
+    printf "\033c"
+    echo "${G}Dropping all caches, wait, it's very fast. ^^${N}"
     sleep 1
     sync
     echo "3" > "/proc/sys/vm/drop_caches"
@@ -357,7 +360,8 @@ Opcao9 () {
 }
 
 Opcao10 () {
-    clear
+    am start -a android.intent.action.MAIN -e toasttext "Clear RAM [ HEAVY ]" -n bellavita.toast/.MainActivity
+    printf "\033c"
     echo "${G}Dropping caches and killing background processes, wait patiently... ^^${N}"
     sleep 1
     sync
@@ -379,7 +383,8 @@ Opcao10 () {
 }
 
 Opcao11 () {
-    clear
+    am start -a android.intent.action.MAIN -e toasttext "Clear RAM [ ADVANCED ]" -n bellavita.toast/.MainActivity
+    printf "\033c"
     echo "${G}Dropping all caches and killing all processes, wait there. ^^${N}"
     sleep 1
     sync
@@ -405,8 +410,8 @@ Opcao11 () {
 }
 
 Opcao12 () {
-    clear
-    echo "${G}Cleaning up all unnecessary junk, wait a minute ;)${N}"
+    printf "\033c"
+    echo "${G}Cleaning up useless residual files...${N}"
     sleep 1
     cleaner 2>/dev/null
     echo " "
@@ -425,7 +430,7 @@ Opcao12 () {
 }
 
 Opcao13 () {
-    clear
+    printf "\033c"
     echo "${G}Clearing battery status, please wait. >.<${N}"
     sleep 1
     rm -f /data/system/batterystats.bin
@@ -445,11 +450,11 @@ Opcao13 () {
 }
 
 Opcao14 () {
-    clear
+    printf "\033c"
     echo "${G}Access telegram group (support)${N}"
     sleep 2
     am start -a android.intent.action.VIEW -d https://t.me/rtksgroup
-    clear
+    printf "\033c"
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo " "
@@ -463,7 +468,7 @@ Opcao14 () {
 }
 
 Opcao15 () {
-    clear
+    printf "\033c"
     echo "${G}Module informations:${N}"
     echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste, enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
     echo " "
@@ -479,16 +484,39 @@ Opcao15 () {
     esac
 }
 
+Uninstall () {
+    printf "\033c"
+    echo "${G}Okay, I understand... uninstalling the Raiden Tweaks module...${N}"
+    sleep 2
+    rm -rf /data/adb/modules/RTKS
+    echo " "
+    echo "${G}Module uninstalled, now we will restart your device...${N}"
+    sleep 4
+    echo "${G}In a few seconds the device will restart.${N}"
+    echo " "
+    echo -ne '${R}>>>                       [20%]\r${N}'
+    sleep 1.5
+    echo -ne '${R}>>>>>>>                   [40%]\r{N}'
+    sleep 1.5
+    echo -ne '${R}>>>>>>>>>>>>>>            [60%]\r${N}'
+    sleep 1.5
+    echo -ne '${R}>>>>>>>>>>>>>>>>>>>>>>>   [80%]\r${N}'
+    sleep 1.5
+    echo -ne '${R}>>>>>>>>>>>>>>>>>>>>>>>>>>[100%]\r${N}'
+    echo -ne '\n'
+    echo "foi"
+}
+
 Return() {
-    clear
+    printf "\033c"
     rtksmenu
+    printf "\033c"
 }
 
 GoOut() {
-    clear
+    printf "\033c"
     echo "${B}Bye bye, see you next time.${N}"
-    echo " "
     exit
 }
-clear
+printf "\033c"
 Menu

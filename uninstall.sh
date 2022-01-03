@@ -1,4 +1,8 @@
-# Don't modify anything after this
+if [[ -e "/sdcard/RTKS" ]]
+then 
+rm -rf /sdcard/RTKS
+fi
+
 if [ -f $INFO ]; then
   while read LINE; do
     if [ "$(echo -n $LINE | tail -c 1)" == "~" ]; then

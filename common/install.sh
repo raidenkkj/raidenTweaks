@@ -1,72 +1,18 @@
 set_perm_recursive "$MODPATH/system/bin" root root 0777 0755
-awk '{print}' "${MODPATH}/common/rtks_banner" 
-ui_print "VERSION: 3.3.3 - 25/11/2021"
+awk '{print}' "${MODPATH}/common/rtks_banner"
 ui_print " "
+ui_print "VERSION: 3.3.4 - 07/01/2022"
 ui_print " "
-ui_print "CODENAME: SKYL1N3"
+ui_print "CODENAME: FALK3N"
 sleep 2
 ui_print " "
-ui_print "With this module you can choose one of "
-ui_print " his profiles and improve your user experience."
+ui_print "With this module you can choose one of"
+ui_print "his profiles and improve your user experience."
 sleep 3
 ui_print " "
-ui_print "[*] Do you want to optimize application packages?"
-sleep 2
-ui_print " "
-ui_print "[!] Important warning! This process may take a while to complete."
-ui_print "Wait as long as necessary."
-sleep 5
-ui_print " "
-ui_print " Vol + = Switch option"
-ui_print ""
-sleep 0.2
-ui_print " Vol - = Select option"
-sleep 1
-ui_print " "
-ui_print " 1- Yes "
-ui_print ""
 sleep 0.5
-ui_print " 2- No "
-ui_print " "
-sleep 0.5
-ui_print "[!] Select the desired option: "
-ui_print " "
-AO=1
-while true
-do
-ui_print "  $AO"
-if $VKSEL 
-then
-AO=$((AO + 1))
-else 
-break
-fi
-if [ $AO -gt 2 ]
-then
-AO=1
-fi
-done
-
-case $AO in
-1 ) FCTEXTAD2="Yes";;
-2 ) FCTEXTAD2="No";;
-esac
-
-ui_print " "
-ui_print "[*] Selected: $FCTEXTAD2 "
-ui_print " "
-
-if [[ $FCTEXTAD2 == "Yes" ]]
-then
-ui_print "Wait, process in progress..."
-sleep 1
-cmd package bg-dexopt-job
-ui_print " "
-fi
-
-sleep 2
-ui_print "[*] Do you want to fstrim the partitions?"
-sleep 5
+ui_print "[*] Do you want to fstrim the partitions? [Recommended]"
+sleep 3
 ui_print " "
 ui_print " Vol + = Switch option"
 ui_print ""
@@ -186,7 +132,6 @@ ui_print "[!] MAGNETAR App has been detected, I recommend removing the app to av
 
 elif [ "$(pm list package ktweak)" ]; then
 ui_print "[!] KTweak App has been detected, I recommend removing the app to avoid conflicts."
-
 
 elif [ "$(pm list package lsandroid)" ]; then
 ui_print "[!] LSpeed App has been detected, I recommend removing the app to avoid conflicts."
@@ -313,6 +258,23 @@ sleep 1
 ui_print " "
 ui_print " - Thanks to everyone for the feedback, it helps a lot. ❤️"
 sleep 1
+ui_print " "
+ui_print "[*] Download the latest script(s) / application from Github..."
+ui_print " "
+wget -O "${MODPATH}/system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/system/bin/raidentweaks"
+wget -O "${MODPATH}/system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/system/bin/rtksmenu"
+wget -O "${MODPATH}/system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/cleaner"
+wget -O "${MODPATH}/mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/mod-util.sh"
+wget -O "$MODPATH/RaidenTweaks.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/main/RaidenTweaks.apk?raw=true"
+wget -O "$MODPATH/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/main/RDToast.apk?raw=true"
+
+ui_print "[*] Okay, all necessary files have been successfully installed.
+ui_print " "
+ui_print "[*] Installing main application...
+pm install $MODPATH/KingTweaks.apk
+ui_print " "
+ui_print "[*] Installing toasts app...
+pm install $MODPATH/RDToast.apk
 ui_print " "
 ui_print " - Logs are at the root of internal memory RTKS/RTKS.log"
 sleep 1

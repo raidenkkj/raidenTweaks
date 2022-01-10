@@ -80,7 +80,7 @@ Menu() {
     echo " "
     echo "${Y}[*] Your current profile:${B} $rtks_prof ${N}"
     echo " "
-    echo "${Y}[*] Version:${B} 3.2.2 - RX-7${N}"
+    echo "${Y}[*] Version:${B} 3.3.4 - FALK3N${N}"
     echo " "
     echo "${Y}[*] Thermal state:${B} $ts ${N}"
     echo " "
@@ -106,7 +106,7 @@ Menu() {
     echo "${Y}[6] Disable thermal-engine ${C}(May heat the device)${N}"
     echo " "
     elif [[ "$ts" == "Off" ]]; then
-    echo "${Y}[6] Enable thermal-engine${N}"
+    echo "${Y}[6] Enable thermal-engine (Revert to normal)${N}"
     echo " "
     fi
     echo "${Y}[7] Fstrim on some partitions ${C}(Improves fluidity)${N}"
@@ -266,19 +266,20 @@ Opcao6 () {
     printf "\033c"
     if [[ "$ts" == "On" ]]; then
     echo "${G}Disabling thermal...${N}"
+    echo "${R}[!] Warning: Your device may get hot.${N}"
     sleep 2
     stop thermal-engine
     echo " "
     echo "${G}Process finished.${N}"
     echo " "
-elif [[ "$ts" == "Off" ]]; then
-    echo "${G}Enabling thermal...${N}"
+    elif [[ "$ts" == "Off" ]]; then
+    echo "${G}Enabling thermal engine to normal...${N}"
     sleep 2
     start thermal-engine
     echo " "
     echo "${G}Process finished.${N}"
     echo " "
-fi
+    fi
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo " "
@@ -388,13 +389,12 @@ Opcao11 () {
     echo "${G}Dropping all caches and killing all processes, wait there. ^^${N}"
     sleep 1
     sync
-    echo "3" > "/proc/sys/vm/drop_caches"
+    echo "3" >"/proc/sys/vm/drop_caches"
     am kill-all
     sleep 3
     while IFS= read -r pkg_nm; do
-    [[ "${pkg_nm}" != "com.termux" ]] && [[ "${pkg_nm}" != "jackpal.androidterm" ]] && [[ "${pkg_nm}" != "yarolegovich.materialterminal" ]] && [[ "${pkg_nm}" != "com.google.android.inputmethod.latin" ]] && [[ "${pkg_nm}" != "com.termoneplus" ]] && am force-stop "${pkg_nm}"
-    done <<< "$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
-    echo " "
+        [[ ${pkg_nm} != "com.termux" ]] && [[ ${pkg_nm} != "jackpal.androidterm" ]] && [[ ${pkg_nm} != "yarolegovich.materialterminal" ]] && [[ ${pkg_nm} != "com.google.android.inputmethod.latin" ]] && [[ ${pkg_nm} != "com.termoneplus" ]] && [[ ${pkg_nm} != "com.pittvandewitt.viperfx" ]] && [[ ${pkg_nm} != "com.topjohnwu.magisk" ]] && [[ ${pkg_nm} != "ridmik.keyboard" ]] && [[ ${pkg_nm} != "com.maxmpz.equalizer" ]] && [[ ${pkg_nm} != "com.miui.screenrecorder" ]] && am force-stop ${pkg_nm}
+    done <<<"$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"    echo " "
     echo "${G}Process finished!${N}"
     echo " "
     echo "${B}[ 1 ] Return${N}"
@@ -504,7 +504,7 @@ Uninstall () {
     sleep 1.5
     echo -ne '${R}>>>>>>>>>>>>>>>>>>>>>>>>>>[100%]\r${N}'
     echo -ne '\n'
-    echo "foi"
+    reboot system
 }
 
 Return() {

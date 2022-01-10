@@ -41,9 +41,15 @@
 
 * Download the module.
 
+<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/abbac80c5f4916073bd1f.jpg" width="1000"></a></p>
+
 * Go to your Magisk, enter the module menu and click in "install from storage"
 
+<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/f29c6a172a98828c71489.jpg" width="1000"></a></p>
+
 * Now go to the directory that the module is in and select it, choose the options and wait.
+
+<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/876d71b5c31d0390fb480.jpg" width="1000"></a></p>
 
 * When finished, just click restart and you're done.
 

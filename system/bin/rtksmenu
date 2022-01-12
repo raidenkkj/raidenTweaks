@@ -1,6 +1,6 @@
 #!/system/bin/sh
 # veez21 @ xda-developers
-# raidenkk @ telegram
+# raidenkkj @ github
 
 # Magisk Module ID **
 ID="RTKS"
@@ -24,13 +24,13 @@ _bb=
 mount -o remount,rw /cache 2>/dev/null
 mount -o rw,remount /cache 2>/dev/null
 # > Logs should go in this file
-LOG=/sdcard/RTKS/$ID.log
-oldLOG=/sdcard/RTKS/$ID-old.log
+LOG=/sdcard/.RTKS/$ID.log
+oldLOG=/sdcard/.RTKS/$ID-old.log
 # > Verbose output goes here
-VERLOG=/sdcard/RTKS/$ID-verbose.log
-oldVERLOG=/sdcard/RTKS/$ID-verbose-old.log
-stdoutLOG=$MODDIR/logs/$ID-STDOUT.log
-oldstdoutLOG=$MODDIR/logs/$ID-STDOUT-old.log
+VERLOG=/sdcard/.RTKS/Menu-verbose.log
+oldVERLOG=/sdcard/.RTKS/Menu-verbose-old.log
+stdoutLOG=$MODDIR/logs/Menu-STDOUT.log
+oldstdoutLOG=$MODDIR/logs/Menu-STDOUT-old.log
 
 # Start Logging verbosely
 mv -f $VERLOG $oldVERLOG 2>/dev/null; mv -f $LOG $oldLOG 2>/dev/null; mv -f $stdoutLOG $oldstdoutLOG 2>/dev/null
@@ -70,6 +70,9 @@ else
     ts=Unknown
 fi
 
+V="3.3.4"
+CDNM="F4LK3N"
+
 Menu() {
     echo -e '\n'
     printf "\033c"
@@ -80,12 +83,12 @@ Menu() {
     echo " "
     echo "${Y}[*] Your current profile:${B} $rtks_prof ${N}"
     echo " "
-    echo "${Y}[*] Version:${B} 3.3.4 - FALK3N${N}"
+    echo "${Y}[*] Version:${B} $V - $CDNM ${N}"
     echo " "
     echo "${Y}[*] Thermal state:${B} $ts ${N}"
     echo " "
     echo "--------------------------------------------"
-    echo "${C}[*] Profile selector! ${N}"
+    echo "${C}[*] Profile selector ${N}"
     echo "--------------------------------------------"
     echo " "
     echo "${C}[1] Thermal: Focused on making your device heat free, cold.${N}"
@@ -99,7 +102,7 @@ Menu() {
     echo "${R}[5] Gaming: Focused on improving your gaming/all performance.${N}"
     echo " "
     echo "--------------------------------------------"
-    echo "${C}[*] Other options that might be helpful. ${N}"
+    echo "${C}[*] Other options that might be helpful ${N}"
     echo "--------------------------------------------"
     echo " "
     if [[ "$ts" == "On" ]]; then
@@ -127,7 +130,9 @@ Menu() {
     echo " "
     echo "${B}[15] About the module ${C}(Information!)${N}"
     echo " "
-    echo "${R}[U] Uninstall Raiden Tweaks ${C}(Will remove the module from your system)${N}"
+    echo "${B}[S] Send logs to developer ${C}(This will send the current logs to the dev) ${N}"
+    echo " "
+    echo "${R}[U] Uninstall Raiden Tweaks ${C}(Will remove the module / files from your system)${N}"
     echo " "
     echo "${R}[0] Go out.${N}"
     echo " "
@@ -150,6 +155,8 @@ Menu() {
     13) Opcao13 ;;
     14) Opcao14 ;;
     15) Opcao15 ;;
+    S) SendLogs ;;
+    D) DeleteLogs ;;
     U) Uninstall ;;
     0) GoOut ;;
     *) Menu;;
@@ -394,7 +401,7 @@ Opcao11 () {
     sleep 3
     while IFS= read -r pkg_nm; do
         [[ ${pkg_nm} != "com.termux" ]] && [[ ${pkg_nm} != "jackpal.androidterm" ]] && [[ ${pkg_nm} != "yarolegovich.materialterminal" ]] && [[ ${pkg_nm} != "com.google.android.inputmethod.latin" ]] && [[ ${pkg_nm} != "com.termoneplus" ]] && [[ ${pkg_nm} != "com.pittvandewitt.viperfx" ]] && [[ ${pkg_nm} != "com.topjohnwu.magisk" ]] && [[ ${pkg_nm} != "ridmik.keyboard" ]] && [[ ${pkg_nm} != "com.maxmpz.equalizer" ]] && [[ ${pkg_nm} != "com.miui.screenrecorder" ]] && am force-stop ${pkg_nm}
-    done <<<"$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"    echo " "
+    done <<<"$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
     echo "${G}Process finished!${N}"
     echo " "
     echo "${B}[ 1 ] Return${N}"
@@ -481,6 +488,64 @@ Opcao15 () {
     1) Return ;;
     0) GoOut ;;
     *) "Unknown command, sorry." ; echo ; Opcao15  ;;
+    esac
+}
+
+SendLogs () {
+    printf "\033c"
+    echo "${G}Creating directory for logs....${N}"
+    echo " "
+    sleep 1.5
+    mkdir /storage/emulated/0/raidentweaks-logs
+    echo "${G}Created directory '/storage/emulated/0/raidentweaks-logs'${N}"
+    echo " "
+    echo "${G}Copying logs to directory and compressing...${N}"
+    echo " "
+    sleep 1.5
+    cp -R /storage/emulated/0/.RTKS /storage/emulated/0/raidentweaks-logs
+    rm -rf /storage/emulated/0/raidentweaks-logs/.RTKS/README.md
+    mv /storage/emulated/0/raidentweaks-logs/.RTKS /storage/emulated/0/raidentweaks-logs/raidentweaks-logs
+    cd /storage/emulated/0/raidentweaks-logs
+    tar -czvf raidentweaks-logs.tar.gz raidentweaks-logs
+    rm -rf /storage/emulated/0/raidentweaks-logs/raidentweaks-logs
+    sleep 2
+    echo " "
+    echo "${G}Done, now we will send the logs to the developer.${N}"
+    sleep 0.5
+    echo " "
+    echo "${G}After sending the logs, click on delete logs option.${N}"
+    sleep 0.5
+    echo " "
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    echo "${B}[ D ] Delete logs (recommended)${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
+    read opcao
+    case $opcao in
+    0) GoOut ;;
+    D) DeleteLogs ;;
+    *) "Unknown command, sorry." ; echo ; Menu  ;;
+    esac
+}
+
+DeleteLogs () {
+    printf "\033c"
+    echo "${G}Deleting logs automatically...${N}"
+    echo " "
+    sleep 1
+    rm -rf /storage/emulated/0/raidentweaks-logs
+    echo "${G}Logs deleted!${N}"
+    echo " "
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    echo " "
+    echo "[${C} Enter${N} ]: \c"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "Unknown command, sorry." ; echo ; Menu  ;;
     esac
 }
 

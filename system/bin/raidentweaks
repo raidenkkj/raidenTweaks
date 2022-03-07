@@ -279,8 +279,8 @@ totalram=`free -m | awk '/Mem:/{print $2}'`
 # Variable to battery actual capacity
 percentage=`cat /sys/class/power_supply/battery/capacity`
 
-# Thermal Profile
-thermal() {
+# Automatic Profiles
+automatic() {
      	init=`date +%s`
      	if [[ `getprop persist.sys.locale` == "en-US" ]]
      	then
@@ -309,7 +309,7 @@ kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                          
 kmsg1 "⭐ Android Version: $arv                                                                                          "
 kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.3                                                                                           "
+kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
 kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
 kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
 kmsg1 "⭐ Magisk: $magisk                                                                                              "
@@ -319,138 +319,8 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                         ENABLING $rtks_profile PROFILE                                                                          "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# Enable perfd and mpdecision
-start perfd
-start mpdecision
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED MPDECISION AND PERFD.                                                "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-# Disable logd and statsd to reduce overhead.
-stop logd
-stop statsd
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                            QUEUE TWEAKS...                                                                           "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-for queue in /sys/block/*/queue/
-do
-write "${queue}iostats" "0"
-write "${queue}read_ahead_kb" "64"
-write "${queue}nr_requests" "64"
-write "${queue}scheduler" "cfq"
-done
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                           BOOST CONTROL TWEAKS....                                                                           "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/sys/module/boost_control/parameters/cpu_wake_boost_duration" "0"
-write "/sys/module/boost_control/parameters/cpubw_wake_boost_duration" "0"
-write "/sys/module/boost_control/parameters/cpubw_boost_freq" "0"
-write "/sys/module/boost_control/parameters/dynamic_stune_boost" "0"
-write "/sys/module/boost_control/parameters/app_launch_boost_ms" "100"
-write "/sys/module/boost_control/parameters/input_boost_freq_perf" "0"
-write "/sys/module/boost_control/parameters/input_boost_freq_lp" "10"
-write "/sys/module/boost_control/parameters/lmk_boost_ms" "10"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                        IOWAIT BOOST 0...                                                                           "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/sys/devices/system/cpu/cpu*/cpufreq/schedutil/iowait_boost_enable" "0"
-write "/sys/devices/system/cpu/cpu*/cpufreq/schedutil/iowait_boost_enable" "0"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          CPU SET TWEAKS....                                                                        "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/dev/cpuset/audio-app/cpus" "0-1"
-write "/dev/cpuset/top-app/cpus" "0-1,4-5"
-write "/dev/cpuset/foreground/cpus" "0-1"
-write "/dev/cpuset/background/cpus" "0-1,4-5" 
-write "/dev/cpuset/system-background/cpus" "0-1"
-write "/dev/cpuset/restricted/cpus" "0-1"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                      POWER EFFICIENT TWEAKS....                                                                        "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/sys/module/workqueue/parameters/power_efficient" "Y"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                      ADRENO IDLER TWEAK....                                                                        "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/sys/module/adreno_idler/paremeters/adreno_idler_active" "Y"
-
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                        CPU AND SCHEDTUNE OPTMIZER                                                              "
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "0"
-write "/sys/module/cpu_input_boost/parameters/dynamic_stune_boost_duration" "0"
-write "/sys/module/cpu_input_boost/parameters/dynamic_stune_boost" "0"
-write "/dev/stune/schedtune.sched_boost" "0"
-write "/dev/stune/schedtune.sched_boost_enabled" "0"
-write "/dev/stune/top-app/schedtune.boost" "0"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                      ACTIVE THROTTLING AND DEFAULT POWERLEVEL TWEAKS....                                                                        "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/sys/class/kgsl/kgsl-3d0/throttling" "1"
-write "/sys/class/kgsl/kgsl-3d0/default_pwrlevel" "5"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                        SDB SDA SDC SDD ADE SDF TWEAKS....                                                                        "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/sys/block/sda/queue/scheduler" "cfq"
-write "/sys/block/sdb/queue/scheduler" "cfq"
-write "/sys/block/sdc/queue/scheduler" "cfq"
-write "/sys/block/sdd/queue/scheduler" "cfq"
-write "/sys/block/sde/queue/scheduler" "cfq"
-write "/sys/block/sdf/queue/scheduler" "cfq"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                              FSYNC AND DYN TWEAKS....                                                                        "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
-chmod 666 /sys/module/sync/parameters/fsync_enable
-chown root /sys/module/sync/parameters/fsync_enable
-write "/sys/module/sync/parameters/fsync_enable" "N"
-chmod 666 /sys/kernel/dyn_fsync/Dyn_fsync_active
-chown root /sys/kernel/dyn_fsync/Dyn_fsync_active
-write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "0"
-chmod 666 /sys/class/misc/fsynccontrol/fsync_enabled
-chown root /sys/class/misc/fsynccontrol/fsync_enabled
-write "/sys/class/misc/fsynccontrol/fsync_enabled" "0"
-chmod 666 /sys/module/sync/parameters/fsync
-chown root /sys/module/sync/parameters/fsync
-write "/sys/module/sync/parameters/fsync" "0"
-
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                               FS KERNEL TWEAKS                                                                              "
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-
-write "/proc/sys/fs/dir-notify-enable" "0"
-write "/proc/sys/fs/lease-break-time" "15"
-write "/proc/sys/fs/aio-max-nr" "131072"
-
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" 
-kmsg1 "                                                THERMAL SETTINGS                                                                              "
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-
-if [ -d "/sys/module/msm_thermal" ]
-then
-write "/sys/module/msm_thermal/parameters/enabled" "Y"
-write "/sys/module/msm_thermal/core_control/enabled" "1"
-write "/sys/module/msm_thermal/vdd_restriction/enabled" "1"
-write "/sys/module/msm_thermal/core_control/cpus_offlined" "2"
-fi
+sync
+rtksauto
 
 kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" 
 kmsg1 "                                         $rtks_profile PROFILE APPLIED                                                                   "
@@ -513,7 +383,7 @@ kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                          
 kmsg1 "⭐ Android Version: $arv                                                                                          "
 kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.3                                                                                           "
+kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
 kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
 kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
 kmsg1 "⭐ Magisk: $magisk                                                                                              "
@@ -523,6 +393,31 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          ENABLING $rtks_profile PROFILE...                                                                       "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
      	
+renice -n -5 $(pgrep system_server)
+renice -n -5 $(pgrep com.miui.home)
+renice -n -5 $(pgrep launcher)
+renice -n -5 $(pgrep lawnchair)
+renice -n -5 $(pgrep home)
+renice -n -5 $(pgrep watchapp)
+renice -n -5 $(pgrep trebuchet)
+renice -n -1 $(pgrep dialer)
+renice -n -1 $(pgrep keyboard)
+renice -n -1 $(pgrep inputmethod)
+renice -n -9 $(pgrep fluid)
+renice -n -10 $(pgrep composer)
+renice -n -1 $(pgrep com.android.phone)
+renice -n -10 $(pgrep surfaceflinger)
+renice -n 1 $(pgrep kswapd0)
+renice -n 1 $(pgrep ksmd)
+renice -n -6 $(pgrep msm_irqbalance)
+renice -n -9 $(pgrep kgsl_worker)
+renice -n 6 $(pgrep android.gms)
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          RENICED PROCESSES.                                                                               "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
 # Enable perfd and mpdecision
 start perfd
 start mpdecision
@@ -924,29 +819,7 @@ kmsg1 "                                          DISABLED TOUCH BOOST.          
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Internet Tweaks
-write "/proc/sys/net/ipv4/ip_no_pmtu_disc" "0"
-write "/proc/sys/net/ipv4/tcp_ecn" "1"
-write "/proc/sys/net/ipv4/tcp_timestamps" "0"
-write "/proc/sys/net/ipv4/route.flush" "1"
-write "/proc/sys/net/ipv4/tcp_rfc1337" "1"
-write "/proc/sys/net/ipv4/tcp_tw_reuse" "1"
-write "/proc/sys/net/ipv4/tcp_sack" "1"
-write "/proc/sys/net/ipv4/tcp_fack" "1"
-write "/proc/sys/net/ipv4/tcp_fastopen" "3"
-write "/proc/sys/net/ipv4/tcp_tw_recycle" "1"
-write "/proc/sys/net/ipv4/tcp_no_metrics_save" "1"
-write "/proc/sys/net/ipv4/tcp_syncookies" "0"
-write "/proc/sys/net/ipv4/tcp_window_scaling" "1"
-write "/proc/sys/net/ipv4/tcp_keepalive_probes" "10"
-write "/proc/sys/net/ipv4/tcp_keepalive_intvl" "30"
-write "/proc/sys/net/ipv4/tcp_fin_timeout" "30"
-write "/proc/sys/net/ipv4/tcp_low_latency" "1"
-write "/proc/sys/net/ipv4/tcp_congestion_control" "bbr2"
 
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          APPLIED INTERNET TWEAKS.                                                                            "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # Enable battery saver
 if [[ -d "/sys/module/battery_saver" ]]
@@ -1067,7 +940,7 @@ kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                          
 kmsg1 "⭐ Android Version: $arv                                                                                          "
 kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.3                                                                                           "
+kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
 kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
 kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
 kmsg1 "⭐ Magisk: $magisk                                                                                              "
@@ -1077,6 +950,31 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          ENABLING $rtks_profile PROFILE...                                                                       "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"       	
  	
+renice -n -5 $(pgrep system_server)
+renice -n -5 $(pgrep com.miui.home)
+renice -n -5 $(pgrep launcher)
+renice -n -5 $(pgrep lawnchair)
+renice -n -5 $(pgrep home)
+renice -n -5 $(pgrep watchapp)
+renice -n -5 $(pgrep trebuchet)
+renice -n -1 $(pgrep dialer)
+renice -n -1 $(pgrep keyboard)
+renice -n -1 $(pgrep inputmethod)
+renice -n -9 $(pgrep fluid)
+renice -n -10 $(pgrep composer)
+renice -n -1 $(pgrep com.android.phone)
+renice -n -10 $(pgrep surfaceflinger)
+renice -n 1 $(pgrep kswapd0)
+renice -n 1 $(pgrep ksmd)
+renice -n -6 $(pgrep msm_irqbalance)
+renice -n -9 $(pgrep kgsl_worker)
+renice -n 6 $(pgrep android.gms)
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          RENICED PROCESSES.                                                                               "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
 # Enable perfd and mp decision
 start perfd
 start mpdecision
@@ -1449,29 +1347,6 @@ kmsg1 "                                          DISABLED TOUCH BOOST.          
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Internet Tweaks
-write "/proc/sys/net/ipv4/ip_no_pmtu_disc" "0"
-write "/proc/sys/net/ipv4/tcp_ecn" "1"
-write "/proc/sys/net/ipv4/tcp_timestamps" "0"
-write "/proc/sys/net/ipv4/route.flush" "1"
-write "/proc/sys/net/ipv4/tcp_rfc1337" "1"
-write "/proc/sys/net/ipv4/tcp_tw_reuse" "1"
-write "/proc/sys/net/ipv4/tcp_sack" "1"
-write "/proc/sys/net/ipv4/tcp_fack" "1"
-write "/proc/sys/net/ipv4/tcp_fastopen" "3"
-write "/proc/sys/net/ipv4/tcp_tw_recycle" "1"
-write "/proc/sys/net/ipv4/tcp_no_metrics_save" "1"
-write "/proc/sys/net/ipv4/tcp_syncookies" "0"
-write "/proc/sys/net/ipv4/tcp_window_scaling" "1"
-write "/proc/sys/net/ipv4/tcp_keepalive_probes" "10"
-write "/proc/sys/net/ipv4/tcp_keepalive_intvl" "30"
-write "/proc/sys/net/ipv4/tcp_fin_timeout" "30"
-write "/proc/sys/net/ipv4/tcp_low_latency" "1"
-write "/proc/sys/net/ipv4/tcp_congestion_control" "bbr2"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          APPLIED INTERNET TWEAKS.                                                                            "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # Enable KSM
 if [[ -e "/sys/kernel/mm/ksm/run" ]] 
@@ -1590,7 +1465,7 @@ kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                          
 kmsg1 "⭐ Android Version: $arv                                                                                          "
 kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.3                                                                                           "
+kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
 kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
 kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
 kmsg1 "⭐ Magisk: $magisk                                                                                              "
@@ -1600,6 +1475,31 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          ENABLING $rtks_profile PROFILE.                                                                       "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 	  
+renice -n -5 $(pgrep system_server)
+renice -n -5 $(pgrep com.miui.home)
+renice -n -5 $(pgrep launcher)
+renice -n -5 $(pgrep lawnchair)
+renice -n -5 $(pgrep home)
+renice -n -5 $(pgrep watchapp)
+renice -n -5 $(pgrep trebuchet)
+renice -n -1 $(pgrep dialer)
+renice -n -1 $(pgrep keyboard)
+renice -n -1 $(pgrep inputmethod)
+renice -n -9 $(pgrep fluid)
+renice -n -10 $(pgrep composer)
+renice -n -1 $(pgrep com.android.phone)
+renice -n -10 $(pgrep surfaceflinger)
+renice -n 1 $(pgrep kswapd0)
+renice -n 1 $(pgrep ksmd)
+renice -n -6 $(pgrep msm_irqbalance)
+renice -n -9 $(pgrep kgsl_worker)
+renice -n 6 $(pgrep android.gms)
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          RENICED PROCESSES.                                                                               "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
 # Enable perfd and stop mp decision
 start perfd
 stop mpdecision
@@ -1987,29 +1887,6 @@ kmsg1 "                                          ENABLED TOUCH BOOST.           
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Internet Tweaks
-write "/proc/sys/net/ipv4/ip_no_pmtu_disc" "0"
-write "/proc/sys/net/ipv4/tcp_ecn" "1"
-write "/proc/sys/net/ipv4/tcp_timestamps" "0"
-write "/proc/sys/net/ipv4/route.flush" "1"
-write "/proc/sys/net/ipv4/tcp_rfc1337" "1"
-write "/proc/sys/net/ipv4/tcp_tw_reuse" "1"
-write "/proc/sys/net/ipv4/tcp_sack" "1"
-write "/proc/sys/net/ipv4/tcp_fack" "1"
-write "/proc/sys/net/ipv4/tcp_fastopen" "3"
-write "/proc/sys/net/ipv4/tcp_tw_recycle" "1"
-write "/proc/sys/net/ipv4/tcp_no_metrics_save" "1"
-write "/proc/sys/net/ipv4/tcp_syncookies" "0"
-write "/proc/sys/net/ipv4/tcp_window_scaling" "1"
-write "/proc/sys/net/ipv4/tcp_keepalive_probes" "10"
-write "/proc/sys/net/ipv4/tcp_keepalive_intvl" "30"
-write "/proc/sys/net/ipv4/tcp_fin_timeout" "30"
-write "/proc/sys/net/ipv4/tcp_low_latency" "1"
-write "/proc/sys/net/ipv4/tcp_congestion_control" "bbr2"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          APPLIED INTERNET TWEAKS.                                                                            "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # Disable battery saver
 if [[ -d "/sys/module/battery_saver" ]]
@@ -2146,7 +2023,7 @@ kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                          
 kmsg1 "⭐ Android Version: $arv                                                                                          "
 kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.3                                                                                           "
+kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
 kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
 kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
 kmsg1 "⭐ Magisk: $magisk                                                                                              "
@@ -2155,6 +2032,31 @@ kmsg1 "----------------------------------"
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 kmsg1 "                                          ENABLING $rtks_profile PROFILE...                                                                       "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
+renice -n -5 $(pgrep system_server)
+renice -n -5 $(pgrep com.miui.home)
+renice -n -5 $(pgrep launcher)
+renice -n -5 $(pgrep lawnchair)
+renice -n -5 $(pgrep home)
+renice -n -5 $(pgrep watchapp)
+renice -n -5 $(pgrep trebuchet)
+renice -n -1 $(pgrep dialer)
+renice -n -1 $(pgrep keyboard)
+renice -n -1 $(pgrep inputmethod)
+renice -n -9 $(pgrep fluid)
+renice -n -10 $(pgrep composer)
+renice -n -1 $(pgrep com.android.phone)
+renice -n -10 $(pgrep surfaceflinger)
+renice -n 1 $(pgrep kswapd0)
+renice -n 1 $(pgrep ksmd)
+renice -n -6 $(pgrep msm_irqbalance)
+renice -n -9 $(pgrep kgsl_worker)
+renice -n 6 $(pgrep android.gms)
+
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+kmsg1 "                                          RENICED PROCESSES.                                                                               "
+kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
+
 
 # Disable perfd and mpdecision
 stop perfd
@@ -2545,29 +2447,6 @@ kmsg1 "                                          ENABLED TOUCH BOOST.           
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Internet Tweaks
-write "/proc/sys/net/ipv4/ip_no_pmtu_disc" "0"
-write "/proc/sys/net/ipv4/tcp_ecn" "1"
-write "/proc/sys/net/ipv4/tcp_timestamps" "0"
-write "/proc/sys/net/ipv4/route.flush" "1"
-write "/proc/sys/net/ipv4/tcp_rfc1337" "1"
-write "/proc/sys/net/ipv4/tcp_tw_reuse" "1"
-write "/proc/sys/net/ipv4/tcp_sack" "1"
-write "/proc/sys/net/ipv4/tcp_fack" "1"
-write "/proc/sys/net/ipv4/tcp_fastopen" "3"
-write "/proc/sys/net/ipv4/tcp_tw_recycle" "1"
-write "/proc/sys/net/ipv4/tcp_no_metrics_save" "1"
-write "/proc/sys/net/ipv4/tcp_syncookies" "0"
-write "/proc/sys/net/ipv4/tcp_window_scaling" "1"
-write "/proc/sys/net/ipv4/tcp_keepalive_probes" "10"
-write "/proc/sys/net/ipv4/tcp_keepalive_intvl" "30"
-write "/proc/sys/net/ipv4/tcp_fin_timeout" "30"
-write "/proc/sys/net/ipv4/tcp_low_latency" "1"
-write "/proc/sys/net/ipv4/tcp_congestion_control" "bbr2"
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          APPLIED INTERNET TWEAKS.                                                                            "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # Disable battery saver
 if [[ -d "/sys/module/battery_saver" ]]
@@ -2732,9 +2611,9 @@ rtks_profile=Gaming
 fi
 
 case "$rtks_profile" in
- "Thermal") {
+ "Automatic") {
  	sleep 5
-     thermal
+     automatic
 	 };;
 	 
 	 "Battery") {

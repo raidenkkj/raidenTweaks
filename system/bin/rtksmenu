@@ -70,67 +70,79 @@ else
     ts=Unknown
 fi
 
-V="3.3.4"
+V="3.4.4"
+DEV="raidenkk"
 CDNM="F4LK3N"
+magisk=`magisk -c`
+[[ "$(settings get global low_power)" == "1" ]] && low_power_mode="Enabled" || low_power_mode="Disabled"
 
 Menu() {
     echo -e '\n'
     printf "\033c"
     echo "${Y}|   This is the official Raiden Tweaks menu.   |${N}"
-    echo "${Y}|  Created and written by raidenkk @ telegram  |${N}"
-    echo " "
+    echo "${Y}|  Created and written by $DEV @ telegram  |${N}"
+    echo ""
     echo "${Y}[*] Your device:${B} $(getprop ro.product.model) ${N}"
-    echo " "
+    echo ""
     echo "${Y}[*] Your current profile:${B} $rtks_prof ${N}"
-    echo " "
+    echo ""
     echo "${Y}[*] Version:${B} $V - $CDNM ${N}"
-    echo " "
+    echo ""
+    echo "${Y}[*] Magisk version:${B} $magisk ${N}"
+    echo ""
     echo "${Y}[*] Thermal state:${B} $ts ${N}"
-    echo " "
+    echo ""
     echo "--------------------------------------------"
     echo "${C}[*] Profile selector ${N}"
     echo "--------------------------------------------"
-    echo " "
+    echo ""
     echo "${C}[1] Thermal: Focused on making your device heat free, cold.${N}"
-    echo " "
+    echo ""
     echo "${B}[2] Battery: Focused on saving as much battery as possible.${N}"
-    echo " "
+    echo ""
     echo "${G}[3] Balanced: Focused on leaving the system balanced.${N}"
-    echo " "
+    echo ""
     echo "${Y}[4] Performance: Focused on maximizing your device's performance.${N}"
-    echo " "
+    echo ""
     echo "${R}[5] Gaming: Focused on improving your gaming/all performance.${N}"
-    echo " "
+    echo ""
     echo "--------------------------------------------"
     echo "${C}[*] Other options that might be helpful ${N}"
     echo "--------------------------------------------"
-    echo " "
+    echo ""
     if [[ "$ts" == "On" ]]; then
     echo "${Y}[6] Disable thermal-engine ${C}(May heat the device)${N}"
-    echo " "
+    echo ""
     elif [[ "$ts" == "Off" ]]; then
     echo "${Y}[6] Enable thermal-engine (Revert to normal)${N}"
-    echo " "
+    echo ""
     fi
     echo "${Y}[7] Fstrim on some partitions ${C}(Improves fluidity)${N}"
-    echo " "
+    echo ""
     echo "${Y}[8] Optimize application package ${C}(May take time)${N}"
-    echo " "
+    echo ""
     echo "${Y}[9] Clear RAM [ ${B}BASIC ${Y}] ${C}(This one will just drop all caches)${N}"
-    echo " "
+    echo ""
     echo "${Y}[10] Clear RAM [ ${B}HEAVY ${Y}] ${C}(This will drop cache and kill background apps)${N}"
-    echo " "
+    echo ""
     echo "${Y}[11] Clear RAM [ ${B}ADVANCED ${Y}] ${C}(This will drop cache and kill all apps)${N}"
-    echo " "
+    echo ""
     echo "${Y}[12] Clean up unnecessary files. ${C}(I.e. System logs, logs, debug...)${N}"
+    echo ""
+    echo "${Y}[13] Clear battery status ${C}(I recommend using only when your battery is at 100%)${N}"
+    echo ""
+    if [[ "$low_power_mode" == "Disabled" ]]; then
+    echo "${Y}[14] Enable low power mode ${C}(This will enable maximum battery saver)${N}"
+    echo ""
+	elif [[ "$low_power_mode" == "Enabled" ]]; then
+	echo "${Y}[14] Disable low power mode ${C}(Revert to normal)${N}"
+	echo ""
+	fi
+    echo "${Y}[15] Telegram group ${C}(To answer your questions / report bugs)${N}"
     echo " "
-    echo "${Y}[13] Clear battery status ${C}(Must be at 100%)${N}"
+    echo "${B}[16] About the module ${C}(Informations)${N}"
     echo " "
-    echo "${Y}[14] Telegram group ${C}(To answer your questions)${N}"
-    echo " "
-    echo "${B}[15] About the module ${C}(Information!)${N}"
-    echo " "
-    echo "${B}[S] Send logs to developer ${C}(This will send the current logs to the dev) ${N}"
+    echo "${B}[S] Send logs to developer ${C}(This will prepare the logs to be sent to dev)${N}"
     echo " "
     echo "${R}[U] Uninstall Raiden Tweaks ${C}(Will remove the module / files from your system)${N}"
     echo " "
@@ -155,6 +167,7 @@ Menu() {
     13) Opcao13 ;;
     14) Opcao14 ;;
     15) Opcao15 ;;
+    16) Opcao16 ;;
     S) SendLogs ;;
     D) DeleteLogs ;;
     U) Uninstall ;;
@@ -167,15 +180,15 @@ Opcao1 () {
     printf "\033c"
     echo "${G}Putting the profile in thermal mode...${N}"
     sleep 2
-    echo " "
+    echo ""
     setprop persist.raidentweaks.mode "1"
     sleep 2
-    echo " "
+    echo ""
     echo "${G}Process finished!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -189,15 +202,15 @@ Opcao2 () {
     printf "\033c"
     echo "${G}Putting the profile in battery mode...${N}"
     sleep 2
-    echo " "
+    echo ""
     setprop persist.raidentweaks.mode "2"
     sleep 2
-    echo " "
+    echo ""
     echo "${G}Process finished.${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -211,15 +224,15 @@ Opcao3 () {
     printf "\033c"
     echo "${G}Putting the profile in balanced mode...${N}"
     sleep 2
-    echo " "
+    echo ""
     setprop persist.raidentweaks.mode "3"
     sleep 2
-    echo " "
+    echo ""
     echo "${G}Process finished!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -233,13 +246,13 @@ Opcao4 () {
     printf "\033c"
     echo "${G}Putting the profile in performance mode...${N}"
     sleep 2
-    echo " "
+    echo ""
     setprop persist.raidentweaks.mode "4"
     sleep 2
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -253,13 +266,13 @@ Opcao5 () {
     printf "\033c"
     echo "${G}Putting the profile in gaming mode...${N}"
     sleep 2
-    echo " "
+    echo ""
     setprop persist.raidentweaks.mode "5"
     sleep 2
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -276,20 +289,20 @@ Opcao6 () {
     echo "${R}[!] Warning: Your device may get hot.${N}"
     sleep 2
     stop thermal-engine
-    echo " "
+    echo ""
     echo "${G}Process finished.${N}"
-    echo " "
+    echo ""
     elif [[ "$ts" == "Off" ]]; then
     echo "${G}Enabling thermal engine to normal...${N}"
     sleep 2
     start thermal-engine
-    echo " "
+    echo ""
     echo "${G}Process finished.${N}"
-    echo " "
+    echo ""
     fi
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -302,17 +315,17 @@ Opcao6 () {
 Opcao7 () {
     printf "\033c"
     echo "${G}Fstrim initializing, please wait. >.<${N}"
-    echo " "
+    echo ""
     fstrim -v /system
     fstrim -v /data
     fstrim -v /cache
     sleep 1
-    echo " "
+    echo ""
     echo "${G}Process finished!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -326,16 +339,16 @@ Opcao8 () {
     printf "\033c"
     echo "${G}Optimizing application packages, please wait. >.<${N}"
     sleep 2
-    echo " "
+    echo ""
     echo "${G}[ ! ] this process can take between 5-10 minutes${N}"
-    echo " "
+    echo ""
     cmd package bg-dexopt-job
-    echo " "
+    echo ""
     echo "${G}Process finished.${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -352,12 +365,12 @@ Opcao9 () {
     sleep 1
     sync
     echo "3" > "/proc/sys/vm/drop_caches"
-    echo " "
+    echo ""
     echo "${G}Process finished!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -375,9 +388,9 @@ Opcao10 () {
     sync
     echo "3" > "/proc/sys/vm/drop_caches"
     am kill-all
-    echo " "
+    echo ""
     echo "${G}Process finished!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo " "
@@ -421,12 +434,12 @@ Opcao12 () {
     echo "${G}Cleaning up useless residual files...${N}"
     sleep 1
     cleaner 2>/dev/null
-    echo " "
+    echo ""
     echo "${G}Process finished!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -441,12 +454,12 @@ Opcao13 () {
     echo "${G}Clearing battery status, please wait. >.<${N}"
     sleep 1
     rm -f /data/system/batterystats.bin
-    echo " "
+    echo ""
     echo "${G}Process finished!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -457,14 +470,41 @@ Opcao13 () {
 }
 
 Opcao14 () {
-    printf "\033c"
-    echo "${G}Access telegram group (support)${N}"
+	printf "\033c"
+    if [[ "$low_power_mode" == "Disabled" ]]; then
+    echo "${G}Enabling low power mode...${N}"
     sleep 2
-    am start -a android.intent.action.VIEW -d https://t.me/rtksgroup
-    printf "\033c"
+    echo ""
+    settings put global low_power 1 2>/dev/null
+    settings put global low_power_sticky 1 2>/dev/null
+    settings put global app_standby_enabled 1 2>/dev/null
+    settings put global forced_app_standby_enabled 1 2>/dev/null
+    settings put global app_auto_restriction_enabled true 2>/dev/null
+    settings put global forced_app_standby_for_small_battery_enabled 1 2>/dev/null
+    echo ""
+    echo "${G}Process finished.${N}"
+    echo ""
+    elif [[ "$low_power_mode" == "Enabled" ]]; then
+    echo "${G}Disabling low power mode...${N}"
+    sleep 2
+    settings put global low_power 0 2>/dev/null
+    settings reset global low_power 2>/dev/null
+    settings put global low_power_sticky 0 2>/dev/null
+    settings reset global low_power_sticky 2>/dev/null
+    settings put global app_standby_enabled 1 2>/dev/null
+    settings reset global app_standby_enabled 2>/dev/null
+    settings put global forced_app_standby_enabled 0 2>/dev/null
+    settings reset global forced_app_standby_enabled 2>/dev/null
+    settings put global app_auto_restriction_enabled false 2>/dev/null
+    settings reset global app_auto_restriction_enabled 2>/dev/null
+    settings put global forced_app_standby_for_small_battery_enabled 0 2>/dev/null
+    echo ""
+    echo "${G}Process finished.${N}"
+    echo ""
+    fi
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -476,31 +516,48 @@ Opcao14 () {
 
 Opcao15 () {
     printf "\033c"
-    echo "${G}Module informations:${N}"
-    echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste, enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
-    echo " "
+    echo "${G}Access telegram group (support)${N}"
+    sleep 2
+    printf "\033c"
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
     1) Return ;;
     0) GoOut ;;
-    *) "Unknown command, sorry." ; echo ; Opcao15  ;;
+    *) "${R}Unknown command, sorry.${N}" ; echo ; Opcao15  ;;
+    esac
+}
+
+Opcao16 () {
+    printf "\033c"
+    echo "${G}Module informations:${N}"
+    echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste, enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
+    echo ""
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    echo ""
+    echo "[${C} Enter${N} ]: \c"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "Unknown command, sorry." ; echo ; Opcao16  ;;
     esac
 }
 
 SendLogs () {
     printf "\033c"
     echo "${G}Creating directory for logs....${N}"
-    echo " "
+    echo ""
     sleep 1.5
     mkdir /storage/emulated/0/raidentweaks-logs
     echo "${G}Created directory '/storage/emulated/0/raidentweaks-logs'${N}"
-    echo " "
+    echo ""
     echo "${G}Copying logs to directory and compressing...${N}"
-    echo " "
+    echo ""
     sleep 1.5
     cp -R /storage/emulated/0/.RTKS /storage/emulated/0/raidentweaks-logs
     rm -rf /storage/emulated/0/raidentweaks-logs/.RTKS/README.md
@@ -509,17 +566,17 @@ SendLogs () {
     tar -czvf raidentweaks-logs.tar.gz raidentweaks-logs
     rm -rf /storage/emulated/0/raidentweaks-logs/raidentweaks-logs
     sleep 2
-    echo " "
+    echo ""
     echo "${G}Done, now we will send the logs to the developer.${N}"
     sleep 0.5
-    echo " "
+    echo ""
     echo "${G}After sending the logs, click on delete logs option.${N}"
     sleep 0.5
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo "${B}[ D ] Delete logs (recommended)${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -532,14 +589,14 @@ SendLogs () {
 DeleteLogs () {
     printf "\033c"
     echo "${G}Deleting logs automatically...${N}"
-    echo " "
+    echo ""
     sleep 1
     rm -rf /storage/emulated/0/raidentweaks-logs
     echo "${G}Logs deleted!${N}"
-    echo " "
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo " "
+    echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao
     case $opcao in
@@ -554,11 +611,12 @@ Uninstall () {
     echo "${G}Okay, I understand... uninstalling the Raiden Tweaks module...${N}"
     sleep 2
     rm -rf /data/adb/modules/RTKS
-    echo " "
+    rm -rf /storage/emulated/0/.RTKS
+    echo ""
     echo "${G}Module uninstalled, now we will restart your device...${N}"
     sleep 4
     echo "${G}In a few seconds the device will restart.${N}"
-    echo " "
+    echo ""
     echo -ne '${R}>>>                       [20%]\r${N}'
     sleep 1.5
     echo -ne '${R}>>>>>>>                   [40%]\r{N}'

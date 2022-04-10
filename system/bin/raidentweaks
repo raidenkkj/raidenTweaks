@@ -2,19 +2,19 @@
 # Some script credits go to @pedro3z0 ktsr dev, thx pedro
 # Modified by raidenkk @ telegram
 
-LOG=/sdcard/RTKS/RTKS.log
+LOG=/sdcard/.RTKS/RTKS.log
 
 if [[ -e $LOG ]] 
 then
 rm $LOG
 fi
 
-if [[ -d "/sdcard/RTKS" ]] 
+if [[ -d "/sdcard/.RTKS" ]] 
 then
 touch RTKS.log
 
 else
-mkdir /sdcard/RTKS
+mkdir /sdcard/.RTKS
 touch RTKS.log
 fi
 
@@ -297,22 +297,22 @@ automatic() {
      	else
      	toasteua
      	fi
-     	
+
 kmsg1 "-------------- Info --------------"
-kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
-kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
-kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
-kmsg1 "⭐ SDK: $sdk                                                                                                    "
-kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
-kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ Android Version: $arv                                                                                          "
-kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
-kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
-kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
-kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "🟠 Date of execution: $(date)                                                                                   " 
+kmsg1 "🟠 Kernel: `uname -a`                                                                                           "
+kmsg1 "🟠 SOC: $mf, $soc                                                                                               "
+kmsg1 "🟠 SDK: $sdk                                                                                                    "
+kmsg1 "🟠 CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 CPU AArch: $aarch                                                                                            "
+kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 Android Version: $arv                                                                                          "
+kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "🟠 Device: $dm                                                                                                  "
+kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
+kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
+kmsg1 "🟠 Magisk: $magisk                                                                                              "
 kmsg1 "----------------------------------"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -356,6 +356,8 @@ kmsg1 "-------------------------------------------------------------------------
 # Battery Profile
 battery() {
          init=`date +%s`
+         killall kingauto
+         
      	if [[ `getprop persist.sys.locale` == "en-US" ]]
      	then
      	toasteua
@@ -373,20 +375,20 @@ battery() {
      	fi
      	
 kmsg1 "-------------- Info --------------"
-kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
-kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
-kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
-kmsg1 "⭐ SDK: $sdk                                                                                                    "
-kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
-kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ Android Version: $arv                                                                                          "
-kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
-kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
-kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
-kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "🟠 Date of execution: $(date)                                                                                   " 
+kmsg1 "🟠 Kernel: `uname -a`                                                                                           "
+kmsg1 "🟠 SOC: $mf, $soc                                                                                               "
+kmsg1 "🟠 SDK: $sdk                                                                                                    "
+kmsg1 "🟠 CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 CPU AArch: $aarch                                                                                            "
+kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 Android Version: $arv                                                                                          "
+kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "🟠 Device: $dm                                                                                                  "
+kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
+kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
+kmsg1 "🟠 Magisk: $magisk                                                                                              "
 kmsg1 "----------------------------------"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -913,6 +915,8 @@ kmsg1 "-------------------------------------------------------------------------
 # Balanced Profile
 balanced() {
         	init=`date +%s`
+        	killall kingauto
+        	
      	if [[ `getprop persist.sys.locale` == "en-US" ]]
      	then
      	toasteua
@@ -930,20 +934,20 @@ balanced() {
      	fi
      	
 kmsg1 "-------------- Info --------------"
-kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
-kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
-kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
-kmsg1 "⭐ SDK: $sdk                                                                                                    "
-kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
-kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ Android Version: $arv                                                                                          "
-kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
-kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
-kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
-kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "🟠 Date of execution: $(date)                                                                                   " 
+kmsg1 "🟠 Kernel: `uname -a`                                                                                           "
+kmsg1 "🟠 SOC: $mf, $soc                                                                                               "
+kmsg1 "🟠 SDK: $sdk                                                                                                    "
+kmsg1 "🟠 CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 CPU AArch: $aarch                                                                                            "
+kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 Android Version: $arv                                                                                          "
+kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "🟠 Device: $dm                                                                                                  "
+kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
+kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
+kmsg1 "🟠 Magisk: $magisk                                                                                              "
 kmsg1 "----------------------------------"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -1438,6 +1442,8 @@ kmsg1 "-------------------------------------------------------------------------
 # Performance Profile
 performance() {
         	init=`date +%s`
+        	killall kingauto
+        	
      	if [[ `getprop persist.sys.locale` == "en-US" ]]
      	then
      	toasteua
@@ -1455,20 +1461,20 @@ performance() {
      	fi
      	
 kmsg1 "-------------- Info --------------"
-kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
-kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
-kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
-kmsg1 "⭐ SDK: $sdk                                                                                                    "
-kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
-kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ Android Version: $arv                                                                                          "
-kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
-kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
-kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
-kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "🟠 Date of execution: $(date)                                                                                   " 
+kmsg1 "🟠 Kernel: `uname -a`                                                                                           "
+kmsg1 "🟠 SOC: $mf, $soc                                                                                               "
+kmsg1 "🟠 SDK: $sdk                                                                                                    "
+kmsg1 "🟠 CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 CPU AArch: $aarch                                                                                            "
+kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 Android Version: $arv                                                                                          "
+kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "🟠 Device: $dm                                                                                                  "
+kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
+kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
+kmsg1 "🟠 Magisk: $magisk                                                                                              "
 kmsg1 "----------------------------------"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -1996,6 +2002,8 @@ kmsg1 "-------------------------------------------------------------------------
 # Gaming Profile
 gaming() {
         	init=`date +%s`
+        	killall kingauto
+        	
      	if [[ `getprop persist.sys.locale` == "en-US" ]]
      	then
      	toasteua
@@ -2013,20 +2021,20 @@ gaming() {
      	fi
      	
 kmsg1 "-------------- Info --------------"
-kmsg1 "⭐ Date of execution: $(date)                                                                                   " 
-kmsg1 "⭐ Kernel: `uname -a`                                                                                           "
-kmsg1 "⭐ SOC: $mf, $soc                                                                                               "
-kmsg1 "⭐ SDK: $sdk                                                                                                    "
-kmsg1 "⭐ CPU Governor: $CPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ CPU AArch: $aarch                                                                                            "
-kmsg1 "⭐ GPU Governor: $GPU_GOVERNOR                                                                                  "
-kmsg1 "⭐ Android Version: $arv                                                                                          "
-kmsg1 "⭐ GPU Model: $GPU_MODEL                                                                                        "
-kmsg1 "⭐ Device: $dm                                                                                                  "
-kmsg1 "⭐ RTKS Version: 3.3.4                                                                                           "
-kmsg1 "⭐ Battery charge level: $percentage%                                                                           "
-kmsg1 "⭐ Device total RAM: $totalram MB                                                                               "
-kmsg1 "⭐ Magisk: $magisk                                                                                              "
+kmsg1 "🟠 Date of execution: $(date)                                                                                   " 
+kmsg1 "🟠 Kernel: `uname -a`                                                                                           "
+kmsg1 "🟠 SOC: $mf, $soc                                                                                               "
+kmsg1 "🟠 SDK: $sdk                                                                                                    "
+kmsg1 "🟠 CPU Governor: $CPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 CPU AArch: $aarch                                                                                            "
+kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                                                                  "
+kmsg1 "🟠 Android Version: $arv                                                                                          "
+kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
+kmsg1 "🟠 Device: $dm                                                                                                  "
+kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
+kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
+kmsg1 "🟠 Magisk: $magisk                                                                                              "
 kmsg1 "----------------------------------"
 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -2570,7 +2578,7 @@ loc=/data/adb/modules
 
 if [[ "$rtks_mode" == "1" ]]
 then
-rtks_profilebr=Thermal
+rtks_profilebr=Automático
 
 elif [[ "$rtks_mode" == "2" ]]
 then
@@ -2591,7 +2599,7 @@ fi
 	 	
 if [[ "$rtks_mode" == "1" ]]
 then
-rtks_profile=Thermal
+rtks_profile=Automatic
 
 elif [[ "$rtks_mode" == "2" ]]
 then
@@ -2613,11 +2621,13 @@ fi
 case "$rtks_profile" in
  "Automatic") {
  	sleep 5
+ 	settings delete global device_idle_constants
      automatic
 	 };;
 	 
 	 "Battery") {
 	 	sleep 5
+	 	settings put global device_idle_constants inactive_to=60000,sensing_to=0,locating_to=0,location_accuracy=2000,motion_inactive_to=0,idle_after_inactive_to=0,idle_pending_to=60000,max_idle_pending_to=120000,idle_pending_factor=2.0,idle_to=900000,max_idle_to=21600000,idle_factor=2.0,max_temp_app_whitelist_duration=60000,mms_temp_app_whitelist_duration=30000,sms_temp_app_whitelist_duration=20000,light_after_inactive_to=10000,light_pre_idle_to=60000,light_idle_to=180000,light_idle_factor=2.0,light_max_idle_to=900000,light_idle_maintenance_min_budget=30000,light_idle_maintenance_max_budget=60000
 	 	battery
 	 	};;
 	
@@ -2628,12 +2638,15 @@ case "$rtks_profile" in
 	 		
 	 		"Performance") {
 	 			sleep 5
+	 			settings delete global device_idle_constants
 	 			performance
 	 			};;
 
 	 			"Gaming") {
 	 				sleep 5
+	 				settings delete global device_idle_constants
 	 				gaming
 	 				};;
+	 				
 esac
 done

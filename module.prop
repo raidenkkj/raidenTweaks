@@ -1,6 +1,7 @@
 id=RTKS
 name=RaidenTweaks
-version=v3.3.3
+version=v3.4.4
 versionCode=10
 author=@raidenkkj
 description=Module focused on maximizing user experience, multiple profiles you can change!
+updateJson=https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/update.json

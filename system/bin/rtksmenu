@@ -72,7 +72,7 @@ fi
 
 V="3.4.4"
 DEV="raidenkk"
-CDNM="F4LK3N"
+CDNM="S4GITT4RIUS"
 magisk=`magisk -c`
 [[ "$(settings get global low_power)" == "1" ]] && low_power_mode="Enabled" || low_power_mode="Disabled"
 
@@ -612,6 +612,8 @@ Uninstall () {
     sleep 2
     rm -rf /data/adb/modules/RTKS
     rm -rf /storage/emulated/0/.RTKS
+    rm -rf /data/local/RaidenTweaks.apk
+    rm -rf /data/local/RDToast.apk
     echo ""
     echo "${G}Module uninstalled, now we will restart your device...${N}"
     sleep 4

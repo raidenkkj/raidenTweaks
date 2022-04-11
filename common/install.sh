@@ -265,18 +265,19 @@ wget -O "${MODPATH}/system/bin/raidentweaks" "https://raw.githubusercontent.com/
 wget -O "${MODPATH}/system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/system/bin/rtksmenu"
 wget -O "${MODPATH}/system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/cleaner"
 wget -O "${MODPATH}/mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/mod-util.sh"
-wget -O "$MODPATH/RaidenTweaks.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/main/RaidenTweaks.apk?raw=true"
-wget -O "$MODPATH/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/main/RDToast.apk?raw=true"
+wget -O "/data/local/tmp/RaidenTweaks.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/main/RaidenTweaks.apk?raw=true"
+wget -O "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/main/RDToast.apk?raw=true"
 
-ui_print "[*] Okay, all necessary files have been successfully installed.
+ui_print "[*] Okay, all necessary files have been successfully installed."
 ui_print " "
-ui_print "[*] Installing main application...
-pm install $MODPATH/RaidenTweaks.apk
+ui_print "[*] Installing main application..."
+pm install /data/local/tmp/RaidenTweaks.apk
 ui_print " "
-ui_print "[*] Installing toasts app...
-pm install $MODPATH/RDToast.apk
+ui_print "[*] Installing toasts app..."
+pm install /data/local/tmp/RDToast.apk
 ui_print " "
-ui_print " - Logs are at the root of internal memory RTKS/RTKS.log"
+ui_print " - The logs are in a hidden place"
+ui_print "   if you want the logs, get it using rtksmenu."
 sleep 1
 ui_print " "
 ui_print " - [*] Raiden Tweaks Module has been installed successfuly!"

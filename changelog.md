@@ -1,13 +1,19 @@
 ### v3.4.4 - 10.04.2022
-*
-*
-*
-*
-*
-*
-*
-*
-*
+* GMS optimization enabled
+* Remastering in the install script 
+* Translation into different languages ​​in the app 
+* New menu options (option to uninstall module, collect logs, low power mode...)
+* Changes to all profiles 
+* Added renice in some apps when applying profiles
+* Updated base supporting current magisk versions
+* Support since magisk 20.0+
+* Added zygisk support
+* Improvements in the menu
+* Improvements made to GitHub (update.json and changelog.md added)
+* Removing files to make it lighter
+* The required files will be downloaded at installation (now whenever the module is updated on GitHub, just install it in your magisk)
+* Removed option to optimize apps on installation (many were having difficulties with this)
+* And some other adjustments...
 
 ### v3.3.3 - 26.11.2021
 * Conflict checker (When installing the module)

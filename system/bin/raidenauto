@@ -4,7 +4,7 @@
 
 MODPATH=/data/adb/modules/RTKS
 
-LOG=/sdcard/RTKS/.RTKS.log
+LOG=/sdcard/.RTKS/RTKS.log
 
 # Log in white and continue (unnecessary)
 kmsg() {

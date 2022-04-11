@@ -1,7 +1,7 @@
 set_perm_recursive "$MODPATH/system/bin" root root 0777 0755
 awk '{print}' "${MODPATH}/common/rtks_banner"
 ui_print " "
-ui_print "VERSION: 3.3.4 - 07/01/2022"
+ui_print "VERSION: 3.4.4 - 10/04/2022"
 ui_print " "
 ui_print "CODENAME: S4GITT4RIUS"
 sleep 2

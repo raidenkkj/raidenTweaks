@@ -1,5 +1,6 @@
 ### v3.4.4 (HOTFIX) - 18.04.2022
 * Zygisk issue has been resolved
+* Unlocker apex legends (test)
 
 ### v3.4.4 - 10.04.2022
 * GMS optimization enabled

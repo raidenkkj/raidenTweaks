@@ -12,7 +12,6 @@
 
 ```
 
-/**
     EN:
    ⚠️If you are going to use it, use it conscientiously!⚠️          
 
@@ -25,7 +24,6 @@
    Se você vai postar algum vídeo em seu canal com o meu módulo, deixe os créditos na descrição.
      Eu recomendo salvar os logs para resolver possíveis bugs.
      
-/**
 
 ```
 

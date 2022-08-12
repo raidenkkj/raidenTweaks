@@ -42,7 +42,7 @@ In case of bugs, join the group to report your problem and we will try to help y
 
 # Installation guide 
 
-* Download the module.
+* Download the module [here](https://fir3.net/sXSL)
 
 <p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/abbac80c5f4916073bd1f.jpg" width="1000"></a></p>
 

@@ -40,7 +40,7 @@ In case of bugs, join the group to report your problem and we will try to help y
 
  - The module is supported on **Android 5** and up.
 
-# How To Install
+# Installation guide 
 
 * Download the module.
 

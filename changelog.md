@@ -1,3 +1,15 @@
+### 4.5.4 - 15.08.2022
+* Added fstrim when starting the system 
+* Added new menu options (Disable and enable gapps whenever you want)
+* Added new unlocker options on installation (Several new options, there are so many that it is not possible to mention them here.)
+* Toast removed when applying clear ram in menu 
+* Added notification when applying clear ram
+* Fixed version in module.prop
+* Remastering the installation script
+* There's an easter egg somewhere.
+* A few other small tweaks...
+
+
 ### v3.4.4 (HOTFIX) - 18.04.2022
 * Zygisk issue has been resolved
 * Unlocker apex legends (test)
@@ -68,7 +80,7 @@
 * Internet, zram tweaks included.
 * Several new tweaks adjusted.
 * Logs at the root of internal storage.
-And various other things...
+* And various other things...
 
 ### v1.0.0 - 25.02.2021
 * Initial build

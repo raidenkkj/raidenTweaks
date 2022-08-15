@@ -618,15 +618,11 @@ Opcao18 () {
 }
 
 Easteregg() {
-   chars="/-\|"
-
-while :; do
-  for (( i=0; i<${#chars}; i++ )); do
-    sleep 0.5
-    echo -en "${chars:$i:1}" "\r"
-  done
-done
-    sleep 5
+    echo "${R} CRITICAL MESSAGE!!! CAUTION!!!${N}"
+    sleep 2
+    echo ""
+    echo "${B}Hey man, relax. It was just a joke.${N}
+    sleep 3
     printf "\033c"
     echo "${B}If you're seeing this message, you've discovered EasterEgg, congratulations.${N}"
     echo "${B}You came to look at my code and found this, there is no other way to find out other than this.${N}"

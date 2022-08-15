@@ -578,6 +578,6 @@ ui_print " - The logs are in a hidden place"
 ui_print "   if you want the logs, get it using rtksmenu."
 sleep 1
 ui_print " "
-ui_print "[*] Raiden Tweaks Module has been installed successfuly!"
+ui_print "- [*] Raiden Tweaks Module has been installed successfuly!"
 ui_print " "
 sleep 2

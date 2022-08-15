@@ -18,6 +18,9 @@ wait_until_login
 # Readme
 wget -O "${MODPATH}/storage/emulated/0/RTKS/README.md" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/README.md"
 
+# Automatic fstrim
+fstrim 2>/dev/null
+
 # Setup tweaks
 sleep 60
 raidentweaks

@@ -1,0 +1,8 @@
+#!/system/bin/sh
+
+fstrim -v /system
+fstrim -v /data
+fstrim -v /cache
+
+# always return success, even if any command fail
+exit 0

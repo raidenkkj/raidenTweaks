@@ -126,6 +126,10 @@ elif [ -d $MODDIR/injector ]; then
 ui_print "[!] NFS Injector Module detected, removing for security reasons."
 touch $MODDIR/injector/disable
 
+elif [ -d $MODDIR/STRP ]; then
+ui_print "[!] Stratosphere Performance Module detected, removing for security reasons."
+touch $MODDIR/STRP/disable
+
 elif [ "$(pm list package magnetarapp)" ]; then
 ui_print "[!] MAGNETAR App has been detected, I recommend removing the app to avoid conflicts."
 

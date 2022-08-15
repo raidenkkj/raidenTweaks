@@ -1,4 +1,4 @@
-### 4.5.4 - 15.08.2022
+### v4.5.4 - 15.08.2022
 * Added fstrim when starting the system 
 * Added new menu options (Disable and enable gapps whenever you want)
 * Added new unlocker options on installation (Several new options, there are so many that it is not possible to mention them here.)

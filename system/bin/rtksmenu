@@ -139,16 +139,16 @@ Menu() {
     if [[ "$low_power_mode" == "Disabled" ]]; then
     echo "${Y}[14] Enable low power mode ${C}(This will enable maximum battery saver)${N}"
     echo ""
-	elif [[ "$low_power_mode" == "Enabled" ]]; then
-	echo "${Y}[14] Disable low power mode ${C}(Revert to normal)${N}"
-	echo ""
-	fi
-	[[ "$(pm list package com.google.android.gms)" ]] && {
-	echo "${Y}[15] Enable Gapps${N}"
-	echo ""
-	echo "${Y}[16] Disable Gapps${N}"
-	echo ""
-	}
+    elif [[ "$low_power_mode" == "Enabled" ]]; then
+    echo "${Y}[14] Disable low power mode ${C}(Revert to normal)${N}"
+    echo ""
+    fi
+    [[ "$(pm list package com.google.android.gms)" ]] && {
+    echo "${Y}[15] Enable Gapps${N}"
+    echo ""
+    echo "${Y}[16] Disable Gapps${N}"
+    echo ""
+    }
     echo "${Y}[17] Telegram group ${C}(To answer your questions / report bugs)${N}"
     echo ""
     echo "${B}[18] About the module ${C}(Informations)${N}"
@@ -533,15 +533,15 @@ Opcao15 () {
     printf "\033c"
     echo "${G}Enabling gapps, please wait...${N}"
     sleep 1.5
-	pm enable com.google.android.gsf 2>/dev/null
-	pm enable com.google.android.gsf.login 2>/dev/null
-	pm enable com.google.android.gms 2>/dev/null
-	pm enable com.google.android.ims 2>/dev/null
-	pm enable com.google.android.apps.carrier.log 2>/dev/null
-	pm enable com.android.vending 2>/dev/null
-	pm enable com.google.android.play.games 2>/dev/null
-	pm enable com.google.android.syncadapters.contacts 2>/dev/null
-	echo ""
+    pm enable com.google.android.gsf 2>/dev/null
+    pm enable com.google.android.gsf.login 2>/dev/null
+    pm enable com.google.android.gms 2>/dev/null
+    pm enable com.google.android.ims 2>/dev/null 
+    pm enable com.google.android.apps.carrier.log 2>/dev/null
+    pm enable com.android.vending 2>/dev/null
+    pm enable com.google.android.play.games 2>/dev/null
+    pm enable com.google.android.syncadapters.contacts 2>/dev/null
+    echo ""
     echo "${G}Process finished.${N}"
     echo ""
     echo "${B}[ 1 ] Return${N}"
@@ -560,15 +560,15 @@ Opcao16 () {
     printf "\033c"
     echo "${G}Disabling gapps, please wait...${N}"
     sleep 1.5
-	pm disable com.google.android.gsf 2>/dev/null
-	pm disable com.google.android.gsf.login 2>/dev/null
-	pm disable com.google.android.gms 2>/dev/null
-	pm disable com.google.android.ims 2>/dev/null
-	pm disable com.google.android.apps.carrier.log 2>/dev/null
-	pm disable com.android.vending 2>/dev/null
-	pm disable com.google.android.play.games 2>/dev/null
-	pm disable com.google.android.syncadapters.contacts 2>/dev/null
-	echo ""
+    pm disable com.google.android.gsf 2>/dev/null
+    pm disable com.google.android.gsf.login 2>/dev/null
+    pm disable com.google.android.gms 2>/dev/null
+    pm disable com.google.android.ims 2>/dev/null
+    pm disable com.google.android.apps.carrier.log 2>/dev/null
+    pm disable com.android.vending 2>/dev/null
+    pm disable com.google.android.play.games 2>/dev/null
+    pm disable com.google.android.syncadapters.contacts 2>/dev/null
+    echo ""
     echo "${G}Process finished.${N}"
     echo ""
     echo "${B}[ 1 ] Return${N}"

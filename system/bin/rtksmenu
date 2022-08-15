@@ -179,8 +179,8 @@ Menu() {
     14) Opcao14 ;;
     15) Opcao15 ;;
     16) Opcao16 ;;
-    17
-    18
+    17) Opcao17 ;;
+    18) Opcao18 ;;
     E) Easteregg ;;
     S) SendLogs ;;
     D) DeleteLogs ;;

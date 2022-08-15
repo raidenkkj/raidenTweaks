@@ -70,9 +70,14 @@ else
     ts=Unknown
 fi
 
-V="3.4.4"
+# Device SDK
+sdk=$(getprop ro.build.version.sdk)
+[[ "$sdk" == "" ]] && sdk=$(getprop ro.vendor.build.version.sdk)
+[[ "$sdk" == "" ]] && sdk=$(getprop ro.vndk.version)
+
+V="4.5.4"
 DEV="raidenkk"
-CDNM="S4GITT4RIUS"
+CDNM="S1R1U5"
 magisk=`magisk -c`
 [[ "$(settings get global low_power)" == "1" ]] && low_power_mode="Enabled" || low_power_mode="Disabled"
 
@@ -138,10 +143,16 @@ Menu() {
 	echo "${Y}[14] Disable low power mode ${C}(Revert to normal)${N}"
 	echo ""
 	fi
-    echo "${Y}[15] Telegram group ${C}(To answer your questions / report bugs)${N}"
-    echo " "
-    echo "${B}[16] About the module ${C}(Informations)${N}"
-    echo " "
+	[[ "$(pm list package com.google.android.gms)" ]] && {
+	echo "${Y}[15] Enable Gapps${N}"
+	echo ""
+	echo "${Y}[16] Disable Gapps${N}"
+	echo ""
+	}
+    echo "${Y}[17] Telegram group ${C}(To answer your questions / report bugs)${N}"
+    echo ""
+    echo "${B}[18] About the module ${C}(Informations)${N}"
+    echo ""
     echo "${B}[S] Send logs to developer ${C}(This will prepare the logs to be sent to dev)${N}"
     echo " "
     echo "${R}[U] Uninstall Raiden Tweaks ${C}(Will remove the module / files from your system)${N}"
@@ -168,6 +179,9 @@ Menu() {
     14) Opcao14 ;;
     15) Opcao15 ;;
     16) Opcao16 ;;
+    17
+    18
+    E) Easteregg ;;
     S) SendLogs ;;
     D) DeleteLogs ;;
     U) Uninstall ;;
@@ -359,7 +373,8 @@ Opcao8 () {
 }
 
 Opcao9 () {
-    am start -a android.intent.action.MAIN -e toasttext "Clear RAM [ BASIC ]" -n bellavita.toast/.MainActivity
+
+    su -lp 2000 -c "cmd notification post -S bigtext -t 'Clear ram basic is running successfully.' tag 'Execution in: $(date)'"
     printf "\033c"
     echo "${G}Dropping all caches, wait, it's very fast. ^^${N}"
     sleep 1
@@ -381,7 +396,7 @@ Opcao9 () {
 }
 
 Opcao10 () {
-    am start -a android.intent.action.MAIN -e toasttext "Clear RAM [ HEAVY ]" -n bellavita.toast/.MainActivity
+    su -lp 2000 -c "cmd notification post -S bigtext -t 'Clear ram heavy is running successfully.' tag 'Execution in: $(date)'"
     printf "\033c"
     echo "${G}Dropping caches and killing background processes, wait patiently... ^^${N}"
     sleep 1
@@ -404,7 +419,7 @@ Opcao10 () {
 }
 
 Opcao11 () {
-    am start -a android.intent.action.MAIN -e toasttext "Clear RAM [ ADVANCED ]" -n bellavita.toast/.MainActivity
+   su -lp 2000 -c "cmd notification post -S bigtext -t 'Clear ram advanced is running successfully.' tag 'Execution in: $(date)'"
     printf "\033c"
     echo "${G}Dropping all caches and killing all processes, wait there. ^^${N}"
     sleep 1
@@ -516,9 +531,19 @@ Opcao14 () {
 
 Opcao15 () {
     printf "\033c"
-    echo "${G}Access telegram group (support)${N}"
-    sleep 2
-    printf "\033c"
+    echo "${G}Enabling gapps, please wait...${N}"
+    sleep 1.5
+	pm enable com.google.android.gsf 2>/dev/null
+	pm enable com.google.android.gsf.login 2>/dev/null
+	pm enable com.google.android.gms 2>/dev/null
+	pm enable com.google.android.ims 2>/dev/null
+	pm enable com.google.android.apps.carrier.log 2>/dev/null
+	pm enable com.android.vending 2>/dev/null
+	pm enable com.google.android.play.games 2>/dev/null
+	pm enable com.google.android.syncadapters.contacts 2>/dev/null
+	echo ""
+    echo "${G}Process finished.${N}"
+    echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo ""
@@ -533,6 +558,50 @@ Opcao15 () {
 
 Opcao16 () {
     printf "\033c"
+    echo "${G}Disabling gapps, please wait...${N}"
+    sleep 1.5
+	pm disable com.google.android.gsf 2>/dev/null
+	pm disable com.google.android.gsf.login 2>/dev/null
+	pm disable com.google.android.gms 2>/dev/null
+	pm disable com.google.android.ims 2>/dev/null
+	pm disable com.google.android.apps.carrier.log 2>/dev/null
+	pm disable com.android.vending 2>/dev/null
+	pm disable com.google.android.play.games 2>/dev/null
+	pm disable com.google.android.syncadapters.contacts 2>/dev/null
+	echo ""
+    echo "${G}Process finished.${N}"
+    echo ""
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    echo ""
+    echo "[${C} Enter${N} ]: \c"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "${R}Unknown command, sorry.${N}" ; echo ; Opcao16  ;;
+    esac
+}
+
+Opcao17 () {
+    printf "\033c"
+    echo "${G}Access telegram group (support)${N}"
+    sleep 2
+    printf "\033c"
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    echo ""
+    echo "[${C} Enter${N} ]: \c"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "${R}Unknown command, sorry.${N}" ; echo ; Opcao17  ;;
+    esac
+}
+
+Opcao18 () {
+    printf "\033c"
     echo "${G}Module informations:${N}"
     echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste, enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
     echo ""
@@ -544,7 +613,35 @@ Opcao16 () {
     case $opcao in
     1) Return ;;
     0) GoOut ;;
-    *) "Unknown command, sorry." ; echo ; Opcao16  ;;
+    *) "Unknown command, sorry." ; echo ; Opcao18  ;;
+    esac
+}
+
+Easteregg() {
+   chars="/-\|"
+
+while :; do
+  for (( i=0; i<${#chars}; i++ )); do
+    sleep 0.5
+    echo -en "${chars:$i:1}" "\r"
+  done
+done
+    sleep 5
+    printf "\033c"
+    echo "${B}If you're seeing this message, you've discovered EasterEgg, congratulations.${N}"
+    echo "${B}You came to look at my code and found this, there is no other way to find out other than this.${N}"
+    echo "${B}Come to my group and talk to me if you are interested in being part of my team, I am waiting for you with open arms.${N}"
+    echo "${C}Have a nice day, sir.${N}"
+    echo ""
+    echo "${B}[ 1 ] Return${N}"
+    echo "${B}[ 0 ] Go out${N}"
+    echo ""
+    echo "[${C} Enter${N} ]: \c"
+    read opcao
+    case $opcao in
+    1) Return ;;
+    0) GoOut ;;
+    *) "Unknown command, sorry." ; echo ; Menu  ;;
     esac
 }
 
@@ -573,6 +670,7 @@ SendLogs () {
     echo "${G}After sending the logs, click on delete logs option.${N}"
     sleep 0.5
     echo ""
+    su -lp 2000 -c "cmd notification post -S bigtext -t 'The logs are now in your storage.' tag 'Do not click on the delete option until it has been sent to the dev.'"
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo "${B}[ D ] Delete logs (recommended)${N}"

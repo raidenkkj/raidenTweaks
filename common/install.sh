@@ -525,7 +525,6 @@ sed -i '/ro.build.product/s/.*/ro.build.product=ZS600KL/' "${modpath}system1.pro
 	ui_print "Selected: $FCTEXTAD2 "
 	ui_print ""
 	sleep 2
-fi
 sleep 1
 ui_print " - [*] Created by raidenkk @ (Telegram)"
 sleep 2

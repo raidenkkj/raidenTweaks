@@ -144,9 +144,9 @@ Menu() {
     echo ""
     fi
     [[ "$(pm list package com.google.android.gms)" ]] && {
-    echo "${Y}[15] Enable Gapps${N}"
+    echo "${Y}[15] Enable Gapps ${C}(This will disable your gapps until you enable it again)${N}"
     echo ""
-    echo "${Y}[16] Disable Gapps${N}"
+    echo "${Y}[16] Disable Gapps ${C}(This will enable your gapps in case you have it disabled and want to revert)${N}"
     echo ""
     }
     echo "${Y}[17] Telegram group ${C}(To answer your questions / report bugs)${N}"
@@ -617,17 +617,24 @@ Opcao18 () {
     esac
 }
 
-Easteregg() {
+Easteregg () {
+    printf "\033c"
     echo "${R} CRITICAL MESSAGE!!! CAUTION!!!${N}"
-    sleep 2
+    sleep 5
     echo ""
-    echo "${B}Hey man, relax. It was just a joke.${N}
+    echo "${B}Hey man, relax. It was just a joke.${N}"
     sleep 3
     printf "\033c"
-    echo "${B}If you're seeing this message, you've discovered EasterEgg, congratulations.${N}"
-    echo "${B}You came to look at my code and found this, there is no other way to find out other than this.${N}"
-    echo "${B}Come to my group and talk to me if you are interested in being part of my team, I am waiting for you with open arms.${N}"
+    echo "${G}If you re seeing this message, you ve discovered EasterEgg, congratulations.${N}"
+    sleep 3
+    echo ""
+    echo "${Y}You came to look at my code and found this, there is no other way to find out other than this.${N}"
+    echo ""
+    sleep 3
+    echo "${Y}Come to my group and talk to me if you are interested in being part of my team, I am waiting for you with open arms.${N}"
+    echo ""
     echo "${C}Have a nice day, sir.${N}"
+    sleep 2
     echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
@@ -669,7 +676,7 @@ SendLogs () {
     su -lp 2000 -c "cmd notification post -S bigtext -t 'The logs are now in your storage.' tag 'Do not click on the delete option until it has been sent to the dev.'"
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
-    echo "${B}[ D ] Delete logs (recommended)${N}"
+    echo "${B}[ D ] Delete logs [recommended]${N}"
     echo ""
     echo "[${C} Enter${N} ]: \c"
     read opcao

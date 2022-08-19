@@ -498,16 +498,16 @@ elif [[ "$kuopt" != "" ]] && [[ "$kuopt" == "25" ]]; then
 	sleep 2
 else
 	awk '{print}' "${MODPATH}/common/ru_banner" 
-    sleep 3
-    ui_print " [!] Important: These settings can cause  "
-    ui_print "                errors in system applications.  "
-    sleep 0.5
-    ui_print ""
-    ui_print "     Might not work if you are using "
-    ui_print "     magiskhideprops or other like module. "
-    ui_print ""
-    ui_print ""
-    sleep 0.5
+        sleep 3
+        ui_print " [!] Important: These settings can cause  "
+        ui_print "                errors in system applications.  "
+        sleep 0.5
+        ui_print ""
+        ui_print "     Might not work if you are using "
+        ui_print "     magiskhideprops or other like module. "
+        ui_print ""
+        ui_print ""
+        sleep 0.5
 	ui_print " 1 - None "
 	ui_print ""
 	ui_print " 2 - Apply CODM 120 FPS "

@@ -1,3 +1,8 @@
+### v4.5.4 (HOTFIX) - 18.08.2022
+* Changes to the installation script 
+* Attempt to fix bugs in unlockers
+
+
 ### v4.5.4 - 15.08.2022
 * Added fstrim when starting the system 
 * Added new menu options (Disable and enable gapps whenever you want)
@@ -8,7 +13,6 @@
 * Remastering the installation script
 * There's an easter egg somewhere.
 * A few other small tweaks...
-
 
 ### v3.4.4 (HOTFIX) - 18.04.2022
 * Zygisk issue has been resolved

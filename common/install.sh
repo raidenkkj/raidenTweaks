@@ -144,7 +144,7 @@ ui_print "[!] Kitana Tweak App has been detected, I recommend removing the app t
 elif [ "$(pm list package nfs)" ]; then
 ui_print "[!] NFS Manager App has been detected, I recommend removing the app to avoid conflicts."
 
-    fi
+fi
 sleep 1.5
 
  # Credit for all script below goes to king unlocker.
@@ -493,10 +493,8 @@ elif [[ "$kuopt" != "" ]] && [[ "$kuopt" == "25" ]]; then
 	sed -i '/ro.product.product.manufacturer/s/.*/ro.product.product.manufacturer=asus/' "${modpath}system1.prop"
 	sed -i '/ro.build.product/s/.*/ro.build.product=ZS600KL/' "${modpath}system.prop"
 	sed -i '/ro.build.product/s/.*/ro.build.product=ZS600KL/' "${modpath}system1.prop"
-	ui_print ""
-	ui_print "Selected: $FCTEXTAD2 "
+	fi
 	sleep 2
-else
 	awk '{print}' "${MODPATH}/common/ru_banner" 
         sleep 3
         ui_print " [!] Important: These settings can cause  "

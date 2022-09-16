@@ -715,6 +715,8 @@ Uninstall () {
     rm -rf /storage/emulated/0/.RTKS
     rm -rf /data/local/RaidenTweaks.apk
     rm -rf /data/local/RDToast.apk
+    pm uninstall -k --user 0 org.rtks.raiden
+    pm uninstall -k --user 0 bellavita.toast
     echo ""
     echo "${G}Module uninstalled, now we will restart your device...${N}"
     sleep 4

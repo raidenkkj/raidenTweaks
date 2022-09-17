@@ -279,6 +279,9 @@ totalram=`free -m | awk '/Mem:/{print $2}'`
 # Variable to battery actual capacity
 percentage=`cat /sys/class/power_supply/battery/capacity`
 
+# Module information variables
+vers='4.5.5'
+
 # Automatic Profiles
 automatic() {
      	init=`date +%s`
@@ -309,7 +312,7 @@ kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                         
 kmsg1 "🟠 Android Version: $arv                                                                                          "
 kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "🟠 Device: $dm                                                                                                  "
-kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 RTKS Version: $vers                                                                                           "
 kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
 kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
 kmsg1 "🟠 Magisk: $magisk                                                                                              "
@@ -385,7 +388,7 @@ kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                         
 kmsg1 "🟠 Android Version: $arv                                                                                          "
 kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "🟠 Device: $dm                                                                                                  "
-kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 RTKS Version: $vers                                                                                           "
 kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
 kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
 kmsg1 "🟠 Magisk: $magisk                                                                                              "
@@ -944,7 +947,7 @@ kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                         
 kmsg1 "🟠 Android Version: $arv                                                                                          "
 kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "🟠 Device: $dm                                                                                                  "
-kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 RTKS Version: $vers                                                                                           "
 kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
 kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
 kmsg1 "🟠 Magisk: $magisk                                                                                              "
@@ -1471,7 +1474,7 @@ kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                         
 kmsg1 "🟠 Android Version: $arv                                                                                          "
 kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "🟠 Device: $dm                                                                                                  "
-kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 RTKS Version: $vers                                                                                           "
 kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
 kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
 kmsg1 "🟠 Magisk: $magisk                                                                                              "
@@ -2031,7 +2034,7 @@ kmsg1 "🟠 GPU Governor: $GPU_GOVERNOR                                         
 kmsg1 "🟠 Android Version: $arv                                                                                          "
 kmsg1 "🟠 GPU Model: $GPU_MODEL                                                                                        "
 kmsg1 "🟠 Device: $dm                                                                                                  "
-kmsg1 "🟠 RTKS Version: 3.3.4                                                                                           "
+kmsg1 "🟠 RTKS Version: $vers                                                                                           "
 kmsg1 "🟠 Battery charge level: $percentage%                                                                           "
 kmsg1 "🟠 Device total RAM: $totalram MB                                                                               "
 kmsg1 "🟠 Magisk: $magisk                                                                                              "

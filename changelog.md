@@ -8,6 +8,8 @@
 * Fix in the version that is shown in the logs
 * Removal of obsolete permission
 * Directory fix in uninstall.sh
+* System to uninstall module from the menu has been improved
+* System remove module has been improved, now the main application will be removed
 * Fix main app not installing (older versions may not install the main app automatically)
 * Easter egg removed from menu
 

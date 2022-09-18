@@ -75,9 +75,9 @@ sdk=$(getprop ro.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vendor.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vndk.version)
 
-V="4.5.4"
+V="4.5.5"
 DEV="raidenkk"
-CDNM="S1R1U5"
+CDNM="4RT3M1S"
 magisk=`magisk -c`
 [[ "$(settings get global low_power)" == "1" ]] && low_power_mode="Enabled" || low_power_mode="Disabled"
 
@@ -181,7 +181,6 @@ Menu() {
     16) Opcao16 ;;
     17) Opcao17 ;;
     18) Opcao18 ;;
-    E) Easteregg ;;
     S) SendLogs ;;
     D) DeleteLogs ;;
     U) Uninstall ;;
@@ -614,37 +613,6 @@ Opcao18 () {
     1) Return ;;
     0) GoOut ;;
     *) "Unknown command, sorry." ; echo ; Opcao18  ;;
-    esac
-}
-
-Easteregg () {
-    printf "\033c"
-    echo "${R} CRITICAL MESSAGE!!! CAUTION!!!${N}"
-    sleep 5
-    echo ""
-    echo "${B}Hey man, relax. It was just a joke.${N}"
-    sleep 3
-    printf "\033c"
-    echo "${G}If you re seeing this message, you ve discovered EasterEgg, congratulations.${N}"
-    sleep 3
-    echo ""
-    echo "${Y}You came to look at my code and found this, there is no other way to find out other than this.${N}"
-    echo ""
-    sleep 3
-    echo "${Y}Come to my group and talk to me if you are interested in being part of my team, I am waiting for you with open arms.${N}"
-    echo ""
-    echo "${C}Have a nice day, sir.${N}"
-    sleep 2
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "[${C} Enter${N} ]: \c"
-    read opcao
-    case $opcao in
-    1) Return ;;
-    0) GoOut ;;
-    *) "Unknown command, sorry." ; echo ; Menu  ;;
     esac
 }
 

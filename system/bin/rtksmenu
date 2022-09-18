@@ -77,7 +77,7 @@ sdk=$(getprop ro.build.version.sdk)
 
 V="4.5.5"
 DEV="raidenkk"
-CDNM="4RT3M1S"
+CDNM="4RT3M1S-S"
 magisk=`magisk -c`
 [[ "$(settings get global low_power)" == "1" ]] && low_power_mode="Enabled" || low_power_mode="Disabled"
 

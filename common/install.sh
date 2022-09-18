@@ -1,8 +1,8 @@
 awk '{print}' "${MODPATH}/common/rtks_banner"
 ui_print ""
-ui_print "VERSION: 4.5.5 - 13/09/2022"
+ui_print "VERSION: 4.5.5 - 18/09/2022"
 ui_print ""
-ui_print "CODENAME: S1R1U5-S"
+ui_print "CODENAME: 4RT3M1S-S"
 sleep 2
 ui_print " "
 ui_print "With this module you can choose one of"

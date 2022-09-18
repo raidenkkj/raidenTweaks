@@ -1,3 +1,17 @@
+### v4.5.5 (S) - 18.09.2022
+* Introducing stable version 
+* Core app with UX improvement
+* Rollback to old and working unlockers (temp)
+* Removal of obsolete props
+* Improved uninstall system
+* Auto profile script fix
+* Fix in the version that is shown in the logs
+* Removal of obsolete permission
+* Directory fix in uninstall.sh
+* Fix main app not installing (older versions may not install the main app automatically)
+* Easter egg removed from menu
+
+
 ### v4.5.4 (HOTFIX) - 18.08.2022
 * Changes to the installation script 
 * Attempt to fix bugs in unlockers
@@ -12,7 +26,7 @@
 * Fixed version in module.prop
 * Remastering the installation script
 * There's an easter egg somewhere.
-* A few other small tweaks...
+* A few other small changes...
 
 ### v3.4.4 (HOTFIX) - 18.04.2022
 * Zygisk issue has been resolved

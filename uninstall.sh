@@ -1,6 +1,6 @@
-if [[ -e "/sdcard/RTKS" ]]
+if [[ -e "/sdcard/.RTKS" ]]
 then 
-rm -rf /sdcard/RTKS
+rm -rf /sdcard/.RTKS
 fi
 
 if [ -f $INFO ]; then

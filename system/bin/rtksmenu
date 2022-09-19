@@ -353,7 +353,7 @@ Opcao8 () {
     echo "${G}Optimizing application packages, please wait. >.<${N}"
     sleep 2
     echo ""
-    echo "${G}[ ! ] this process can take between 5-10 minutes${N}"
+    echo "${G}[ ! ] This process can take between 5-20 minutes${N}"
     echo ""
     cmd package bg-dexopt-job
     echo ""
@@ -586,6 +586,7 @@ Opcao17 () {
     printf "\033c"
     echo "${G}Access telegram group (support)${N}"
     sleep 2
+    am start -a android.intent.action.VIEW -d https://t.me/raidenprjktsgroup
     printf "\033c"
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"

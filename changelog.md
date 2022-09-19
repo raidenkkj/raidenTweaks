@@ -12,12 +12,11 @@
 * System remove module has been improved, now the main application will be removed
 * Fix main app not installing (older versions may not install the main app automatically)
 * Easter egg removed from menu
-
+* Persist added to fstrim
 
 ### v4.5.4 (HOTFIX) - 18.08.2022
 * Changes to the installation script 
 * Attempt to fix bugs in unlockers
-
 
 ### v4.5.4 - 15.08.2022
 * Added fstrim when starting the system 

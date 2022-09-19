@@ -986,21 +986,6 @@ kmsg1 "                                          DISABLED UKSM.                 
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
 
-# Enable LPM sleep in thermal / balanced / battery profile
-for lpm in /sys/module/lpm_levels/system/*/*/*/
-do
-if [[ -d "/sys/module/lpm_levels" ]]
-then
-write "/sys/module/lpm_levels/parameters/sleep_disabled" "N"
-write "${lpm}idle_enabled" "Y"
-write "${lpm}suspend_enabled" "Y"
-fi
-done
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED LPM SLEEP.                                                                                 "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-
 if [[ -e "/sys/class/lcd/panel/power_reduce" ]] 
 then
 write "/sys/class/lcd/panel/power_reduce" "1"
@@ -1471,21 +1456,6 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          ENABLED UKSM.                                                                              "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
-
-# Enable LPM sleep in thermal / balanced / battery profile
-for lpm in /sys/module/lpm_levels/system/*/*/*/
-do
-if [[ -d "/sys/module/lpm_levels" ]]
-then
-write "/sys/module/lpm_levels/parameters/sleep_disabled" "N"
-write "${lpm}idle_enabled" "Y"
-write "${lpm}suspend_enabled" "Y"
-fi
-done
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          ENABLED LPM SLEEP.                                                                                 "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]] 
 then
@@ -1997,21 +1967,6 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          DISABLED ARCH POWER.                                                                                "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
-
-# Disable LPM sleep in performance / gaming profile
-for lpm in /sys/module/lpm_levels/system/*/*/*/
-do
-if [[ -d "/sys/module/lpm_levels" ]]
-then
-write "/sys/module/lpm_levels/parameters/sleep_disabled" "Y"
-write "${lpm}idle_enabled" "N"
-write "${lpm}suspend_enabled" "N"
-fi
-done
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED LPM SLEEP.                                                                                 "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]] 
 then
@@ -2525,21 +2480,6 @@ kmsg1 "-------------------------------------------------------------------------
 kmsg1 "                                          DISABLED ARCH POWER.                                                                                "
 kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 fi
-
-# Disable LPM sleep in performance / gaming profile
-for lpm in /sys/module/lpm_levels/system/*/*/*/
-do
-if [[ -d "/sys/module/lpm_levels" ]]
-then
-write "/sys/module/lpm_levels/parameters/sleep_disabled" "Y"
-write "${lpm}idle_enabled" "N"
-write "${lpm}suspend_enabled" "N"
-fi
-done
-
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "                                          DISABLED LPM SLEEP.                                                                                 "
-kmsg1 "-------------------------------------------------------------------------------------------------------------------------------------------------"
 
 if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]] 
 then

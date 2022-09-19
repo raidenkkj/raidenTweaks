@@ -6,7 +6,7 @@ ui_print "CODENAME: 4RT3M1S-S"
 sleep 2
 ui_print " "
 ui_print "With this module you can choose one of"
-ui_print "his profiles and improve your user experience."
+ui_print "These profiles and improve your user experience."
 sleep 3
 ui_print ""
 sleep 0.5

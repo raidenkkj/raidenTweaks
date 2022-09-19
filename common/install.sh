@@ -1,6 +1,6 @@
 awk '{print}' "${MODPATH}/common/rtks_banner"
 ui_print ""
-ui_print "VERSION: 4.5.5 - 18/09/2022"
+ui_print "VERSION: 4.5.5 - 19/09/2022"
 ui_print ""
 ui_print "CODENAME: 4RT3M1S-S"
 sleep 2
@@ -265,10 +265,12 @@ wget -O "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweak
 
 ui_print "[*] Okay, all necessary files have been successfully installed."
 ui_print " "
-ui_print "[*] Installing main application..."
+ui_print "[*] Uninstalling old and installing new version of the main application..."
+pm uninstall -k --user 0 org.rtks.raiden
 pm install /data/local/tmp/RaidenTweaks.apk
 ui_print " "
-ui_print "[*] Installing toasts app..."
+ui_print "[*] Uninstalling old and installing new version of the toast application..."
+pm uninstall -k --user 0 bellavita.toast
 pm install /data/local/tmp/RDToast.apk
 ui_print " "
 ui_print " - The logs are in a hidden place"

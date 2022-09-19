@@ -32,6 +32,8 @@ In case of bugs, join the group to report your problem and we will try to help y
 
  - If you are going to post any video on your channel with my module **please leave the credits in the description**.
 
+ - The download link provided in your video description should be the official pling link, you can use shorteners if you like.
+
 # Requirements 
 
  - You will need **Magisk 20.4 (20400)** and up.

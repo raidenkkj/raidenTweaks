@@ -144,9 +144,9 @@ Menu() {
     echo ""
     fi
     [[ "$(pm list package com.google.android.gms)" ]] && {
-    echo "${Y}[15] Disable Gapps ${C}(This will disable your gapps until you enable it again)${N}"
+    echo "${Y}[15] Enable Gapps ${C}(This will disable your gapps until you enable it again)${N}"
     echo ""
-    echo "${Y}[16] Enable Gapps ${C}(This will enable your gapps in case you have it disabled and want to revert)${N}"
+    echo "${Y}[16] Disable Gapps ${C}(This will enable your gapps in case you have it disabled and want to revert)${N}"
     echo ""
     }
     echo "${Y}[17] Telegram group ${C}(To answer your questions / report bugs)${N}"

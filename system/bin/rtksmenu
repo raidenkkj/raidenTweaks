@@ -144,9 +144,9 @@ Menu() {
     echo ""
     fi
     [[ "$(pm list package com.google.android.gms)" ]] && {
-    echo "${Y}[15] Enable Gapps ${C}(This will disable your gapps until you enable it again)${N}"
+    echo "${Y}[15] Disable Gapps ${C}(This will disable your gapps until you enable it again)${N}"
     echo ""
-    echo "${Y}[16] Disable Gapps ${C}(This will enable your gapps in case you have it disabled and want to revert)${N}"
+    echo "${Y}[16] Enable Gapps ${C}(This will enable your gapps in case you have it disabled and want to revert)${N}"
     echo ""
     }
     echo "${Y}[17] Telegram group ${C}(To answer your questions / report bugs)${N}"
@@ -467,7 +467,7 @@ Opcao13 () {
     printf "\033c"
     echo "${G}Clearing battery status, please wait. >.<${N}"
     sleep 1
-    rm -f /data/system/batterystats.bin
+    rm -rf /data/system/batterystats.bin
     echo ""
     echo "${G}Process finished!${N}"
     echo ""
@@ -603,7 +603,7 @@ Opcao17 () {
 Opcao18 () {
     printf "\033c"
     echo "${G}Module informations:${N}"
-    echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste, enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
+    echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste, enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram i appreciate every feedback! :)${N}"
     echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
@@ -619,7 +619,7 @@ Opcao18 () {
 
 SendLogs () {
     printf "\033c"
-    echo "${G}Creating directory for logs....${N}"
+    echo "${G}Creating directory for logs please wait....${N}"
     echo ""
     sleep 1.5
     mkdir /storage/emulated/0/raidentweaks-logs
@@ -636,7 +636,7 @@ SendLogs () {
     rm -rf /storage/emulated/0/raidentweaks-logs/raidentweaks-logs
     sleep 2
     echo ""
-    echo "${G}Done, now we will send the logs to the developer.${N}"
+    echo "${G}Done, now the logs will be located at '/storage/emulated/0/raidentweaks-logs'.${N}"
     sleep 0.5
     echo ""
     echo "${G}After sending the logs, click on delete logs option.${N}"
@@ -701,6 +701,7 @@ Uninstall () {
     sleep 1.5
     echo -ne '${R}>>>>>>>>>>>>>>>>>>>>>>>>>>[100%]\r${N}'
     echo -ne '\n'
+    echo "The progress bar isnt actually real"
     reboot system
 }
 

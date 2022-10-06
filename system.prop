@@ -1,0 +1,21 @@
+ # Raiden Tweaks support prop
+raiden.tweaks.support=1
+
+# Raiden Unlocker
+ro.product.product.model
+
+# Enable system to perform dexopt job by default and set dexopt profile to everything on bg-dexopt-job
+persist.bg.dexopt.enable=true
+pm.dexopt.bg-dexopt=everything
+pm.dexopt.forced-dexopt=everything
+
+# Unspecialized app process pool
+persist.device_config.runtime_native.usap_pool_enabled
+persist.device_config.runtime_native.usap_pool_refill_delay_ms=3000
+persist.device_config.runtime_native.usap_pool_size_max=10
+persist.device_config.runtime_native.usap_pool_size_min=1
+persist.device_config.runtime_native.usap_refill_threshold=5
+
+# Enable usage of dex2oat64 to better dexopt time
+dalvik.vm.dex2oat64.enabled
+

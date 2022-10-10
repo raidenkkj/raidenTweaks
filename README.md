@@ -1,5 +1,7 @@
 # What is Raiden Tweaks™?
 
+![raidentweaks-banner](https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/images/raidentweaks-banner.png?raw=true)
+
 **Raiden Tweaks™** is a kernel manager with several profiles applicable to each type of user, its main focus is to improve your user experience.
 
 # FAQ

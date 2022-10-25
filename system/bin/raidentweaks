@@ -453,9 +453,9 @@ if [[ -e "${corectl}/enable" ]]
 then
 write "${corectl}/enable" "1"
 
-elif [[ -e "${corectl}/disable" ]]
+elif [[ -e "${corectl}/enable" ]]
 then
-write "${corectl}/disable" "0"
+write "${corectl}/enable" "1"
 fi
 done
 

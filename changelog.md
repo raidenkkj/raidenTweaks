@@ -1,3 +1,41 @@
+### v4.6.6 - 13.11.2022
+* NASA-themed raidenTweaks initial release
+* Rebuilt unlockers
+* Fix unlockers not working
+* Fix auto profile not working properly
+* Fix performance and thermal profiles not applying in auto profile
+* Fix conflict with fstrim binary
+* Redesigned logs interface
+* Redesigned magisk installation panel
+* Redesigned main app
+* Redesigned uninstall system
+* Pastel colors for each profile in the main app
+* New icons for each profile in the main app
+* Minimally improved main app rounded corners
+* Improved functions.sh 
+* Improved raidenTweaks menu descriptions
+* Improved log upload system
+* Improved cleaner binary 
+* Improved fstrim binary (will now be rfstrim)
+* Improved module prop
+* Improved option to optimize app package in menu
+* Added success or failure exit system when applying profiles
+* Added system of updating files whenever device is rebooted twice
+* Added option to choose branch for required files
+* Added option to define which profile will be applied after reboots
+* Added a specific menu to choose low memory killer profiles (this feature is exclusively created by me, if you see this elsewhere without the credits, that's kang!)
+* Added a specific menu to select unlockers
+* Added build.sh to zip the files and create a new release
+* Added new apps to auto profile
+* Added option to enable/disable low ram mode in menu
+* Added new boot detection system in service.sh
+* LPM sleep disable removed
+* Removed several useless things
+* Changed main app package and icon
+* Icon for toast app changed
+* Four core will shut down when battery reaches 5% in certain profiles with simple usage
+* Other minor changes...
+
 ### v4.5.5 (S) - 18.09.2022
 * Introducing stable version 
 * Core app with UX improvement

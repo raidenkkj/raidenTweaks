@@ -147,7 +147,9 @@ REL=$(grep_prop versionCode "$MODDIR"/module.prop)
 # Author
 AUTHOR=$(grep_prop author "$MODDIR"/module.prop)
 # Mod Name/Title
-MODTITLE=$(grep_prop name "$MODDIR"/module.prop)
+MODT=$(grep_prop name "$MODDIR"/module.prop)
+# Mod Codename
+CODNM=$(grep_prop codename "$MODDIR"/module.prop)
 
 # Colors
 G='\e[01;32m'		# GREEN TEXT
@@ -257,8 +259,8 @@ test_connection() {
     true
   else
     false
-  fi & e_spinner "Testing internet connection"
-  ) && echo " - OK" || { echo " - Error"; false; }
+  fi & echo "${G}[*] - Testing if you are connected to an internet...${N}"
+  ) && echo "" && echo "${G}[*] - Done, all right.${N}" || { echo "" && echo "${R}[*] - You are not connected to the internet!${N}"; false; }
 }
 
 
@@ -267,25 +269,28 @@ test_connection() {
 upload_logs() {
   $BBok && {
     test_connection || exit
-    echo "Uploading logs"
+    echo ""
+    echo "${G}[*] - Uploading logs, wait.${N}"
+    echo ""
     [[ -s $VERLOG ]] && verUp=$(cat "$VERLOG" | nc termbin.com 9999) || verUp=none
     [[ -s $oldVERLOG ]] && oldverUp=$(cat "$oldVERLOG" | nc termbin.com 9999) || oldverUp=none
-    [[ -s $LOG ]] && logUp=$(cat "$LOG" | nc termbin.com 9999) || logUp=none
+    [[ -s $RLOG ]] && logUp=$(cat "$RLOG" | nc termbin.com 9999) || logUp=none
     [[ -s $oldLOG ]] && oldlogUp=$(cat "$oldLOG" | nc termbin.com 9999) || oldlogUp=none
     [[ -s $stdoutLOG ]] && stdoutUp=$(cat "$stdoutLOG" | nc termbin.com 9999) || stdoutUp=none
     [[ -s $oldstdoutLOG ]] && oldstdoutUp=$(cat "$oldstdoutLOG" | nc termbin.com 9999) || oldstdoutUp=none
-    echo -n "Link: "
-    echo "$MODEL ($DEVICE) API $API\n$ROM\n$ID\n
+    echo -n "${C}[*] - Link: ${BGBL}"
+    echo "$MODEL ($DEVICE) API $API \n$ROM \r$MODT - $CDNM
+    
+    rT-log: $logUp
+    O_rT: $oldlogUp
+    
+    Verbose: $verUp
     O_Verbose: $oldverUp
-    Verbose:   $verUp
 
-    O_STDOUT:  $oldstdoutUp
-    STDOUT:    $stdoutUp
-
-    O_Log: $oldlogUp
-    Log:   $logUp" | nc termbin.com 9999
-  } || echo "- Busybox not found"
-  exit 1
+    STDOUT: $stdoutUp
+    O_STDOUT: $oldstdoutUp" | nc termbin.com 9999
+    
+  } || echo "${R}[*] - You are not using busybox, why?"
 }
 
 # Print Random

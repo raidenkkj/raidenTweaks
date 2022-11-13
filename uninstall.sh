@@ -1,5 +1,4 @@
-if [[ -e "/sdcard/.RTKS" ]]
-then 
+if [[ -e "/sdcard/.RTKS" ]]; then 
 rm -rf /sdcard/.RTKS
 rm -rf /data/local/tmp/RaidenTweaks.apk
 rm -rf /data/local/tmp/RDToast.apk

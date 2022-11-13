@@ -1,31 +1,34 @@
 #!/system/bin/sh
-wait_until_login() {
-	# we doesn't have the permission to rw "/sdcard" before the user unlocks the screen
-	while [[ `getprop sys.boot_completed` -ne 1 && -d "/sdcard" ]]
-	do
-       sleep 2
-	done
 
-    local test_file="/sdcard/.PERMISSION_TEST"
-    touch "$test_file"
-    while [ ! -f "$test_file" ]; do
-        touch "$test_file"
-        sleep 2
-    done
-    rm "$test_file"
-}
-wait_until_login
+modpath="/data/adb/modules/RTKS/"
+
+# Wait to boot be completed
+until [[ "$(getprop sys.boot_completed)" -eq "1" ]] || [[ "$(getprop dev.bootcomplete)" -eq "1" ]]; do
+	sleep 1
+done
+
 # Readme
-wget -O "${MODPATH}/storage/emulated/0/RTKS/README.md" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/main/README.md"
+wget -qO "${modpath}storage/emulated/0/.RTKS/README.md" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/README.md"
 
-# Automatic fstrim
-fstrim 2>/dev/null
+# Download the scripts
+wget -qO "${modpath}system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/raidentweaks"
+wget -qO "${modpath}system/bin/raidenauto" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/raidenauto"
+wget -qO "${modpath}system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/rtksmenu"
+wget -qO "${modpath}lsystem/bin/lmkmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/lmkmenu"
+wget -qO "${modpath}system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/cleaner"
+wget -qO "${modpath}system/bin/rfstrim" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/rfstrim"
+wget -qO "${modpath}mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/mod-util.sh"
 
-# Setup tweaks
-sleep 60
-raidentweaks
+
+# Fstrim every time the device reboot
+rfstrim 2>/dev/null
+
+sleep 150
+raidentweaks &
+cleaner
 
 # set swappiness to 100 (zram
 echo 100 > /proc/sys/vm/swappiness
 
 # done
+

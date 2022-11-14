@@ -48,7 +48,7 @@ echo "${default}${bold}Zipping ${blink}$rname-$cdnm-$year$month$day$hour$minute.
 echo ""
 
 
-zip -0 -r9 -ll "$rname-$cdnm-$year$month$day$hour$minute.zip" . -x '*.git*' -x '*RaidenTweaks.apk*' -x '*RDToast.apk*' -x '*mod-util.sh*' -x '*fstrim*' -x '*lmkmenu*' -x '*cleaner*' -x '*changelog.md*' -x '*raidenauto*' -x '*raidentweaks*' -x '*rtksmenu*' -x '*images*' -x '*build.sh*'
+zip -0 -r9 -ll "$rname-$cdnm-$year$month$day$hour$minute.zip" . -x '*.git*' -x '*RaidenTweaks.apk*' -x '*RDToast.apk*' -x '*mod-util.sh*' -x '*fstrim*' -x '*lmkmenu*' -x '*cleaner*' -x '*changelog.md*' -x '*raidenauto*' -x '*raidentweaks*' -x '*rtksmenu*' -x '*images*' -x '*build.sh*' -x '*unlockermenu*'
 
 if [ -d "$outdir" ]
 then

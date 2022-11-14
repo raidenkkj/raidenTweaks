@@ -229,34 +229,148 @@ ui_print "[!] - NFS Injector Module detected, disabling for security reasons."
 ui_print ""
 touch "$MODDIR"/injector/disable
 
+elif [ -d $MODDIR/GamersExtreme ]; then
+ui_print ""
+ui_print "[!] - GamersExtreme Module Detected, disabling for security reasons."
+touch $MODDIR/GamersExtreme/remove
+
+elif [ -d $MODDIR/xengine ]; then
+ui_print ""
+ui_print "[!] - Xengine Module Detected, disabling for security reasons."
+touch $MODDIR/xengine/remove
+
+elif [ -d $MODDIR/PXT ]; then
+ui_print ""
+ui_print "[!] - PXT Module Detected, disabling for security reasons."
+touch $MODDIR/PXT/remove
+
+elif [ -d $MODDIR/Godspeed ]; then
+ui_print ""
+ui_print "[!] - GodSpeed Module Detected, disabling for security reasons."
+touch $MODDIR/GodSpeed/remove
+
+elif [ -d $MODDIR/MTK_VEST ]; then
+ui_print ""
+ui_print "[!] - MTK_VEST Module Detected, disabling for security reasons."
+touch $MODDIR/MTK_VEST/remove
+
+ui_print ""
+ui_print "[!] - AOSP Enhancer Module Detected, disabling for security reasons."
+touch $MODDIR/aosp_enhancer/remove
+
+elif [ -d $MODDIR/GSFAB ]; then
+ui_print ""
+ui_print "[!] - GSMxFAB Module Detected, disabling for security reasons."
+touch $MODDIR/GSFAB/remove
+
+elif [ -d $MODDIR/GSNO ]; then
+ui_print ""
+ui_print "[!] - GODSPEED NET OPTIMIZER Module Detected, disabling for security reasons."
+touch $MODDIR/GSNO/remove
+
+elif [ -d $MODDIR/PXT ]; then
+ui_print ""
+ui_print "[!] - PROJECT XTREME TWEAKS Module Detected, disabling for security reasons."
+touch $MODDIR/PXT/remove
+
+elif [ -d $MODDIR/BeastMode ]; then
+ui_print ""
+ui_print "[!] - BeastMode Module Detected, disabling for security reasons."
+touch $MODDIR/BeastMode/remove
+
+elif [ -d $MODDIR/STRP ]; then
+ui_print ""
+ui_print "[!] - Stratosphere Module Detected, disabling for security reasons."
+touch $MODDIR/STRP/remove
+
+elif [ -d $MODDIR/STRPxEXYPOWER ]; then
+ui_print ""
+ui_print "[!] - STRP Exynos Power Module Detected, disabling for security reasons."
+touch $MODDIR/STRPxEXYPOWER/remove
+
+elif [ -d $MODDIR/STRPxPUBGLE ]; then
+ui_print ""
+ui_print "[!] - STRP Low End Module Detected, disabling for security reasons."
+touch $MODDIR/STRPxPUBGLE/remove
+
+elif [ -d $MODDIR/STRPxMIUI ]; then
+ui_print ""
+ui_print "[!] - STRP MIUI Module Detected, disabling for security reasons."
+touch $MODDIR/STRPxMIUI/remove
+
+elif [ -d $MODDIR/STRPxPG ]; then
+ui_print ""
+ui_print "[!] - STRP Pure Gaming Module Detected, disabling for security reasons."
+touch $MODDIR/STRPxPG/remove
+
+elif [ -d $MODDIR/STRPxSPOOFER ]; then
+ui_print ""
+ui_print "[!] - STRP Spoofer Module Detected, disabling for security reasons."
+touch $MODDIR/STRPxSPOOFER/remove
+
+elif [ -d $MODDIR/STRPxULTRAxBATTERY ]; then
+ui_print ""
+ui_print "[!] - STRP Ultra Battery Module Detected, disabling for security reasons."
+touch $MODDIR/STRPxULTRAxBATTERY/remove
+
+elif [ -d $MODDIR/STRPxUNLOCKER ]; then
+ui_print ""
+ui_print "[!] - STRP Unlocker Module Detected, disabling for security reasons."
+touch $MODDIR/STRPxUNLOCKER/remove
+
+
 elif [ "$(pm list package magnetarapp)" ]; then
 ui_print ""
-ui_print "[!] - MAGNETAR App has been detected, I recommend removing the app to avoid conflicts."
+ui_print "[!] - MAGNETAR App has been detected, removing the app to avoid conflicts..."
+pm uninstall -k --user 0 com.magnetarapp
+sleep 1
+ui_print ""
+ui_print "[!] - Done"
 ui_print ""
 
 elif [ "$(pm list package ktweak)" ]; then
 ui_print ""
-ui_print "[!] - KTweak App has been detected, I recommend removing the app to avoid conflicts."
+ui_print "[!] - KTweak App has been detected, removing the app to avoid conflicts..."
+pm uninstall -k --user 0 pedrozzz.king.tweaks
+sleep 1
+ui_print ""
+ui_print "[!] - Done"
 ui_print ""
 
 elif [ "$(pm list package lsandroid)" ]; then
 ui_print ""
-ui_print "[!] - LSpeed App has been detected, I recommend removing the app to avoid conflicts."
+ui_print "[!] - LSpeed App has been detected, removing the app to avoid conflicts..."
+pm uninstall -k --user 0 com.paget96.lsandroid
+sleep 1
+ui_print ""
+ui_print "[!] - Done"
 ui_print ""
 
 elif [ "$(pm list package feravolt)" ]; then
 ui_print ""
-ui_print "[!] - FDE.AI App has been detected, I recommend removing the app to avoid conflicts."
+ui_print "[!] - FDE.AI App has been detected, removing the app to avoid conflicts..."
+pm uninstall -k --user 0 com.feravolt.fdeai
+sleep 1
+ui_print ""
+ui_print "[!] - Done"
 ui_print ""
 
 elif [ "$(pm list package kitana)" ]; then
 ui_print ""
-ui_print "[!] - Kitana Tweak App has been detected, I recommend removing the app to avoid conflicts."
+ui_print "[!] - Kitana Tweak App has been detected, removing the app to avoid conflicts..."
+pm uninstall -k --user 0 com.tweak.kitana
+sleep 1
+ui_print ""
+ui_print "[!] - Done"
 ui_print ""
 
 elif [ "$(pm list package nfs)" ]; then
 ui_print ""
-ui_print "[!] - NFS Manager App has been detected, I recommend removing the app to avoid conflicts."
+ui_print "[!] - NFS Manager App has been detected, removing the app to avoid conflicts..."
+pm uninstall -k --user 0 com.nfs.nfsmanager
+sleep 1
+ui_print ""
+ui_print "[!] - Done"
 ui_print ""
 
 fi

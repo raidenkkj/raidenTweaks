@@ -89,20 +89,20 @@ ui_print ""
 ui_print "[*] - Select which you want: "
 ui_print ""
 
-RPROF=1
+PRFTEXT=1
 	while true; do
-		ui_print "  $RPROF"
+		ui_print "  $PRFTEXT"
 		if $VKSEL; then
-			RPROF=$((RPROF + 1))
+			PRFTEXT=$((PRFTEXT + 1))
 		else
 			break
 		fi
-		if [[ $RPROF -gt "7" ]]; then
-			RPROF=1
+		if [[ $PRFTEXT -gt "7" ]]; then
+			PRFTEXT=1
 		fi
 	done
 
-	case "$RPROF" in
+	case "$PRFTEXT" in
 
         1)
 			PRFTEXT="✗ | None"
@@ -378,19 +378,19 @@ ui_print ""
 ui_print "[*] - Select which you want: "
 ui_print ""
 
-branch=1
+TEXTBRANCH=1
 while true; do
-		ui_print "  $branch"
+		ui_print "  $TEXTBRANCH"
 		if $VKSEL; then
-			branch=$((branch + 1))
+			TEXTBRANCH=$((TEXTBRANCH + 1))
 		else
 			break
 		fi
-		if [[ $branch -gt "3" ]]; then
-			branch=1
+		if [[ $TEXTBRANCH -gt "3" ]]; then
+			TEXTBRANCH=1
 		fi
 	done
-case $branch in
+case $TEXTBRANCH in
 
         1)
 			TEXTBRANCH="Stable (Default)"

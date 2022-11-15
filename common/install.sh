@@ -34,13 +34,13 @@ ui_print ""
 
 FSTEXT=1
    while true; do
-       ui_print "  $FSTEXT"
-       if $VKSEL; then
+       ui_print "  ${FSTEXT}"
+       if ${VKSEL}; then
           FSTEXT=$((FSTEXT + 1))
-   else
-       break
+       else
+           break
    fi
-   if [[ $FSTEXT -gt 2 ]]; then
+   if [[ ${FSTEXT} -gt 2 ]]; then
           FSTEXT=1
    fi
    done
@@ -91,16 +91,16 @@ ui_print ""
 
 PRFTEXT=1
 	while true; do
-		ui_print "  $PRFTEXT"
-		if $VKSEL; then
-			PRFTEXT=$((PRFTEXT + 1))
-		else
-			break
-		fi
-		if [[ $PRFTEXT -gt "7" ]]; then
-			PRFTEXT=1
-		fi
-	done
+       ui_print "  ${PRFTEXT}"
+       if ${VKSEL}; then
+          PRFTEXT=$((PRFTEXT + 1))
+       else
+           break
+   fi
+   if [[ ${PRFTEXT} -gt 7 ]]; then
+          PRFTEXT=1
+   fi
+   done
 
 	case "$PRFTEXT" in
 
@@ -232,149 +232,138 @@ touch "$MODDIR"/injector/disable
 elif [ -d $MODDIR/GamersExtreme ]; then
 ui_print ""
 ui_print "[!] - GamersExtreme Module Detected, disabling for security reasons."
-touch $MODDIR/GamersExtreme/remove
+touch $MODDIR/GamersExtreme/disable
 
 elif [ -d $MODDIR/xengine ]; then
 ui_print ""
 ui_print "[!] - Xengine Module Detected, disabling for security reasons."
-touch $MODDIR/xengine/remove
+touch "$MODDIR"/xengine/disable
 
 elif [ -d $MODDIR/PXT ]; then
 ui_print ""
 ui_print "[!] - PXT Module Detected, disabling for security reasons."
-touch $MODDIR/PXT/remove
+touch "$MODDIR"/PXT/disable
 
 elif [ -d $MODDIR/Godspeed ]; then
 ui_print ""
 ui_print "[!] - GodSpeed Module Detected, disabling for security reasons."
-touch $MODDIR/GodSpeed/remove
+touch "$MODDIR"/GodSpeed/disable
 
 elif [ -d $MODDIR/MTK_VEST ]; then
 ui_print ""
 ui_print "[!] - MTK_VEST Module Detected, disabling for security reasons."
-touch $MODDIR/MTK_VEST/remove
+touch "$MODDIR"/MTK_VEST/disable
 
 ui_print ""
 ui_print "[!] - AOSP Enhancer Module Detected, disabling for security reasons."
-touch $MODDIR/aosp_enhancer/remove
+touch "$MODDIR"/aosp_enhancer/disable
 
 elif [ -d $MODDIR/GSFAB ]; then
 ui_print ""
 ui_print "[!] - GSMxFAB Module Detected, disabling for security reasons."
-touch $MODDIR/GSFAB/remove
+touch "$MODDIR"/GSFAB/disable
 
 elif [ -d $MODDIR/GSNO ]; then
 ui_print ""
 ui_print "[!] - GODSPEED NET OPTIMIZER Module Detected, disabling for security reasons."
-touch $MODDIR/GSNO/remove
+touch "$MODDIR"/GSNO/disable
 
 elif [ -d $MODDIR/PXT ]; then
 ui_print ""
 ui_print "[!] - PROJECT XTREME TWEAKS Module Detected, disabling for security reasons."
-touch $MODDIR/PXT/remove
+touch "$MODDIR"/PXT/disable
 
 elif [ -d $MODDIR/BeastMode ]; then
 ui_print ""
 ui_print "[!] - BeastMode Module Detected, disabling for security reasons."
-touch $MODDIR/BeastMode/remove
+touch "$MODDIR"/BeastMode/disable
 
 elif [ -d $MODDIR/STRP ]; then
 ui_print ""
 ui_print "[!] - Stratosphere Module Detected, disabling for security reasons."
-touch $MODDIR/STRP/remove
+touch "$MODDIR"/STRP/disable
 
 elif [ -d $MODDIR/STRPxEXYPOWER ]; then
 ui_print ""
 ui_print "[!] - STRP Exynos Power Module Detected, disabling for security reasons."
-touch $MODDIR/STRPxEXYPOWER/remove
+touch "$MODDIR"/STRPxEXYPOWER/disable
 
 elif [ -d $MODDIR/STRPxPUBGLE ]; then
 ui_print ""
 ui_print "[!] - STRP Low End Module Detected, disabling for security reasons."
-touch $MODDIR/STRPxPUBGLE/remove
+touch "$MODDIR"/STRPxPUBGLE/disable
 
 elif [ -d $MODDIR/STRPxMIUI ]; then
 ui_print ""
 ui_print "[!] - STRP MIUI Module Detected, disabling for security reasons."
-touch $MODDIR/STRPxMIUI/remove
+touch "$MODDIR"/STRPxMIUI/disable
 
 elif [ -d $MODDIR/STRPxPG ]; then
 ui_print ""
 ui_print "[!] - STRP Pure Gaming Module Detected, disabling for security reasons."
-touch $MODDIR/STRPxPG/remove
+touch "$MODDIR"/STRPxPG/disable
 
 elif [ -d $MODDIR/STRPxSPOOFER ]; then
 ui_print ""
 ui_print "[!] - STRP Spoofer Module Detected, disabling for security reasons."
-touch $MODDIR/STRPxSPOOFER/remove
+touch "$MODDIR"/STRPxSPOOFER/disable
 
 elif [ -d $MODDIR/STRPxULTRAxBATTERY ]; then
 ui_print ""
 ui_print "[!] - STRP Ultra Battery Module Detected, disabling for security reasons."
-touch $MODDIR/STRPxULTRAxBATTERY/remove
+touch "$MODDIR"/STRPxULTRAxBATTERY/disable
 
 elif [ -d $MODDIR/STRPxUNLOCKER ]; then
 ui_print ""
 ui_print "[!] - STRP Unlocker Module Detected, disabling for security reasons."
-touch $MODDIR/STRPxUNLOCKER/remove
+touch "$MODDIR"/STRPxUNLOCKER/disable
 
 
 elif [ "$(pm list package magnetarapp)" ]; then
 ui_print ""
 ui_print "[!] - MAGNETAR App has been detected, removing the app to avoid conflicts..."
+ui_print ""
 pm uninstall -k --user 0 com.magnetarapp
 sleep 1
-ui_print ""
-ui_print "[!] - Done"
-ui_print ""
 
-elif [ "$(pm list package ktweak)" ]; then
+elif [ "$(pm list package pedrozzz)" ]; then
 ui_print ""
-ui_print "[!] - KTweak App has been detected, removing the app to avoid conflicts..."
+ui_print "[!] - King Tweaks App has been detected, removing the app to avoid conflicts..."
 pm uninstall -k --user 0 pedrozzz.king.tweaks
 sleep 1
-ui_print ""
-ui_print "[!] - Done"
-ui_print ""
 
 elif [ "$(pm list package lsandroid)" ]; then
 ui_print ""
 ui_print "[!] - LSpeed App has been detected, removing the app to avoid conflicts..."
+ui_print ""
 pm uninstall -k --user 0 com.paget96.lsandroid
 sleep 1
-ui_print ""
-ui_print "[!] - Done"
-ui_print ""
 
 elif [ "$(pm list package feravolt)" ]; then
 ui_print ""
 ui_print "[!] - FDE.AI App has been detected, removing the app to avoid conflicts..."
+ui_print ""
 pm uninstall -k --user 0 com.feravolt.fdeai
 sleep 1
-ui_print ""
-ui_print "[!] - Done"
-ui_print ""
+
 
 elif [ "$(pm list package kitana)" ]; then
 ui_print ""
 ui_print "[!] - Kitana Tweak App has been detected, removing the app to avoid conflicts..."
+ui_print ""
 pm uninstall -k --user 0 com.tweak.kitana
 sleep 1
-ui_print ""
-ui_print "[!] - Done"
-ui_print ""
 
 elif [ "$(pm list package nfs)" ]; then
 ui_print ""
 ui_print "[!] - NFS Manager App has been detected, removing the app to avoid conflicts..."
+ui_print ""
 pm uninstall -k --user 0 com.nfs.nfsmanager
 sleep 1
-ui_print ""
-ui_print "[!] - Done"
-ui_print ""
 
 fi
 
+ui_print ""
 ui_print "[*] - Conflict checker executed"
 sleep 1.5
 
@@ -420,21 +409,20 @@ ui_print ""
 
 RU=1
   while true; do
-	  ui_print "  $RU "
-	  if $VKSEL; then
-		  RU=$((RU + 1))
-	  else
-		  break
-	  fi
-	  if [ $RU -gt 16 ]; then
-		  RU=1
-	  fi
-  done
-
+       ui_print "  ${RU}"
+       if ${VKSEL}; then
+          RU=$((RU + 1))
+       else
+           break
+   fi
+   if [[ ${RU} -gt 16 ]]; then
+          RU=1
+   fi
+   done 
 ui_print ""
-set_perm_recursive "$MODPATH" 0 0 0755 0644
+
 for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveData/Local/*/Setting; do
-case $RU in
+case "$RU" in
  1 ) TEXT="✗ | None"; UNTEXT="None";;
  
  2 ) TEXT="✓ | PUBG Mobile / BGMI / 90 FPS "; UNTEXT="PUBG Mobile and BGMI 90 FPS"; sed -i '/ro.product.model/s/.*/ro.product.model=M2102K1C/' "${modpath}system.prop"; sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=M2102K1C/' "${modpath}system.prop"; sed -i '/ro.product.system.model/s/.*/ro.product.system.model=M2102K1C/' "${modpath}system.prop"; sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=M2102K1C/' "${modpath}system.prop"; sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=M2102K1C/' "${modpath}system.prop";;
@@ -493,18 +481,18 @@ ui_print "[*] - Select which you want: "
 ui_print ""
 
 TEXTBRANCH=1
-while true; do
-		ui_print "  $TEXTBRANCH"
-		if $VKSEL; then
-			TEXTBRANCH=$((TEXTBRANCH + 1))
-		else
-			break
-		fi
-		if [[ $TEXTBRANCH -gt "3" ]]; then
-			TEXTBRANCH=1
-		fi
-	done
-case $TEXTBRANCH in
+   while true; do
+       ui_print "  ${TEXTBRANCH}"
+       if ${VKSEL}; then
+          TEXTBRANCH=$((TEXTBRANCH + 1))
+       else
+           break
+   fi
+   if [[ ${TEXTBRANCH} -gt 3 ]]; then
+          TEXTBRANCH=1
+   fi
+   done
+case "$TEXTBRANCH" in
 
         1)
 			TEXTBRANCH="Stable (Default)"

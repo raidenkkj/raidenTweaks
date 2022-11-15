@@ -170,18 +170,19 @@ ORIGDIR="$MAGISKTMP/mirror"
 }
 
 # Extract files
-ui_print "[*] - Extracting module files"
-unzip -o "$ZIPFILE" -x 'META-INF/*' 'common/functions.sh' -d $MODPATH >&2
-[ -f "$MODPATH/common/addon.tar.xz" ] && tar -xf $MODPATH/common/addon.tar.xz -C $MODPATH/common 2>/dev/null
+ui_print "[*] - Extracting module files..."
+unzip -o "$ZIPFILE" -x 'META-INF/*' 'common/functions.sh' -d "$MODPATH" >&2
+[[ -f "$MODPATH/common/addon.tar.xz" ]] && tar -xf "$MODPATH/common/addon.tar.xz" -C "$MODPATH/common" 2>/dev/null
 
 # Run addons
-if [ "$(ls -A $MODPATH/common/addon/*/install.sh 2>/dev/null)" ]; then
-  ui_print " "; ui_print "[*] - Running addons "
-  for i in $MODPATH/common/addon/*/install.sh; do
-    ui_print "[*] - Running $(echo $i | sed -r "s|$MODPATH/common/addon/(.*)/install.sh|\1|")..."
-    . $i
-  done
-fi
+[[ "$(ls -A "$MODPATH"/common/addon/*/install.sh 2>/dev/null)" ]] && {
+	ui_print " "
+	ui_print "[*] - Running addons..."
+	for i in "$MODPATH"/common/addon/*/install.sh; do
+		ui_print "[*] - Running $(echo "$i" | sed -r "s|$MODPATH/common/addon/(.*)/install.sh|\1|")..."
+		. "$i"
+	done
+}
 
 # Remove files outside of module directory
 ui_print "[*] - Removing old files..."

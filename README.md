@@ -24,9 +24,9 @@ Does this module work perfectly on all kernels?
  
 # Support 
 
-<a href="https://t.me/rtksgroup"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
+ - Telegram group [here](https://t.me/raidenprjktsgroup)!
 
-In case of bugs, join the group to report your problem and we will try to help you.
+ - In case of bugs, join the group to report your problem and we will try to help you.
 
 # Disclaimer
 
@@ -46,17 +46,11 @@ In case of bugs, join the group to report your problem and we will try to help y
 
 # Installation guide 
 
-* Download the module [here](https://fir3.net/sXSL)
-
-<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/abbac80c5f4916073bd1f.jpg" width="1000"></a></p>
+* Download the module [here](https://fir3.net/sXSL)!
 
 * Go to your Magisk, enter the module menu and click in "install from storage"
 
-<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/f29c6a172a98828c71489.jpg" width="1000"></a></p>
-
-* Now go to the directory that the module is in and select it, choose the options and wait.
-
-<p align="center"><a href="https://t.me/rtksgroup"><img src="https://telegra.ph/file/876d71b5c31d0390fb480.jpg" width="1000"></a></p>
+* Now go to the directory that the module is in and select it, choose the options during installation and wait. Obs: With the volume "+" you change the option, with the volume "-" you confirm the option.
 
 * I recommend saving the logs to resolve possible bugs.
 
@@ -81,5 +75,3 @@ In case of bugs, join the group to report your problem and we will try to help y
 * [corruptor64](https://forum.xda-developers.com/member.php?s=1f3e5a492ffebb222d62a936f8b34ce2&u=731319) by the toast app.
 
 Thank you to everyone who contributed to this project. <3
-
-![Jokes Card](https://readme-jokes.vercel.app/api)<br>

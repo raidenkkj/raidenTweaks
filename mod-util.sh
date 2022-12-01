@@ -6,8 +6,18 @@
 #
 ##########################################################################################
 
+# Log variables
+RLOG=/sdcard/.RTKS/raidenTweaks.log
+oldRLOG=/sdcard/.RTKS/raidenTweaks-old.log
+RTKSLOG=/sdcard/.RTKS/raidenTweaks-menu-verbose.log
+oldRTKSLOG=/sdcard/.RTKS/raidenTweaks-menu-verbose-old.log
+LMKLOG=/sdcard/.RTKS/raidenTweaks-lmkmenu-verbose.log
+oldLMKLOG=/sdcard/.RTKS/raidenTweaks-lmkmenu-verbose-old.log
+UNLOG=/sdcard/.RTKS/raidenTweaks-unlocker-menu-verbose.log
+oldUNLOG=/sdcard/.RTKS/raidenTweaks-unlocker-menu-verbose-old.log
+
 # Versions
-MODUTILVER=v2.6.1
+MODUTILVER=v2.6.1-r2
 MODUTILVCODE=261
 
 # Check A/B slot
@@ -263,9 +273,9 @@ test_connection() {
   ) && echo "" && echo "${G}[*] - Done, all right.${N}" || { echo "" && echo "${R}[*] - You are not connected to the internet!${N}"; false; }
 }
 
-
 # Log files will be uploaded to termbin.com
 # Logs included: VERLOG LOG oldVERLOG oldLOG
+
 upload_logs() {
   $BBok && {
     test_connection || exit
@@ -274,15 +284,30 @@ upload_logs() {
     echo ""
     [[ -s $VERLOG ]] && verUp=$(cat "$VERLOG" | nc termbin.com 9999) || verUp=none
     [[ -s $oldVERLOG ]] && oldverUp=$(cat "$oldVERLOG" | nc termbin.com 9999) || oldverUp=none
-    [[ -s $RLOG ]] && logUp=$(cat "$RLOG" | nc termbin.com 9999) || logUp=none
-    [[ -s $oldLOG ]] && oldlogUp=$(cat "$oldLOG" | nc termbin.com 9999) || oldlogUp=none
+    [[ -s $RLOG ]] && RLOGUp=$(cat "$RLOG" | nc termbin.com 9999) || RLOGUp=none
+    [[ -s $oldRLOG ]] && oldRLOG=$(cat "$oldRLOG" | nc termbin.com 9999) || oldRLOG=none
+    [[ -s $RTKSLOG ]] && RTMlogUp=$(cat "$RTKSLOG" | nc termbin.com 9999) || RTMlogUp=none
+    [[ -s $oldRTKSLOG ]] && oldRTMlog=$(cat "$oldRTKSLOG" | nc termbin.com 9999) || oldRTMlog=none
+    [[ -s $UNLOG ]] && UNlogUp=$(cat "$UNLOG" | nc termbin.com 9999) || UNlogUp=none
+    [[ -s $oldUNLOG ]] && oldUNlog=$(cat "$oldUNLOG" | nc termbin.com 9999) || oldUNlog=none
+    [[ -s $LMKLOG ]] && LMKlogUp=$(cat "$LMKLOG" | nc termbin.com 9999) || LMKlogUp=none
+    [[ -s $oldLMKLOG ]] && oldLMKlog=$(cat "$oldLMKLOG" | nc termbin.com 9999) || oldLMKlog=none
     [[ -s $stdoutLOG ]] && stdoutUp=$(cat "$stdoutLOG" | nc termbin.com 9999) || stdoutUp=none
     [[ -s $oldstdoutLOG ]] && oldstdoutUp=$(cat "$oldstdoutLOG" | nc termbin.com 9999) || oldstdoutUp=none
     echo -n "${C}[*] - Link: ${BGBL}"
     echo "$MODEL ($DEVICE) API $API \n$ROM \r$MODT - $CDNM
     
-    rT-log: $logUp
-    O_rT: $oldlogUp
+    rT-log: $RLOGUp
+    O_rT: $oldRLOG
+    
+    rT_M-log: $RTMlogUp
+    O_rT-M: $oldRTMlog
+    
+    UN-log: $UNlogUp
+    O_UN: $oldUNlog
+    
+    LMK-log: $LMKlogUp
+    O_LMK: $oldLMKlog
     
     Verbose: $verUp
     O_Verbose: $oldverUp

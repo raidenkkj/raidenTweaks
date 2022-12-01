@@ -65,6 +65,15 @@ dev="raidenkk"
 modpath="/data/adb/modules/RTKS/"
 magisk=$(magisk -V)
 
+if [[ -d "/sys/module/lowmemorykiller" ]]; then
+printf "\033c"
+else
+printf "\033c"
+echo "${R}[!] Your kernel has no low memory killer, returning to the main menu...${N}"
+sleep 4
+rtksmenu
+fi
+
 Menu() {
     echo -e '\n'
     if [[ "$lmkprof" == "Default" ]]; then

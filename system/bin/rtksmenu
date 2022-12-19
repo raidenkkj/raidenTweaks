@@ -47,11 +47,11 @@ case "${rtks_prof}" in
 1)
   rtks_prof=Automatic
   ;;
-  
+
    2)
     rtks_prof=Battery
     ;;
-    
+
      3)
       rtks_prof=Balanced
       ;;
@@ -63,7 +63,7 @@ case "${rtks_prof}" in
         5)
          rtks_prof=Gaming
          ;;
-         
+
           6)
          rtks_prof=Thermal
          ;;
@@ -80,7 +80,7 @@ fi
 if [[ "$(grep_prop ro.config.low_ram ${modpath}system.prop)" == "true" ]]; then
     lr=Enabled
 elif [[ "$(grep_prop ro.config.low_ram ${modpath}system.prop)" == "false" ]]; then
-    lr=Disabled 
+    lr=Disabled
 else
     lr=Unknown
 fi
@@ -90,22 +90,25 @@ sdk=$(getprop ro.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vendor.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vndk.version)
 
-dev="raidenkk"
+moddev="raidenkk"
+modname="$(grep_prop name "$modpath"module.prop)"
+modver="$(grep_prop version "$modpath"module.prop)"
+modcodename="$(grep_prop codename "$modpath"module.prop)"
 
-magisk=$(magisk -V)
+magisk=$(magisk -c)
 [[ "$(settings get global low_power)" == "1" ]] && low_power_mode="Enabled" || low_power_mode="Disabled"
 
 Menu() {
     echo -e '\n'
     printf "\033c"
     echo "${Y}|         Welcome to raidenTweaks menu         |${N}"
-    echo "${Y}|  Created and written by $dev @ telegram  |${N}"
+    echo "${Y}|  Created and written by $moddev @ telegram  |${N}"
     echo ""
     echo "${Y}[*] Your device:${B} $(getprop ro.product.model) ${N}"
     echo ""
     echo "${Y}[*] Your current profile:${B} $rtks_prof ${N}"
     echo ""
-    echo "${Y}[*] Version:${B} $(grep_prop version "$modpath"module.prop) - $(grep_prop codename "$modpath"module.prop) ${N}"
+    echo "${Y}[*] Version:${B} $modver - $modcodename ${N}"
     echo ""
     echo "${Y}[*] Magisk version:${B} $magisk ${N}"
     echo ""
@@ -194,13 +197,13 @@ Menu() {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Option1 ;; 
+    1) Option1 ;;
     2) Option2 ;;
     3) Option3 ;;
     4) Option4 ;;
     5) Option5 ;;
     6) Option6 ;;
-    7) Option7 ;; 
+    7) Option7 ;;
     8) Option8 ;;
     9) Option9 ;;
     10) Option10 ;;
@@ -222,7 +225,7 @@ Menu() {
     *) Menu ;;
     esac
     }
-    
+
 Option1 () {
     printf "\033c"
     echo "${G}Putting the profile in automatic mode...${N}"
@@ -382,7 +385,7 @@ Option7 () {
     *) Option7 ;;
     esac
 }
-    
+
 Option8 () {
     printf "\033c"
     echo "${G}Fstrim initializing, please wait.${N}"
@@ -426,7 +429,6 @@ Option9 () {
 }
 
 Option10 () {
-
     su -lp 2000 -c "cmd notification post -S bigtext -t 'Clear ram basic is running successfully.' tag 'Execution in: $(date)'"
     printf "\033c"
     echo "${G}Dropping all caches, wait, it's very fast. ^^${N}"
@@ -649,7 +651,7 @@ Option18 () {
     echo ""
     elif [[ "$lr" == "Disabled" ]]; then
     echo "${G}Enabling low ram...${N}"
-    echo "" 
+    echo ""
     echo "${G}Features affected by the low-ram property:${N}"
     echo "${C}- Flat recent / multitasking UI, multi-users disabled${N}"
     sleep 0.8
@@ -673,7 +675,7 @@ Option18 () {
     echo ""
     elif [[ "$lr" == "Unknown" ]]; then
     echo "${G}Enabling low ram...${N}"
-    echo "" 
+    echo ""
     echo "${G}Features affected by the low-ram property:${N}"
     echo "${C}- Flat recent / multitasking UI, multi-users disabled${N}"
     sleep 0.8
@@ -810,7 +812,341 @@ GoOut() {
     printf "\033c"
     echo ""
     echo "${B}Bye bye, see you next time.${N}"
+    echo ""
     exit
 }
-printf "\033c"
-Menu
+
+echo ""
+[[ $# -eq "0" ]] && Menu
+
+
+updateall() {
+commondir="/data/adb/modules/RTKS/"
+updatedir="/data/adb/modules_update/RTKS/"
+branch="$(grep_prop dbranch "$modpath"module.prop)"
+
+if [ -d "$commondir" ]; then
+modpath="/data/adb/modules/RTKS/"
+elif [ -d "$updatedir" ]; then
+modpath="/data/adb/modules_update/RTKS/"
+fi
+
+if [ "$branch" == stable ]; then
+dbranch=stable
+elif [ "$branch" == beta ]; then
+dbranch=beta
+elif [ "$branch" == tests ]; then
+dbranch=tests
+else
+dbranch=stable
+fi
+
+echo ""
+echo "$G[*] - Downloading the latest script(s) / application from GitHub...$N"
+echo ""
+wget -qO "${modpath}system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/raidentweaks"
+wget -qO "${modpath}system/bin/raidenauto" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/raidenauto"
+wget -qO "${modpath}system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/rtksmenu"
+wget -qO "${modpath}system/bin/lmkmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/lmkmenu"
+wget -qO "${modpath}system/bin/unlockermenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/unlockermenu"
+wget -qO "${modpath}system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/cleaner"
+wget -qO "${modpath}system/bin/rfstrim" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/rfstrim"
+wget -qO "${modpath}mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/mod-util.sh"
+wget -qO "/data/local/tmp/RaidenTweaks.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RaidenTweaks.apk?raw=true"
+wget -qO "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RDToast.apk?raw=true"
+
+echo ""
+echo "$G[*] - Uninstalling old (if u have) and installing new version of the main application..$N."
+echo ""
+if [ "$(pm list package org.rtks.raiden)" ]; then
+pm uninstall -k --user 0 org.rtks.raiden
+elif [ "$(pm list package com.raidentweaks)" ]; then
+pm uninstall -k --user 0 com.raidentweaks
+fi
+pm install /data/local/tmp/RaidenTweaks.apk
+echo ""
+echo "$G[*] - Uninstalling old (if u have) and installing new version of the toast application...$N"
+if [ "$(pm list package bellavita.toast)" ]; then
+echo ""
+pm uninstall -k --user 0 bellavita.toast
+fi
+pm install /data/local/tmp/RDToast.apk
+echo ""
+
+echo "$G[*] - Setting permissions...$N"
+chmod 755 ${modpath}system/bin/*
+echo "$G[*] - Done, now the device will be rebooted!$N"
+sleep 5
+reboot system
+}
+
+help_text() {
+	echo "  ${Y}$modname $VER($REL)
+by ${B}$AUTHOR${N}
+${Y}Usage: ${B}$_name${N}
+${Y}or: ${B}$_name [options]...${N}
+${Y}Telegram group: ${B}https://t.me/raidenprjktsgroup${N}
+
+${Y}Supported options:${N}
+${Y}-u --update-all ${B}[Update module scripts to the latest available version]${N}
+${Y}-p --profile ${B}[1-6] [Switch between profiles without opening the terminal GUI, for a fast and seamless experience]${N}
+${Y}-c --clear-ram ${B}[1-3] [Higher value means more agressive memory reclaim, which includes killing apps at maximum value (3)]${N}
+${Y}-t --thermal ${B}[1-2] [Disable or enable thermal, option 1 will disable and option 2 will enable]${N}
+${Y}-h --help ${B}[Show this message]${N}
+    "
+	exit 0
+}
+
+opts=":u-:p:c:t:h-:"
+while getopts "$opts" opt; do
+    case "$opt" in
+        -)
+            case "$OPTARG" in
+                update-all)
+                    updateall
+                    ;;
+                profile)
+                    if [[ "$2" == "1" ]]; then
+                    rtks_profile=automatic
+                    echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+                    setprop persist.raidentweaks.mode "1" 2>/dev/null
+                    sleep 1
+                    echo ""
+                    echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+                    echo ""
+                    elif [[ "$2" == "2" ]]; then
+                    rtks_profile=balanced
+                    echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+                    setprop persist.raidentweaks.mode "2" 2>/dev/null
+                    sleep 1
+                    echo ""
+                    echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+                    echo ""
+                    elif [[ "$2" == "3" ]]; then
+                    rtks_profile=battery
+                    echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+                    setprop persist.raidentweaks.mode "3" 2>/dev/null
+                    sleep 1
+                    echo ""
+                    echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+                    echo ""
+                    elif [[ "$2" == "4" ]]; then
+                    rtks_profile=performance
+                    echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+                    setprop persist.raidentweaks.mode "4" 2>/dev/null
+                    sleep 1
+                    echo ""
+                    echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+                    echo ""
+                    elif [[ "$2" == "5" ]]; then
+                    rtks_profile=gaming
+                    echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+                    setprop persist.raidentweaks.mode "5" 2>/dev/null
+                    sleep 1
+                    echo ""
+                    echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+                    echo ""
+                    elif [[ "$2" == "6" ]]; then
+                    rtks_profile=thermal
+                    echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+                    setprop persist.raidentweaks.mode "6" 2>/dev/null
+                    sleep 1
+                    echo ""
+                    echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+                    echo ""
+                    else
+                    echo "$R[!] Error: invalid option or null output.$N"
+                    echo ""
+                    fi
+                    ;;
+                clear-ram)
+                    if [[ "$2" == "1" ]]; then
+                    echo "${G}[*] Dropping all caches, wait, it's very fast. ^^${N}"
+                    sleep 0.5
+                    sync
+                    echo "3" >"/proc/sys/vm/drop_caches"
+                    echo ""
+                    echo "$G[*] Done.$N"
+                    echo ""
+                    elif [[ "$2" == "2" ]]; then
+                    echo "${G}[*] Dropping caches and killing background processes, wait patiently...${N}"
+                    sleep 0.5
+                    sync
+                    echo "3" >"/proc/sys/vm/drop_caches"
+                    am kill-all
+                    echo ""
+                    echo "$G[*] Done.$N"
+                    echo ""
+                    elif [[ "$2" == "3" ]]; then
+                    echo "${G}[*] Dropping all caches and killing all processes, wait there.${N}"
+                    sleep 0.5
+                    sync
+                    echo "3" >"/proc/sys/vm/drop_caches"
+                    am kill-all
+                    sleep 2
+                    while IFS= read -r pkg_nm; do
+                        [[ "$pkg_nm" != "com.termux" ]] && [[ "$pkg_nm" != "jackpal.androidterm" ]] && [[ "$pkg_nm" != "yarolegovich.materialterminal" ]] && [[ "$pkg_nm" != "com.google.android.inputmethod.latin" ]] && [[ "$pkg_nm" != "com.termoneplus" ]] && [[ "$pkg_nm" != "com.pittvandewitt.viperfx" ]] && [[ "$pkg_nm" != "com.topjohnwu.magisk" ]] && [[ "$pkg_nm" != "ridmik.keyboard" ]] && [[ "$pkg_nm" != "com.maxmpz.equalizer" ]] && [[ "$pkg_nm" != "com.miui.screenrecorder" ]] && am force-stop "$pkg_nm"
+                    done <<<"$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
+                    echo ""
+                    echo "$G[*] Done.$N"
+                    echo ""
+                    else
+                    echo "$R[!] Error: invalid option or null output.$N"
+                    echo ""
+                    fi
+                    ;;
+                thermal)
+                    if [[ "$2" == "1" ]]; then
+                    echo "${G}[*] Disabling thermal...${N}"
+                    echo ""
+                    echo "${R}Warning: Your device may get hot.${N}"
+                    echo "${R}This will not work on MIUI!${N}"
+                    sleep 0.5
+                    stop thermal-engine
+                    echo ""
+                    echo "${G}[*] Process finished.${N}"
+                    echo ""
+                    elif [[ "$2" == "2" ]]; then
+                    echo "${G}[*] Enabling thermal engine...${N}"
+                    sleep 0.5
+                    start thermal-engine
+                    echo ""
+                    echo "${G}[*] Process finished.${N}"
+                    echo ""
+                    else
+                    echo "$R[!] Error: invalid option or null output.$N"
+                    echo ""
+                    fi
+                    ;;
+                help)
+                    help_text
+                    ;;
+                *)
+				    [[ "$OPTERR" == "1" ]] && [[ "${opts:0:1}" != ":" ]] && {
+						help_me
+				    }
+                    ;;
+            esac
+            ;;
+        u)
+            updateall
+            ;;
+        p)
+            if [[ "$2" == "1" ]]; then
+            rtks_profile=automatic
+            echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+            setprop persist.raidentweaks.mode "1" 2>/dev/null
+            sleep 1
+            echo ""
+            echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+            echo ""
+            elif [[ "$2" == "2" ]]; then
+            rtks_profile=balanced
+            echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+            setprop persist.raidentweaks.mode "2" 2>/dev/null
+            sleep 1
+            echo ""
+            echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+            echo ""
+            elif [[ "$2" == "3" ]]; then
+            rtks_profile=battery
+            echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+            setprop persist.raidentweaks.mode "3" 2>/dev/null
+            sleep 1
+            echo ""
+            echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+            echo ""
+            elif [[ "$2" == "4" ]]; then
+            rtks_profile=performance
+            echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+            setprop persist.raidentweaks.mode "4" 2>/dev/null
+            sleep 1
+            echo ""
+            echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+            echo ""
+            elif [[ "$2" == "5" ]]; then
+            rtks_profile=gaming
+            echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+            setprop persist.raidentweaks.mode "5" 2>/dev/null
+            sleep 1
+            echo ""
+            echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+            echo ""
+            elif [[ "$2" == "6" ]]; then
+            rtks_profile=thermal
+            echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}."
+            setprop persist.raidentweaks.mode "6" 2>/dev/null
+            sleep 1
+            echo ""
+            echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
+            echo ""
+            else
+            echo "$R[!] Error: invalid option or null output.$N"
+            echo ""
+            fi
+            ;;
+        c)
+            if [[ "$2" == "1" ]]; then
+            echo "${G}[*] Dropping all caches, wait, it's very fast. ^^${N}"
+            sleep 0.5
+            sync
+            echo "3" >"/proc/sys/vm/drop_caches"
+            echo ""
+            echo "$G[*] Done.$N"
+            echo ""
+            elif [[ "$2" == "2" ]]; then
+            echo "${G}[*] Dropping caches and killing some background processes, wait patiently...${N}"
+            sleep 0.5
+            sync
+            echo "3" >"/proc/sys/vm/drop_caches"
+            am kill-all
+            echo ""
+            echo "$G[*] Done.$N"
+            echo ""
+            elif [[ "$2" == "3" ]]; then
+            echo "${G}[*] Dropping all caches and killing all processes, wait there.${N}"
+            sleep 0.5
+            sync
+            echo "3" >"/proc/sys/vm/drop_caches"
+            am kill-all
+            sleep 2
+            while IFS= read -r pkg_nm; do
+                [[ "$pkg_nm" != "com.termux" ]] && [[ "$pkg_nm" != "jackpal.androidterm" ]] && [[ "$pkg_nm" != "yarolegovich.materialterminal" ]] && [[ "$pkg_nm" != "com.google.android.inputmethod.latin" ]] && [[ "$pkg_nm" != "com.termoneplus" ]] && [[ "$pkg_nm" != "com.pittvandewitt.viperfx" ]] && [[ "$pkg_nm" != "com.topjohnwu.magisk" ]] && [[ "$pkg_nm" != "ridmik.keyboard" ]] && [[ "$pkg_nm" != "com.maxmpz.equalizer" ]] && [[ "$pkg_nm" != "com.miui.screenrecorder" ]] && am force-stop "$pkg_nm"
+            done <<<"$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
+            echo ""
+            echo "$G[*] Done.$N"
+            echo ""
+            else
+            echo "$R[!] Error: invalid option or null output.$N"
+            echo ""
+            fi
+            ;;
+        t)
+            if [[ "$2" == "1" ]]; then
+            echo "${G}[*] Disabling thermal...${N}"
+            echo ""
+            echo "${R}Warning: Your device may get hot.${N}"
+            echo "${R}This will not work on MIUI!${N}"
+            sleep 0.5
+            stop thermal-engine
+            echo ""
+            echo "${G}[*] Process finished.${N}"
+            echo ""
+            elif [[ "$2" == "2" ]]; then
+            echo "${G}[*] Enabling thermal engine...${N}"
+            sleep 0.5
+            start thermal-engine
+            echo ""
+            echo "${G}[*] Process finished.${N}"
+            echo ""
+            else
+            echo "$R[!] Error: invalid option or null output.$N"
+            echo ""
+            fi
+            ;;
+        h)
+            help_text
+            ;;
+    esac
+done
+shift $((OPTIND - 1))

@@ -390,7 +390,7 @@ ui_print ""
 ui_print " 1 - None"
 ui_print " 2 - PUBG Mobile / BGMI / 90 FPS settings"
 ui_print " 3 - PUBG: New State / MAX settings"
-ui_print " 4 - COD Mobile And BlackDesert Mobile / MAX settings"
+ui_print " 4 - COD Mobile / FIFA and BlackDesert Mobile / MAX settings"
 ui_print " 5 - Mobile Legends / MAX settings"
 ui_print " 6 - Sky Children of the Light and Asphalt 9 / 60 FPS settings"
 ui_print " 7 - COD Mobile / 120 FPS settings"
@@ -496,9 +496,11 @@ case "$TEXTBRANCH" in
 
         1)
 			TEXTBRANCH="Stable (Default)"
+			sed -i -e "/dbranch=/s/=.*/=stable/" "${modpath}module.prop"
 			;;
 	    2)
 			TEXTBRANCH="Beta"
+			sed -i -e "/dbranch=/s/=.*/=beta/" "${modpath}module.prop"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/raidentweaks/s/.*/wget -qO "${modpath}system\/bin\/raidentweaks" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/beta\/system\/bin\/raidentweaks"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/raidenauto/s/.*/wget -qO "${modpath}system\/bin\/raidenauto" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/beta\/system\/bin\/raidenauto"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/rtksmenu/s/.*/wget -qO "${modpath}system\/bin\/rtksmenu" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/beta\/system\/bin\/rtksmenu"/' "${modpath}service.sh"
@@ -511,6 +513,7 @@ case "$TEXTBRANCH" in
 			;;
 		3)
 			TEXTBRANCH="Tests"
+			sed -i -e "/dbranch=/s/=.*/=tests/" "${modpath}module.prop"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/raidentweaks/s/.*/wget -qO "${modpath}system\/bin\/raidentweaks" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/system\/bin\/raidentweaks"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/raidenauto/s/.*/wget -qO "${modpath}system\/bin\/raidenauto" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/system\/bin\/raidenauto"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/rtksmenu/s/.*/wget -qO "${modpath}system\/bin\/rtksmenu" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/system\/bin\/rtksmenu"/' "${modpath}service.sh"

@@ -132,7 +132,7 @@ case $(echo $(basename $ZIPFILE) | tr '[:upper:]' '[:lower:]') in
 
        $VKSEL "DOWN"
 
-     fi;;
+     fi ;;
 
 esac
 

@@ -24,11 +24,12 @@ wget -qO "${modpath}system/bin/unlockermenu" "https://raw.githubusercontent.com/
 # Fstrim every time the device reboot
 rfstrim 2>/dev/null
 
+# Init scripts
 sleep 150
 raidentweaks &
 cleaner
 
-# set swappiness to 100 (zram
+# Set swappiness to 100% (zram)
 echo 100 > /proc/sys/vm/swappiness
 
 # done

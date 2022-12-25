@@ -50,12 +50,11 @@ echo ""
 
 zip -0 -r9 -ll "$rname-$cdnm-$year$month$day$hour$minute.zip" . -x '*.git*' -x '*RaidenTweaks.apk*' -x '*RDToast.apk*' -x '*mod-util.sh*' -x '*fstrim*' -x '*lmkmenu*' -x '*cleaner*' -x '*changelog.md*' -x '*raidenauto*' -x '*raidentweaks*' -x '*rtksmenu*' -x '*images*' -x '*build.sh*' -x '*unlockermenu*'
 
-if [ -d "$outdir" ]
-then
-mv -f "$rname-$cdnm-$year$month$day$hour$minute.zip" $outdir
+if [[ -d "$outdir" ]]; then
+	mv -f "$rname-$cdnm-$year$month$day$hour$minute.zip" $outdir
 else
-`mkdir $outdir`
-mv -f "$rname-$cdnm-$year$month$day$hour$minute.zip" $outdir
+	mkdir $outdir
+	mv -f "$rname-$cdnm-$year$month$day$hour$minute.zip" $outdir
 fi
 
 exit=$(date +%s)

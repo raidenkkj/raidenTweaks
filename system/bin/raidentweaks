@@ -2,6 +2,11 @@
 # Some script credits go to @pedro3z0 ktsr dev, thx pedro
 # Modified by raidenkk @ telegram
 
+# Load raidenTweaks_conf.sh
+CONFDIR=/storage/emulated/0/
+. "$CONFDIR"/raidenTweaks_conf.sh || exit $?
+
+# Logs
 RLOG=/sdcard/.RTKS/raidenTweaks.log
 
 if [[ -e $RLOG ]] 
@@ -82,9 +87,88 @@ simple_bar() {
  kmsg1 "-------------------------------------------------------"
  }
 
+batteryopt1() {
+for cpu in /sys/devices/system/cpu/cpu*
+do
+if [[ $percentage -le "5" ]]
+then
+write "/sys/devices/system/cpu/cpu1/online" "0"
+write "/sys/devices/system/cpu/cpu2/online" "0"
+write "/sys/devices/system/cpu/cpu5/online" "0"
+write "/sys/devices/system/cpu/cpu6/online" "0"
+
+elif [[ $percentage -ge "5" ]]
+then
+write "$cpu/online" "1"
+fi
+done
+}
+
+batteryopt2() {
+for cpu in /sys/devices/system/cpu/cpu*
+do
+if [[ $percentage -le "15" ]]
+then
+write "/sys/devices/system/cpu/cpu1/online" "0"
+write "/sys/devices/system/cpu/cpu2/online" "0"
+write "/sys/devices/system/cpu/cpu5/online" "0"
+write "/sys/devices/system/cpu/cpu6/online" "0"
+
+elif [[ $percentage -ge "15" ]]
+then
+write "$cpu/online" "1"
+fi
+done
+}
+
+batteryopt3() {
+for cpu in /sys/devices/system/cpu/cpu*
+do
+if [[ $percentage -le "30" ]]
+then
+write "/sys/devices/system/cpu/cpu1/online" "0"
+write "/sys/devices/system/cpu/cpu2/online" "0"
+write "/sys/devices/system/cpu/cpu5/online" "0"
+write "/sys/devices/system/cpu/cpu6/online" "0"
+
+elif [[ $percentage -ge "30" ]]
+then
+write "$cpu/online" "1"
+fi
+done
+}
+
+batteryoptd() {
+for cpu in /sys/devices/system/cpu/cpu*
+do
+if [[ $percentage -le "20" ]]
+then
+write "/sys/devices/system/cpu/cpu1/online" "0"
+write "/sys/devices/system/cpu/cpu2/online" "0"
+write "/sys/devices/system/cpu/cpu5/online" "0"
+write "/sys/devices/system/cpu/cpu6/online" "0"
+
+elif [[ $percentage -ge "20" ]]
+then
+write "$cpu/online" "1"
+fi
+done
+}
+
+battery_efficiency() {
+if [[ "$battery_efficiency" == "1" ]]; then
+batteryopt1
+elif [[ "$battery_efficiency" == "2" ]]; then
+batteryopt2
+elif [[ "$battery_efficiency" == "3" ]]; then
+batteryopt2
+else
+batteryoptd
+fi
+}
+
 rtks_ver=$(grep version ${modpath}module.prop)
 rtks_codename=$(grep codename ${modpath}module.prop)
-
 
 # Grep prop
 grep_prop() {
@@ -555,23 +639,15 @@ write "${cpu}interactive/hispeed_freq" "$cpumfreq"
 fi
 done
 
-for cpu in /sys/devices/system/cpu/cpu*
-do
-if [[ $percentage -le "20" ]]
-then
-write "/sys/devices/system/cpu/cpu1/online" "0"
-write "/sys/devices/system/cpu/cpu2/online" "0"
-write "/sys/devices/system/cpu/cpu5/online" "0"
-write "/sys/devices/system/cpu/cpu6/online" "0"
-
-elif [[ $percentage -ge "20" ]]
-then
-write "$cpu/online" "1"
-fi
-done
 
 simple_bar
 kmsg1 "[*] TWEAKED CPU. "
+simple_bar
+
+battery_efficiency
+
+simple_bar
+kmsg1 "[*] BATTERY EFFICIENCY LEVEL $battery_efficiency APPLIED."
 simple_bar
 
 
@@ -2641,20 +2717,11 @@ write "${cpu}interactive/hispeed_freq" "$cpumfreq"
 fi
 done
 
-for cpu in /sys/devices/system/cpu/cpu*
-do
-if [[ $percentage -le "20" ]]
-then
-write "/sys/devices/system/cpu/cpu1/online" "0"
-write "/sys/devices/system/cpu/cpu2/online" "0"
-write "/sys/devices/system/cpu/cpu5/online" "0"
-write "/sys/devices/system/cpu/cpu6/online" "0"
+battery_efficiency
 
-elif [[ $percentage -ge "20" ]]
-then
-write "$cpu/online" "1"
-fi
-done
+simple_bar
+kmsg1 "[*] BATTERY EFFICIENCY LEVEL $battery_efficiency APPLIED."
+simple_bar
 
 simple_bar
 kmsg1 "[*] CPU SET TWEAKS... "

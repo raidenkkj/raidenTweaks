@@ -1,9 +1,9 @@
-if [[ -e "/sdcard/.RTKS" ]]; then 
-rm -rf /sdcard/.RTKS
-rm -rf /data/local/tmp/RaidenTweaks.apk
-rm -rf /data/local/tmp/RDToast.apk
-pm uninstall -k --user 0 org.rtks.raiden
-pm uninstall -k --user 0 bellavita.toast
+if [[ -e "/sdcard/.RTKS" ]]; then
+  rm -rf /sdcard/.RTKS
+  rm -rf /data/local/tmp/RaidenTweaks.apk
+  rm -rf /data/local/tmp/RDToast.apk
+  pm uninstall -k --user 0 org.rtks.raiden
+  pm uninstall -k --user 0 bellavita.toast
 fi
 
 if [ -f $INFO ]; then

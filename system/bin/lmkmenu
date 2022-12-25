@@ -68,7 +68,7 @@ magisk=$(magisk -V)
 Menu() {
     echo -e '\n'
     if [[ "$lmkprof" == "Default" ]]; then
-    cp /sys/module/lowmemorykiller/parameters/minfree /data/local/tmp/minfree
+        cp /sys/module/lowmemorykiller/parameters/minfree /data/local/tmp/minfree
     fi
     printf "\033c"
     echo "${Y}|              Welcome to LMK menu             |${N}"
@@ -111,27 +111,27 @@ Menu() {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Option1 ;; 
-    2) Option2 ;;
-    3) Option3 ;;
-    4) Option4 ;;
-    5) Option5 ;;
-    6) Option6 ;;
-    7) Option7 ;; 
-    8) Option8 ;;
-    B) Back ;;
-    0) GoOut ;;
-    *) Menu ;;
+        1) Option1 ;;
+        2) Option2 ;;
+        3) Option3 ;;
+        4) Option4 ;;
+        5) Option5 ;;
+        6) Option6 ;;
+        7) Option7 ;;
+        8) Option8 ;;
+        B) Back ;;
+        0) GoOut ;;
+        *) Menu ;;
     esac
     }
-    
+
 Option1 () {
     printf "\033c"
     echo "${G}Putting the lmk profile in light mode...${N}"
     sleep 0.5
     echo ""
     echo 2560,5120,7680,8960,10240,12800 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
-[[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
     sleep 0.5
     echo ""
     echo "${B}[ 1 ] Return${N}"
@@ -140,9 +140,9 @@ Option1 () {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Return ;;
-    0) GoOut ;;
-    *) Option1 ;;
+        1) Return ;;
+        0) GoOut ;;
+        *) Option1 ;;
     esac
 }
 
@@ -161,9 +161,9 @@ Option2 () {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Return ;;
-    0) GoOut ;;
-    *) Option2  ;;
+        1) Return ;;
+        0) GoOut ;;
+        *) Option2  ;;
     esac
 }
 
@@ -182,9 +182,9 @@ Option3 () {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Return ;;
-    0) GoOut ;;
-    *) Option3 ;;
+        1) Return ;;
+        0) GoOut ;;
+        *) Option3 ;;
     esac
 }
 
@@ -203,9 +203,9 @@ Option4 () {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Return ;;
-    0) GoOut ;;
-    *) Option4 ;;
+        1) Return ;;
+        0) GoOut ;;
+        *) Option4 ;;
     esac
 }
 
@@ -224,9 +224,9 @@ Option5 () {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Return ;;
-    0) GoOut ;;
-    *) Option5 ;;
+        1) Return ;;
+        0) GoOut ;;
+        *) Option5 ;;
     esac
 }
 
@@ -244,9 +244,9 @@ Option6() {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Return ;;
-    0) GoOut ;;
-    *) Option5 ;;
+        1) Return ;;
+        0) GoOut ;;
+        *) Option5 ;;
     esac
 }
 
@@ -278,9 +278,9 @@ Option8 () {
     echo "${C}Select your option ${N}: \c"
     read option
     case $option in
-    1) Return ;;
-    0) GoOut ;;
-    *) Option8 ;;
+        1) Return ;;
+        0) GoOut ;;
+        *) Option8 ;;
     esac
 }
 

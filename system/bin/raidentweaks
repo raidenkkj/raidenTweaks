@@ -5,17 +5,15 @@
 # Logs
 RLOG=/sdcard/.RTKS/raidenTweaks.log
 
-if [[ -e $RLOG ]] 
-then
-rm $RLOG
+if [[ -e $RLOG ]]; then
+	rm $RLOG
 fi
 
-if [[ -d "/sdcard/.RTKS" ]] 
-then
-touch raidenTweaks.log
+if [[ -d "/sdcard/.RTKS" ]]; then
+	touch raidenTweaks.log
 else
-mkdir /sdcard/.RTKS
-touch raidenTweaks.log
+	mkdir /sdcard/.RTKS
+	touch raidenTweaks.log
 fi
 
 # Log in white and continue (unnecessary)
@@ -42,26 +40,24 @@ toastbr() {
 }
 
 toastbr1() {
-	am start -a android.intent.action.MAIN -e toasttext "Perfil $rtks_profilebr aplicado" -n bellavita.toast/.MainActivity
+    am start -a android.intent.action.MAIN -e toasttext "Perfil $rtks_profilebr aplicado" -n bellavita.toast/.MainActivity
 }
 
 # Write
 write() {
 	# Bail out if file does not exist
-	if [[ ! -f "$1" ]]
-	then
-    kmsg "$1 doesn't exist, skipping..."
+	if [[ ! -f "$1" ]]; then
+		kmsg "$1 doesn't exist, skipping..."
     return 1
-    fi
+	fi
 
 	# Fetch the current key value
-	local curval=`cat "$1" 2> /dev/null`
+	local curval=$(cat "$1" 2> /dev/null)
 	
 	# Bail out if value is already set
-	if [[ "$curval" == "$2" ]]
-	then
-	kmsg "$1 is already set to $2, skipping..."
-	return 1
+	if [[ "$curval" == "$2" ]]; then
+		kmsg "$1 is already set to $2, skipping..."
+		return 1
 	fi
 
 	# Make file writable in case it is not already
@@ -80,26 +76,25 @@ write() {
 
 # Bars
 simple_bar() {
- kmsg1 "-------------------------------------------------------"
+    kmsg1 "-------------------------------------------------------"
 }
 
-rtks_ver=$(grep version ${modpath}module.prop)
-rtks_codename=$(grep codename ${modpath}module.prop)
+rtks_ver=$(grep version "${modpath}"module.prop)
+rtks_codename=$(grep codename "${modpath}"module.prop)
 
 # Grep prop
 grep_prop() {
   local REGEX="s/^$1=//p"
   shift
-  local FILES=$@
+  local FILES="$@"
   [[ -z "$FILES" ]] && FILES='/system/build.prop'
-  sed -n "$REGEX" $FILES 2>/dev/null | head -n 1
+  sed -n "$REGEX" "$FILES" 2>/dev/null | head -n 1
 }
 
 # Check for root permissions and bail if not granted
-if [[ "`id -u`" -ne 0 ]]
-then
-kmsg1 "[!] No root permissions. Exiting."
-exit 1
+if [[ "$(id -u)" -ne 0 ]]; then
+	kmsg1 "[!] No root permissions. Exiting."
+	exit 1
 fi
 
 # Duration in nanoseconds of one scheduling period
@@ -125,203 +120,194 @@ UINT_MAX="4294967295"
 
     # Variable to GPU directories
     for gpul in /sys/devices/soc/*.qcom,kgsl-3d0/kgsl/kgsl-3d0
-    do
-    if [ -d "$gpul" ]; then
-        gpu=$gpul
-        fi
-        done
+		do
+			if [ -d "$gpul" ]; then
+				gpu=$gpul
+			fi
+		done
         
     for gpul1 in /sys/devices/soc.0/*.qcom,kgsl-3d0/kgsl/kgsl-3d0
     do
-    if [ -d "$gpul1" ]; then
-        gpu=$gpul1
-        fi
-        done
+			if [ -d "$gpul1" ]; then
+				gpu=$gpul1
+			fi
+		done
         
     for gpul2 in /sys/devices/*.mali
     do
-    if [ -d "$gpul2" ]; then
+			if [ -d "$gpul2" ]; then
         gpu=$gpul2
-        fi
-        done
+      fi
+		done
         
     for gpul3 in /sys/devices/platform/*.gpu
     do
-    if [ -d "$gpul3" ]; then
+			if [ -d "$gpul3" ]; then
         gpu=$gpul3
-        fi
-        done
+      fi
+    done
         
     for gpul4 in /sys/devices/platform/mali-*.0
     do
-    if [ -d "$gpul4" ]; then
-        gpu=$gpul4
-        fi
-        done
-        
-	if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
-		gpu="/sys/class/kgsl/kgsl-3d0"
-	elif [ -d "/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0" ]; then
-		gpu="/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0"
-	elif [ -d "/sys/devices/platform/gpusysfs" ]; then
-		gpu="/sys/devices/platform/gpusysfs"
-	elif [ -d "/sys/devices/platform/mali.0" ]; then
-		gpu="/sys/devices/platform/mali.0"
+			if [ -d "$gpul4" ]; then
+				gpu=$gpul4
+      fi
+		done
+
+		if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+			gpu="/sys/class/kgsl/kgsl-3d0"
+		elif [ -d "/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0" ]; then
+			gpu="/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0"
+		elif [ -d "/sys/devices/platform/gpusysfs" ]; then
+			gpu="/sys/devices/platform/gpusysfs"
+		elif [ -d "/sys/devices/platform/mali.0" ]; then
+			gpu="/sys/devices/platform/mali.0"
 		fi
 		
 		for gpul in /sys/devices/soc/*.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq
-        do
-        if [ -d "$gpul" ]; then
-         gpug=$gpul
-         fi
-         done  
-         
-       for gpul1 in /sys/devices/soc.0/*.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq
-       do
-       if [ -d "$gpul1" ]; then
+		do
+			if [ -d "$gpul" ]; then
+				gpug=$gpul
+			fi
+		done
+
+		for gpul1 in /sys/devices/soc.0/*.qcom,kgsl-3d0/kgsl/kgsl-3d0/devfreq
+		do
+			if [ -d "$gpul1" ]; then
         gpug=$gpul1
-        fi
-        done
-        
-      for gpul2 in /sys/devices/platform/*.gpu
-      do
-      if [ -d "$gpul2" ]; then
+      fi
+		done
+
+		for gpul2 in /sys/devices/platform/*.gpu
+		do
+			if [ -d "$gpul2" ]; then
         gpug=$gpul2
-        fi
-        done
-        
-	if [ -d "/sys/class/kgsl/kgsl-3d0/devfreq" ]; then
-		gpug="/sys/class/kgsl/kgsl-3d0/devfreq"
-	elif [ -d "/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/devfreq" ]; then
-		gpug="/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/devfreq"
-	elif [ -d "/sys/devices/platform/gpusysfs" ]; then
-		gpug="/sys/devices/platform/gpusysfs"
-	elif [ -d "/sys/module/mali/parameters" ]; then
-		gpug="/sys/module/mali/parameters"		
-	elif [ -d "/sys/kernel/gpu" ]; then
-		gpug="/sys/kernel/gpu"
+      fi
+    done
+
+		if [ -d "/sys/class/kgsl/kgsl-3d0/devfreq" ]; then
+			gpug="/sys/class/kgsl/kgsl-3d0/devfreq"
+		elif [ -d "/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/devfreq" ]; then
+			gpug="/sys/devices/platform/kgsl-3d0.0/kgsl/kgsl-3d0/devfreq"
+		elif [ -d "/sys/devices/platform/gpusysfs" ]; then
+			gpug="/sys/devices/platform/gpusysfs"
+		elif [ -d "/sys/module/mali/parameters" ]; then
+			gpug="/sys/module/mali/parameters"		
+		elif [ -d "/sys/kernel/gpu" ]; then
+			gpug="/sys/kernel/gpu"
 		fi
 	
 		for gpul in /sys/devices/soc/*.qcom,kgsl-3d0/kgsl/kgsl-3d0
-        do
-        if [ -d "$gpul" ]; then
-         gpum=$gpul
-         fi
-         done
-         
+		do
+			if [ -d "$gpul" ]; then
+				gpum=$gpul
+			fi
+		done
+
 		for gpul1 in /sys/devices/soc.0/*.qcom,kgsl-3d0/kgsl/kgsl-3d0
-        do
-        if [ -d "$gpul1" ]; then
+    do
+			if [ -d "$gpul1" ]; then
         gpum=$gpul1
-        fi
-        done
-        
-	if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
-		gpum="/sys/class/kgsl/kgsl-3d0"
-	elif [ -d "/sys/kernel/gpu" ]; then
-		gpum="/sys/kernel/gpu"
+      fi
+    done
+
+		if [ -d "/sys/class/kgsl/kgsl-3d0" ]; then
+			gpum="/sys/class/kgsl/kgsl-3d0"
+		elif [ -d "/sys/kernel/gpu" ]; then
+			gpum="/sys/kernel/gpu"
 		fi
 
 	# Variable to GPU model
 	if [[ -e $gpum/gpu_model ]]; then
-    GPU_MODEL=`cat $gpum/gpu_model | awk '{print $1}'`
+		GPU_MODEL=$(cat "$gpum"/gpu_model | awk '{print $1}')
     fi
-
-    if [[ -e $gpug/gpu_governor ]]; then
-    GPU_GOVERNOR=`cat $gpug/gpu_governor`
-    
-    elif [[ -e $gpug/governor ]]; then
-    GPU_GOVERNOR=`cat $gpug/governor`
+	if [[ -e $gpug/gpu_governor ]]; then
+		GPU_GOVERNOR=$(cat "$gpug"/gpu_governor)
+	elif [[ -e $gpug/governor ]]; then
+        GPU_GOVERNOR=$(cat "$gpug"/governor)
     fi
 
     if [[ -e $gpu/min_pwrlevel ]]; then
-    gpuminpl=`cat $gpu/min_pwrlevel`
-    gpupl=$((gpuminpl + 1))
-    fi
-    
-    gpumx=`cat $gpu/devfreq/available_frequencies | awk -v var="$gpupl" '{print $var}'`
-    
-    if [[ $gpumx != `cat $gpu/max_gpuclk` ]]; then
-    gpumx=`cat $gpu/devfreq/available_frequencies | awk '{print $1}'`
+		gpuminpl=$(cat "$gpu"/min_pwrlevel)
+		gpupl=$((gpuminpl + 1))
     fi
 
-for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
-do
-CPU_GOVERNOR=`cat $cpu/scaling_governor`
-done
+	gpumx=$(cat "$gpu"/devfreq/available_frequencies | awk -v var="$gpupl" '{print $var}')
 
-for cpu in /sys/devices/system/cpu/cpu*/cpufreq
-do
-cpumxfreq=`cat $cpu/scaling_max_freq`
-cpumxfreq2=`cat $cpu/cpuinfo_max_freq`
+	if [[ $gpumx != $(cat "$gpu"/max_gpuclk) ]]; then
+		gpumx=$(cat "$gpu"/devfreq/available_frequencies | awk '{print $1}')
+    fi
 
-if [[ $cpumxfreq2 > $cpumxfreq ]]; then
-cpumxfreq=$cpumxfreq2
-fi
-done
+	for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
+	do
+		CPU_GOVERNOR=$(cat "$cpu"/scaling_governor)
+	done
+	for cpu in /sys/devices/system/cpu/cpu*/cpufreq
+	do
+		cpumxfreq=$(cat "$cpu"/scaling_max_freq)
+		cpumxfreq2=$(cat "$cpu"/cpuinfo_max_freq)
 
-cpumfreq=$((cpumxfreq / 2))
+		if [[ $cpumxfreq2 > $cpumxfreq ]]; then
+			cpumxfreq=$cpumxfreq2
+		fi
+	done
 
-gpufreq=`cat $gpu/max_gpuclk`
+	cpumfreq=$((cpumxfreq / 2))
 
-gpumfreq=$((gpufreq / 2))
+	gpufreq=$(cat "$gpu"/max_gpuclk)
+
+	gpumfreq=$((gpufreq / 2))
 
 # Variable to SOC manufacturer
-mf=`getprop ro.boot.hardware`
+mf=$(getprop ro.boot.hardware)
 
 # Variable to device SOC
-soc=`getprop ro.board.platform`
+soc=$(getprop ro.board.platform)
 
 if [[ $soc == " " ]]; then
-soc=`getprop ro.product.board`
+	soc=$(getprop ro.product.board)
 fi
 
 # Variable to device SDK
-sdk=`getprop ro.build.version.sdk`
+sdk=$(getprop ro.build.version.sdk)
 
 # Variable to device architeture
-aarch=`getprop ro.product.cpu.abi | awk -F- '{print $1}'`
+aarch=$(getprop ro.product.cpu.abi | awk -F- '{print $1}')
 
 # Variable to device android release version
-arv=`getprop ro.build.version.release`
+arv=$(getprop ro.build.version.release)
 
 # Variable to device model
-dm=`getprop ro.product.model`
+dm=$(getprop ro.product.model)
 
 # Variable to get magisk version
-magisk=`magisk -c`
+magisk=$(magisk -c)
 
 # Variable to total device ram
-totalram=`free -m | awk '/Mem:/{print $2}'`
+totalram=$(free -m | awk '/Mem:/{print $2}')
 
 # Variable to battery actual capacity
-percentage=`cat /sys/class/power_supply/battery/capacity`
+percentage=$( /sys/class/power_supply/battery/capacity)
 
 # Mod path
 modpath="/data/adb/modules/RTKS/"
 
 # Automatic Profiles
 automatic() {
-     	init=`date +%s`
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr
-     	
-     	else
-     	toasteua
-     	fi
+	init=$(date +%s)
+	if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+		toastbr
+	else
+		toasteua
+	fi
 
 kmsg1 "----------------------- Info -----------------------"
 kmsg1 "[ * ] Date of execution: $(date) "
-kmsg1 "[ * ] Kernel: `uname -a` "
+kmsg1 "[ * ] Kernel: $(uname -a) "
 kmsg1 "[ * ] SOC: $mf, $soc "
 kmsg1 "[ * ] SDK: $sdk "
 kmsg1 "[ * ] CPU governor: $CPU_GOVERNOR "
@@ -351,54 +337,44 @@ simple_bar
 simple_bar
 kmsg1 "[*] END OF EXECUTION: $(date) "
 simple_bar
-exit=`date +%s`
+exit=$(date +%s)
 
 exectime=$((exit - init))
 simple_bar
 kmsg1 "[*] EXECUTION DONE IN $exectime SECONDS. "
 simple_bar
+init=$(date +%s)
 
-     	init=`date +%s`
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua1
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua1
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr1
-     	
-     	else
-     	toasteua1
-     	fi
+if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+	toastbr1
+else
+	toasteua1
+fi
+
 }
+
 # Battery Profile
 battery() {
-         init=`date +%s`
-         killall raidenauto
+	init=$(date +%s)
+	killall raidenauto
          
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr
-     	
-     	else
-     	toasteua
-     	fi
-     	
+	if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+		toastbr
+	else
+		toasteua
+	fi
+
 kmsg1 "----------------------- Info -----------------------"
 kmsg1 "[ * ] Date of execution: $(date) "
-kmsg1 "[ * ] Kernel: `uname -a` "
+kmsg1 "[ * ] Kernel: $(uname -a) "
 kmsg1 "[ * ] SOC: $mf, $soc "
 kmsg1 "[ * ] SDK: $sdk "
 kmsg1 "[ * ] CPU governor: $CPU_GOVERNOR "
@@ -417,7 +393,7 @@ kmsg1 "-------------------------------------------------------
 simple_bar
 kmsg1 "[*] ENABLING $rtks_profile PROFILE... "
 simple_bar
-     	
+
 renice -n -5 $(pgrep system_server)
 renice -n -5 $(pgrep com.miui.home)
 renice -n -5 $(pgrep launcher)
@@ -442,7 +418,6 @@ simple_bar
 kmsg1 "[*] RENICED PROCESSES. "
 simple_bar
 
-
 # Enable perfd and mpdecision
 start perfd
 start mpdecision
@@ -459,24 +434,20 @@ simple_bar
 kmsg1 "[*] DISABLED STATSD AND LOGD. "
 simple_bar
 
-if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]
-then
-write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "5"
-simple_bar
-kmsg1 "[*] TWEAKED STUNE BOOST. "
-simple_bar
+if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]; then
+	write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "5"
+	simple_bar
+	kmsg1 "[*] TWEAKED STUNE BOOST. "
+	simple_bar
 fi
 
 for corectl in /sys/devices/system/cpu/cpu*/core_ctl
 do
-if [[ -e "${corectl}/enable" ]]
-then
-write "${corectl}/enable" "1"
-
-elif [[ -e "${corectl}/disable" ]]
-then
-write "${corectl}/disable" "0"
-fi
+	if [[ -e "${corectl}/enable" ]]; then
+		write "${corectl}/enable" "1"
+	elif [[ -e "${corectl}/disable" ]]; then
+		write "${corectl}/disable" "0"
+	fi
 done
 
 simple_bar
@@ -484,21 +455,19 @@ kmsg1 "[*] ENABLED CORE CONTROL. "
 simple_bar
 
 # Caf CPU Boost
-if [[ -e "/sys/module/cpu_boost/parameters/input_boost_ms" ]]
-then
-write "/sys/module/cpu_boost/parameters/input_boost_ms" "0"
-simple_bar
-kmsg1 "[*] DISABLED CAF INPUT BOOST. "
-simple_bar
+if [[ -e "/sys/module/cpu_boost/parameters/input_boost_ms" ]]; then
+	write "/sys/module/cpu_boost/parameters/input_boost_ms" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED CAF INPUT BOOST. "
+	simple_bar
 fi
 
 # CPU input boost
-if [[ -e "/sys/module/cpu_input_boost/parameters/input_boost_duration" ]]
-then
-write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "0"
-simple_bar
-kmsg1 "[*] DISABLED CPU INPUT BOOST. "
-simple_bar
+if [[ -e "/sys/module/cpu_input_boost/parameters/input_boost_duration" ]]; then
+	write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED CPU INPUT BOOST. "
+	simple_bar
 fi
 
 simple_bar
@@ -508,12 +477,12 @@ simple_bar
 # I/O Scheduler Tweaks.
 for queue in /sys/block/*/queue/
 do
-write "${queue}add_random" 0
-write "${queue}iostats" 0
-write "${queue}read_ahead_kb" 128
-write "${queue}nomerges" 0
-write "${queue}rq_affinity" 0
-write "${queue}nr_requests" 64
+	write "${queue}add_random" 0
+	write "${queue}iostats" 0
+	write "${queue}read_ahead_kb" 128
+	write "${queue}nomerges" 0
+	write "${queue}rq_affinity" 0
+	write "${queue}nr_requests" 64
 done
 
 simple_bar
@@ -524,35 +493,32 @@ simple_bar
 # CPU Tweaks
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-avail_govs=`cat "${cpu}scaling_available_governors"`
-if [[ "$avail_govs" == *"schedutil"* ]]
-then
-write "${cpu}scaling_governor" schedutil
-write "${cpu}schedutil/up_rate_limit_us" "$((SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/down_rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/pl" "0"
-write "${cpu}schedutil/iowait_boost_enable" "0"
-write "${cpu}schedutil/rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/hispeed_load" "99"
-write "${cpu}schedutil/hispeed_freq" "$cpumfreq"
-elif [[ "$avail_govs" == *"interactive"* ]]
-then
-write "${cpu}scaling_governor" interactive
-write "${cpu}interactive/timer_rate" "50000"
-write "${cpu}interactive/boost" "0"
-write "${cpu}interactive/timer_slack" "50000"
-write "${cpu}interactive/use_migration_notif" "1" 
-write "${cpu}interactive/ignore_hispeed_on_notif" "1"
-write "${cpu}interactive/use_sched_load" "1"
-write "${cpu}interactive/boostpulse" "0"
-write "${cpu}interactive/fastlane" "1"
-write "${cpu}interactive/fast_ramp_down" "1"
-write "${cpu}interactive/sampling_rate" "50000"
-write "${cpu}interactive/sampling_rate_min" "75000"
-write "${cpu}interactive/min_sample_time" "75000"
-write "${cpu}interactive/go_hispeed_load" "99"
-write "${cpu}interactive/hispeed_freq" "$cpumfreq"
-fi
+	avail_govs=$(cat "${cpu}scaling_available_governors")
+	if [[ "$avail_govs" == *"schedutil"* ]]; then
+		write "${cpu}scaling_governor" schedutil
+		write "${cpu}schedutil/up_rate_limit_us" "$((SCHED_PERIOD_BATTERY / 1000))"
+		write "${cpu}schedutil/down_rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
+		write "${cpu}schedutil/pl" "0"
+		write "${cpu}schedutil/iowait_boost_enable" "0"
+		write "${cpu}schedutil/rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"write "${cpu}schedutil/hispeed_load" "99"
+		write "${cpu}schedutil/hispeed_freq" "$cpumfreq"
+	elif [[ "$avail_govs" == *"interactive"* ]]; then
+		write "${cpu}scaling_governor" interactive
+		write "${cpu}interactive/timer_rate" "50000"
+		write "${cpu}interactive/boost" "0"
+		write "${cpu}interactive/timer_slack" "50000"
+		write "${cpu}interactive/use_migration_notif" "1" 
+		write "${cpu}interactive/ignore_hispeed_on_notif" "1"
+		write "${cpu}interactive/use_sched_load" "1"
+		write "${cpu}interactive/boostpulse" "0"
+		write "${cpu}interactive/fastlane" "1"
+		write "${cpu}interactive/fast_ramp_down" "1"
+		write "${cpu}interactive/sampling_rate" "50000"
+		write "${cpu}interactive/sampling_rate_min" "75000"
+		write "${cpu}interactive/min_sample_time" "75000"
+		write "${cpu}interactive/go_hispeed_load" "99"
+		write "${cpu}interactive/hispeed_freq" "$cpumfreq"
+	fi
 done
 
 
@@ -562,17 +528,14 @@ simple_bar
 
 for cpu in /sys/devices/system/cpu/cpu*
 do
-if [[ $percentage -le "20" ]]
-then
-write "/sys/devices/system/cpu/cpu1/online" "0"
-write "/sys/devices/system/cpu/cpu2/online" "0"
-write "/sys/devices/system/cpu/cpu5/online" "0"
-write "/sys/devices/system/cpu/cpu6/online" "0"
-
-elif [[ $percentage -ge "20" ]]
-then
-write "$cpu/online" "1"
-fi
+	if [[ $percentage -le "20" ]]; then
+		write "/sys/devices/system/cpu/cpu1/online" "0"
+		write "/sys/devices/system/cpu/cpu2/online" "0"
+		write "/sys/devices/system/cpu/cpu5/online" "0"
+		write "/sys/devices/system/cpu/cpu6/online" "0"
+	elif [[ $percentage -ge "20" ]]; then
+		write "$cpu/online" "1"
+	fi
 done
 
 # GPU Tweaks
@@ -589,25 +552,21 @@ write "$gpu/force_clk_on" "0"
 write "$gpu/force_rail_on" "0"
 write "$gpu/idle_timer" "36"
 
-if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]] 
-then
-write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "0"
+if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]]; then
+	write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "0"
 fi
 
 # Enable dvfs
-if [[ -e "/proc/mali/dvfs_enable" ]] 
-then
-write "/proc/mali/dvfs_enable" "1"
+if [[ -e "/proc/mali/dvfs_enable" ]]; then
+	write "/proc/mali/dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]] 
-then
-write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
+if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]]; then
+	write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]
-then
-write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
+if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]; then
+	write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
 fi
 
 simple_bar
@@ -615,79 +574,69 @@ kmsg1 "[*] TWEAKED GPU. "
 simple_bar
 
 # Enable and tweak adreno idler
-if [[ -d "/sys/module/adreno_idler" ]]
-then
-write "/sys/module/adreno_idler/parameters/adreno_idler_active" "Y"
-write "/sys/module/adreno_idler/parameters/adreno_idler_idleworkload" "10000"
-write "/sys/module/adreno_idler/parameters/adreno_idler_downdifferential" "35"
-write "/sys/module/adreno_idler/parameters/adreno_idler_idlewait" "15"
-simple_bar
-kmsg1 "[*] ENABLED AND TWEAKED ADRENO IDLER. "
-simple_bar
+if [[ -d "/sys/module/adreno_idler" ]]; then
+	write "/sys/module/adreno_idler/parameters/adreno_idler_active" "Y"
+	write "/sys/module/adreno_idler/parameters/adreno_idler_idleworkload" "10000"
+	write "/sys/module/adreno_idler/parameters/adreno_idler_downdifferential" "35"
+	write "/sys/module/adreno_idler/parameters/adreno_idler_idlewait" "15"
+	simple_bar
+	kmsg1 "[*] ENABLED AND TWEAKED ADRENO IDLER. "
+	simple_bar
 fi
 
 # Schedtune tweaks
-if [[ -d "/dev/stune/" ]]
-then
-write "/dev/stune/background/schedtune.boost" "0"
-write "/dev/stune/background/schedtune.prefer_idle" "0"
-
-write "/dev/stune/foreground/schedtune.boost" "0"
-write "/dev/stune/foreground/schedtune.prefer_idle" "1"
-
-write "/dev/stune/rt/schedtune.boost" "0"
-write "/dev/stune/rt/schedtune.prefer_idle" "0"
-
-write "/dev/stune/top-app/schedtune.boost" "5"
-write "/dev/stune/top-app/schedtune.prefer_idle" "1"
-
-write "/dev/stune/schedtune.boost" "0"
-write "/dev/stune/schedtune.prefer_idle" "0"
-simple_bar
-kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS. "
-simple_bar
+if [[ -d "/dev/stune/" ]]; then
+	write "/dev/stune/background/schedtune.boost" "0"
+	write "/dev/stune/background/schedtune.prefer_idle" "0"
+	write "/dev/stune/foreground/schedtune.boost" "0"
+	write "/dev/stune/foreground/schedtune.prefer_idle" "1"
+	write "/dev/stune/rt/schedtune.boost" "0"
+	write "/dev/stune/rt/schedtune.prefer_idle" "0"
+	write "/dev/stune/top-app/schedtune.boost" "5"
+	write "/dev/stune/top-app/schedtune.prefer_idle" "1"
+	write "/dev/stune/schedtune.boost" "0"
+	write "/dev/stune/schedtune.prefer_idle" "0"
+	simple_bar
+	kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS. "
+	simple_bar
 fi
 
 # FS Tweaks.
-if [[ -d "/proc/sys/fs" ]]
-then
-write "/proc/sys/fs/dir-notify-enable" "0"
-write "/proc/sys/fs/lease-break-time" "20"
-write "/proc/sys/fs/leases-enable" "1"
-simple_bar
-kmsg1 "[*] APPLIED FS TWEAKS. "
-simple_bar
+if [[ -d "/proc/sys/fs" ]]; then
+	write "/proc/sys/fs/dir-notify-enable" "0"
+	write "/proc/sys/fs/lease-break-time" "20"
+	write "/proc/sys/fs/leases-enable" "1"
+	simple_bar
+	kmsg1 "[*] APPLIED FS TWEAKS. "
+	simple_bar
 fi
     
 # Enable dynamic_fsync.
-if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]
-then
-write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
-simple_bar
-kmsg1 "[*] ENABLED DYNAMIC FSYNC. "
-simple_bar
+if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]; then
+	write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED DYNAMIC FSYNC. "
+	simple_bar
 fi
 
 # Scheduler features.
-if [[ -e "/sys/kernel/debug/sched_features" ]]
-then
-write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
-write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
-write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
-write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
-write "/sys/kernel/debug/sched_features" "ARCH_POWER"
-simple_bar
-kmsg1 "[*] APPLIED SCHEDULER FEATURES. "
-simple_bar
+if [[ -e "/sys/kernel/debug/sched_features" ]]; then
+	write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
+	write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
+	write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
+	write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
+	write "/sys/kernel/debug/sched_features" "ARCH_POWER"
+	simple_bar
+	kmsg1 "[*] APPLIED SCHEDULER FEATURES. "
+	simple_bar
 fi
 	
 # OP Chain disable
-if [[ -d "/sys/module/opchain" ]]
-then
-write "/sys/module/opchain/parameters/chain_on" "0"
-simple_bar
-kmsg1 "[*] DISABLED ONEPLUS CHAIN. "
-simple_bar
+if [[ -d "/sys/module/opchain" ]]; then
+	write "/sys/module/opchain/parameters/chain_on" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED ONEPLUS CHAIN. "
+	simple_bar
 fi
 
 # Tweak some kernel settings to improve overall performance.
@@ -715,52 +664,47 @@ kmsg1 "[*] TWEAKED KERNEL SETTINGS. "
 simple_bar
 
 # Disable fingerprint boost.
-if [[ -e "/sys/kernel/fp_boost/enabled" ]]
-then
-write "/sys/kernel/fp_boost/enabled" "0"
-simple_bar
-kmsg1 "[*] DISABLED FINGERPRINT BOOST. "
-simple_bar
+if [[ -e "/sys/kernel/fp_boost/enabled" ]]; then
+	write "/sys/kernel/fp_boost/enabled" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED FINGERPRINT BOOST. "
+	simple_bar
 fi
 
 # Set min and max clocks.
 for minclk in /sys/devices/system/cpu/cpufreq/policy*/
 do
-if [[ -e "${minclk}scaling_min_freq" ]]
-then
-write "${minclk}scaling_min_freq" "100000"
-write "${minclk}scaling_max_freq" "$cpumfreq"
-fi
+	if [[ -e "${minclk}scaling_min_freq" ]]; then
+		write "${minclk}scaling_min_freq" "100000"
+		write "${minclk}scaling_max_freq" "$cpumfreq"
+	fi
 done
 
 for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-if [[ -e "${mnclk}scaling_min_freq" ]]
-then
-write "${mnclk}scaling_min_freq" "100000"
-write "${mnclk}scaling_max_freq" "$cpumfreq"
-fi
+	if [[ -e "${mnclk}scaling_min_freq" ]]; then
+		write "${mnclk}scaling_min_freq" "100000"
+		write "${mnclk}scaling_max_freq" "$cpumfreq"
+	fi
 done
 
 simple_bar
 kmsg1 "[*] SET MIN AND MAX CPU CLOCKS. "
 simple_bar
 
-if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]] 
-then
-write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "1"
-simple_bar
-kmsg1 "[*] ALLOWED CPUIDLE TO USE DEEPEST STATE. "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]]; then
+	write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "1"
+	simple_bar
+	kmsg1 "[*] ALLOWED CPUIDLE TO USE DEEPEST STATE. "
+	simple_bar
 fi
 
 # Disable krait voltage boost
-if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]] 
-then
-write "/sys/module/acpuclock_krait/parameters/boost" "N"
-simple_bar
-kmsg1 "[*] DISABLED KRAIT VOLTAGE BOOST. "
-simple_bar
+if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]]; then
+	write "/sys/module/acpuclock_krait/parameters/boost" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED KRAIT VOLTAGE BOOST. "
+	simple_bar
 fi
 
 # VM settings to improve overall user experience and performance.
@@ -779,118 +723,96 @@ kmsg1 "[*] APPLIED VM TWEAKS. "
 simple_bar
 
 # MSM thermal tweaks
-if [[ -d "/sys/module/msm_thermal" ]]
-then
-write /sys/module/msm_thermal/vdd_restriction/enabled "1"
-write /sys/module/msm_thermal/core_control/enabled "1"
-write /sys/module/msm_thermal/parameters/enabled "Y"
-simple_bar
-kmsg1 "[*] APPLIED THERMAL TWEAKS. "
-simple_bar
+if [[ -d "/sys/module/msm_thermal" ]]; then
+	write /sys/module/msm_thermal/vdd_restriction/enabled "1"
+	write /sys/module/msm_thermal/core_control/enabled "1"
+	write /sys/module/msm_thermal/parameters/enabled "Y"
+	simple_bar
+	kmsg1 "[*] APPLIED THERMAL TWEAKS. "
+	simple_bar
 fi
 
 # Enable power efficient workqueue.
-if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]
-then 
-write "/sys/module/workqueue/parameters/power_efficient" "Y"
-simple_bar
-kmsg1 "[*] ENABLED POWER EFFICIENT WORKQUEUE. "
-simple_bar
+if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]; then
+	write "/sys/module/workqueue/parameters/power_efficient" "Y"
+	simple_bar
+	kmsg1 "[*] ENABLED POWER EFFICIENT WORKQUEUE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]
-then
-write "/sys/devices/system/cpu/sched_mc_power_savings" "2"
-simple_bar
-kmsg1 "[*] ENABLED AGGRESSIVE MULTICORE POWER SAVINGS. "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]; then
+	write "/sys/devices/system/cpu/sched_mc_power_savings" "2"
+	simple_bar
+	kmsg1 "[*] ENABLED AGGRESSIVE MULTICORE POWER SAVINGS. "
+	simple_bar
 fi
 
 # Fix DT2W.
-if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
-simple_bar
-
-elif [[ -e "/proc/tp_gesture" ]]
-then
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
-simple_bar
-
-elif [[ -e "/sys/touchpanel/double_tap" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
-simple_bar
+if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
+	simple_bar
+elif [[ -e "/proc/tp_gesture" ]]; then
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
+	simple_bar
+elif [[ -e "/sys/touchpanel/double_tap" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
+	simple_bar
 fi
 
 # Disable touch boost on battery and balance profile.
-if [[ -e /sys/module/msm_performance/parameters/touchboost ]]
-then
-write "/sys/module/msm_performance/parameters/touchboost" "0"
-simple_bar
-kmsg1 "[*] DISABLED TOUCH BOOST. "
-simple_bar
-
-elif [[ -e /sys/power/pnpmgr/touch_boost ]]
-then
-write "/sys/power/pnpmgr/touch_boost" "0"
-simple_bar
-kmsg1 "[*] DISABLED TOUCH BOOST "
-simple_bar
+if [[ -e /sys/module/msm_performance/parameters/touchboost ]]; then
+	write "/sys/module/msm_performance/parameters/touchboost" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED TOUCH BOOST. "simple_bar
+elif [[ -e /sys/power/pnpmgr/touch_boost ]]; then
+	write "/sys/power/pnpmgr/touch_boost" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED TOUCH BOOST "
+	simple_bar
 fi
 
-
-
 # Enable battery saver
-if [[ -d "/sys/module/battery_saver" ]]
-then
-write "/sys/module/battery_saver/parameters/enabled" "Y"
-simple_bar
-kmsg1 "[*] ENABLED BATTERY SAVER. "
-simple_bar
+if [[ -d "/sys/module/battery_saver" ]]; then
+	write "/sys/module/battery_saver/parameters/enabled" "Y"
+	simple_barkmsg1 "[*] ENABLED BATTERY SAVER. "
+	simple_bar
 fi
 
 # Disable KSM
-if [[ -e "/sys/kernel/mm/ksm/run" ]] 
-then
-write "/sys/kernel/mm/ksm/run" "0"
-simple_bar
-kmsg1 "[*] DISABLED KSM."
-simple_bar
-
+if [[ -e "/sys/kernel/mm/ksm/run" ]]; then
+	write "/sys/kernel/mm/ksm/run" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED KSM."
+	simple_bar
 # Disable UKSM
-elif [[ -e "/sys/kernel/mm/uksm/run" ]] 
-then
-write "/sys/kernel/mm/uksm/run" "0"
-simple_bar
-kmsg1 "[*] DISABLED UKSM."
-simple_bar
+elif [[ -e "/sys/kernel/mm/uksm/run" ]]; then
+	write "/sys/kernel/mm/uksm/run" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED UKSM."
+	simple_bar
 fi
 
-if [[ -e "/sys/class/lcd/panel/power_reduce" ]] 
-then
-write "/sys/class/lcd/panel/power_reduce" "1"
-simple_bar
-kmsg1 "[*] ENABLED LCD POWER REDUCE. "
-simple_bar
+if [[ -e "/sys/class/lcd/panel/power_reduce" ]]; then
+	write "/sys/class/lcd/panel/power_reduce" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED LCD POWER REDUCE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]
-then
-write "/sys/kernel/sched/gentle_fair_sleepers" "0"
-simple_bar
-kmsg1 "[*] DISABLED GENTLE FAIR SLEEPERS. "
-simple_bar
+if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]; then
+	write "/sys/kernel/sched/gentle_fair_sleepers" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED GENTLE FAIR SLEEPERS. "
+	simple_bar
 fi
 
-  
 simple_bar
 kmsg1 "[*] $rtks_profile PROFILE APPLIED WITH SUCCESS. "
 simple_bar
@@ -898,54 +820,44 @@ simple_bar
 simple_bar
 kmsg1 "[*] END OF EXECUTION: $(date)"
 simple_bar
-exit=`date +%s`
+exit=$(date +%s)
 
 exectime=$((exit - init))
 simple_bar
 kmsg1 "[*] EXECUTION DONE IN $exectime SECONDS. "
 simple_bar
 
-         init=`date +%s`
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua1
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua1
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr1
-     	
-     	else
-     	toasteua1
-     	fi
+init=$(date +%s)
+if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+	toastbr1
+else
+	toasteua1
+fi
+
 }
+
 # Balanced Profile
 balanced() {
-        init=`date +%s`
-        killall raidenauto
-        	
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr
-     	
-     	else
-     	toasteua
-     	fi
+	init=$(date +%s)
+	killall raidenauto
+	
+	if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+		toasteua
+    elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+		toasteua
+    elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+		toastbr
+    else
+		toasteua
+	fi
      	
 kmsg1 "----------------------- Info -----------------------"
 kmsg1 "[ * ] Date of execution: $(date) "
-kmsg1 "[ * ] Kernel: `uname -a` "
+kmsg1 "[ * ] Kernel: $(uname -a) "
 kmsg1 "[ * ] SOC: $mf, $soc "
 kmsg1 "[ * ] SDK: $sdk "
 kmsg1 "[ * ] CPU governor: $CPU_GOVERNOR "
@@ -1006,24 +918,20 @@ simple_bar
 kmsg1 "[*] DISABLED STATSD AND LOGD. "
 simple_bar
 
-if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]
-then
-write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "10"
-simple_bar
-kmsg1 "[*] TWEAKED STUNE BOOST."
-simple_bar
+if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]; then
+	write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "10"
+	simple_bar
+	kmsg1 "[*] TWEAKED STUNE BOOST."
+	simple_bar
 fi
 
 for corectl in /sys/devices/system/cpu/cpu*/core_ctl
 do
-if [[ -e "${corectl}/enable" ]]
-then
-write "${corectl}/enable" "1"
-
-elif [[ -e "${corectl}/disable" ]]
-then
-write "${corectl}/disable" "0"
-fi
+	if [[ -e "${corectl}/enable" ]]; then
+		write "${corectl}/enable" "1"
+    elif [[ -e "${corectl}/disable" ]]; then
+	write "${corectl}/disable" "0"
+	fi
 done
 
 simple_bar
@@ -1033,12 +941,12 @@ simple_bar
 # I/O Scheduler Tweaks.
 for queue in /sys/block/*/queue/
 do
-write "${queue}add_random" 0
-write "${queue}iostats" 0
-write "${queue}read_ahead_kb" 128
-write "${queue}nomerges" 2
-write "${queue}rq_affinity" 1
-write "${queue}nr_requests" 64
+	write "${queue}add_random" 0
+	write "${queue}iostats" 0
+	write "${queue}read_ahead_kb" 128
+	write "${queue}nomerges" 2
+	write "${queue}rq_affinity" 1
+	write "${queue}nr_requests" 64
 done
 
 simple_bar
@@ -1048,40 +956,38 @@ simple_bar
 # CPU Tweaks
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-avail_govs=`cat "${cpu}scaling_available_governors"`
-if [[ "$avail_govs" == *"schedutil"* ]]
-then
-write "${cpu}scaling_governor" schedutil
-write "${cpu}schedutil/up_rate_limit_us" "$((SCHED_PERIOD_BALANCE / 1000))"
-write "${cpu}schedutil/down_rate_limit_us" "$((4 * SCHED_PERIOD_BALANCE / 1000))"
-write "${cpu}schedutil/pl" "0"
-write "${cpu}schedutil/iowait_boost_enable" "0"
-write "${cpu}schedutil/rate_limit_us" "$((4 * SCHED_PERIOD_BALANCE / 1000))"
-write "${cpu}schedutil/hispeed_load" "89"
-write "${cpu}schedutil/hispeed_freq" "$cpumxfreq"
-elif [[ "$avail_govs" == *"interactive"* ]]
-then
-write "${cpu}scaling_governor" interactive
-write "${cpu}interactive/timer_rate" "40000"
-write "${cpu}interactive/boost" "0"
-write "${cpu}interactive/timer_slack" "40000"
-write "${cpu}interactive/use_migration_notif" "1" 
-write "${cpu}interactive/ignore_hispeed_on_notif" "1"
-write "${cpu}interactive/use_sched_load" "1"
-write "${cpu}interactive/boostpulse" "0"
-write "${cpu}interactive/fastlane" "1"
-write "${cpu}interactive/fast_ramp_down" "0"
-write "${cpu}interactive/sampling_rate" "40000"
-write "${cpu}interactive/sampling_rate_min" "50000"
-write "${cpu}interactive/min_sample_time" "50000"
-write "${cpu}interactive/go_hispeed_load" "89"
-write "${cpu}interactive/hispeed_freq" "$cpumxfreq"
-fi
+	avail_govs=$(cat "${cpu}scaling_available_governors")
+	if [[ "$avail_govs" == *"schedutil"* ]]; then
+		write "${cpu}scaling_governor" schedutil
+		write "${cpu}schedutil/up_rate_limit_us" "$((SCHED_PERIOD_BALANCE / 1000))"
+		write "${cpu}schedutil/down_rate_limit_us" "$((4 * SCHED_PERIOD_BALANCE / 1000))"
+		write "${cpu}schedutil/pl" "0"
+		write "${cpu}schedutil/iowait_boost_enable" "0"
+		write "${cpu}schedutil/rate_limit_us" "$((4 * SCHED_PERIOD_BALANCE / 1000))"
+		write "${cpu}schedutil/hispeed_load" "89"
+		write "${cpu}schedutil/hispeed_freq" "$cpumxfreq"
+	elif [[ "$avail_govs" == *"interactive"* ]]; then
+		write "${cpu}scaling_governor" interactive
+		write "${cpu}interactive/timer_rate" "40000"
+		write "${cpu}interactive/boost" "0"
+		write "${cpu}interactive/timer_slack" "40000"
+		write "${cpu}interactive/use_migration_notif" "1" 
+		write "${cpu}interactive/ignore_hispeed_on_notif" "1"
+		write "${cpu}interactive/use_sched_load" "1"
+		write "${cpu}interactive/boostpulse" "0"
+		write "${cpu}interactive/fastlane" "1"
+		write "${cpu}interactive/fast_ramp_down" "0"
+		write "${cpu}interactive/sampling_rate" "40000"
+		write "${cpu}interactive/sampling_rate_min" "50000"
+		write "${cpu}interactive/min_sample_time" "50000"
+		write "${cpu}interactive/go_hispeed_load" "89"
+		write "${cpu}interactive/hispeed_freq" "$cpumxfreq"
+	fi
 done
 
 for cpu in /sys/devices/system/cpu/cpu*
 do
-write "$cpu/online" "1"
+	write "$cpu/online" "1"
 done
 
 simple_bar
@@ -1094,7 +1000,7 @@ write "$gpu/thermal_pwrlevel" "0"
 write "$gpu/devfreq/adrenoboost" "0"
 write "$gpu/force_no_nap" "0"
 write "$gpu/bus_split" "1"
-write "$gpu/devfreq/max_freq" `cat $gpu/max_gpuclk`
+write "$gpu/devfreq/max_freq" $(cat "$gpu"/max_gpuclk)
 write "$gpu/devfreq/min_freq" "100000000"
 write "$gpu/default_pwrlevel" "$gpuminpl"
 write "$gpu/force_bus_on" "0"
@@ -1102,25 +1008,21 @@ write "$gpu/force_clk_on" "0"
 write "$gpu/force_rail_on" "0"
 write "$gpu/idle_timer" "96"
 
-if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]] 
-then
-write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "0"
+if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]]; then
+	write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "0"
 fi
 
 # Enable dvfs
-if [[ -e "/proc/mali/dvfs_enable" ]] 
-then
-write "/proc/mali/dvfs_enable" "1"
+if [[ -e "/proc/mali/dvfs_enable" ]];then
+	write "/proc/mali/dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]] 
-then
-write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
+if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]];then
+	write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]
-then
-write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
+if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]; then
+	write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
 fi
 
 simple_bar
@@ -1128,66 +1030,57 @@ kmsg1 "[*] TWEAKED GPU "
 simple_bar
 	
 # Enable and tweak adreno idler
-if [[ -d "/sys/module/adreno_idler" ]]
-then
-write "/sys/module/adreno_idler/parameters/adreno_idler_active" "Y"
-write "/sys/module/adreno_idler/parameters/adreno_idler_idleworkload" "6000"
-write "/sys/module/adreno_idler/parameters/adreno_idler_downdifferential" "25"
-write "/sys/module/adreno_idler/parameters/adreno_idler_idlewait" "25"
-simple_bar
-kmsg1 "[*] ENABLED AND TWEAKED ADRENO IDLER... "
-simple_bar
+if [[ -d "/sys/module/adreno_idler" ]]; then
+	write "/sys/module/adreno_idler/parameters/adreno_idler_active" "Y"
+	write "/sys/module/adreno_idler/parameters/adreno_idler_idleworkload" "6000"
+	write "/sys/module/adreno_idler/parameters/adreno_idler_downdifferential" "25"
+	write "/sys/module/adreno_idler/parameters/adreno_idler_idlewait" "25"
+	simple_bar
+	kmsg1 "[*] ENABLED AND TWEAKED ADRENO IDLER... "
+	simple_bar
 fi
 
 # Schedtune Tweaks
-if [[ -d "/dev/stune/" ]]
-then
-write "/dev/stune/background/schedtune.boost" "0"
-write "/dev/stune/background/schedtune.prefer_idle" "0"
-
-write "/dev/stune/foreground/schedtune.boost" "0"
-write "/dev/stune/foreground/schedtune.prefer_idle" "1"
-
-write "/dev/stune/rt/schedtune.boost" "0"
-write "/dev/stune/rt/schedtune.prefer_idle" "0"
-
-write "/dev/stune/top-app/schedtune.boost" "10"
-write "/dev/stune/top-app/schedtune.prefer_idle" "1"
-
-write "/dev/stune/schedtune.boost" "0"
-write "/dev/stune/schedtune.prefer_idle" "0"
-simple_bar
-kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS. "
-simple_bar
+if [[ -d "/dev/stune/" ]]; then
+	write "/dev/stune/background/schedtune.boost" "0"
+	write "/dev/stune/background/schedtune.prefer_idle" "0"
+	write "/dev/stune/foreground/schedtune.boost" "0"
+	write "/dev/stune/foreground/schedtune.prefer_idle" "1"
+	write "/dev/stune/rt/schedtune.boost" "0"
+	write "/dev/stune/rt/schedtune.prefer_idle" "0"
+	write "/dev/stune/top-app/schedtune.boost" "10"
+	write "/dev/stune/top-app/schedtune.prefer_idle" "1"
+	write "/dev/stune/schedtune.boost" "0"
+	write "/dev/stune/schedtune.prefer_idle" "0"
+	simple_bar
+	kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS. "
+	simple_bar
 fi
 
 # FS tweaks.
-if [[ -d "/proc/sys/fs" ]]
-then
-write "/proc/sys/fs/dir-notify-enable" "0"
-write "/proc/sys/fs/lease-break-time" "20"
-write "/proc/sys/fs/leases-enable" "1"
-simple_bar
-kmsg1 "[*] APPLIED FS TWEAKS "
-simple_bar
+if [[ -d "/proc/sys/fs" ]]; then
+	write "/proc/sys/fs/dir-notify-enable" "0"
+	write "/proc/sys/fs/lease-break-time" "20"
+	write "/proc/sys/fs/leases-enable" "1"
+	simple_bar
+	kmsg1 "[*] APPLIED FS TWEAKS "
+	simple_bar
 fi
 
 # Enable dynamic_fsync.
-if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]
-then
-write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
-simple_bar
-kmsg1 "[*] ENABLED DYNAMIC FSYNC."
-simple_bar
+if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]; then
+	write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED DYNAMIC FSYNC."
+	simple_bar
 fi
 
 # Scheduler features
-if [[ -e "/sys/kernel/debug/sched_features" ]]
-then
-write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
-write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
-write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
-write "/sys/kernel/debug/sched_features" "WAKEUP_PREEMPTION"
+if [[ -e "/sys/kernel/debug/sched_features" ]]; then
+	write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
+	write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
+	write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
+	write "/sys/kernel/debug/sched_features" "WAKEUP_PREEMPTION"
 fi
 
 simple_bar
@@ -1195,12 +1088,11 @@ kmsg1 "[*] APPLIED SCHEDULER FEATURES. "
 simple_bar
 
 # OP Chain disable.
-if [[ -d "/sys/module/opchain" ]]
-then
-write "/sys/module/opchain/parameters/chain_on" "0"
-simple_bar
-kmsg1 "[*] DISABLED ONEPLUS CHAIN. "
-simple_bar
+if [[ -d "/sys/module/opchain" ]]; then
+	write "/sys/module/opchain/parameters/chain_on" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED ONEPLUS CHAIN. "
+	simple_bar
 fi
 
 # Tweak some kernel settings to improve overall performance.
@@ -1228,52 +1120,47 @@ kmsg1 "[*] TWEAKED KERNEL SETTINGS. "
 simple_bar
 
 # Enable fingerprint boost.
-if [[ -e "/sys/kernel/fp_boost/enabled" ]]
-then
-write "/sys/kernel/fp_boost/enabled" "1"
-simple_bar
-kmsg1 "[*] ENABLED FINGERPRINT BOOST. "
-simple_bar
+if [[ -e "/sys/kernel/fp_boost/enabled" ]]; then
+	write "/sys/kernel/fp_boost/enabled" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED FINGERPRINT BOOST. "
+	simple_bar
 fi
 
 # Set min and max clocks.
 for minclk in /sys/devices/system/cpu/cpufreq/policy*/
 do
-if [[ -e "${minclk}scaling_min_freq" ]]
-then
-write "${minclk}scaling_min_freq" "100000"
-write "${minclk}scaling_max_freq" "$cpumxfreq"
-fi
+	if [[ -e "${minclk}scaling_min_freq" ]]; then
+		write "${minclk}scaling_min_freq" "100000"
+		write "${minclk}scaling_max_freq" "$cpumxfreq"
+	fi
 done
 
 for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-if [[ -e "${mnclk}scaling_min_freq" ]]
-then
-write "${mnclk}scaling_min_freq" "100000"
-write "${mnclk}scaling_max_freq" "$cpumxfreq"
-fi
+	if [[ -e "${mnclk}scaling_min_freq" ]]; then
+		write "${mnclk}scaling_min_freq" "100000"
+		write "${mnclk}scaling_max_freq" "$cpumxfreq"
+	fi
 done
 
 simple_bar
 kmsg1 "[*] SET MIN AND MAX CPU CLOCKS. "
 simple_bar
 
-if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]] 
-then
-write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "1"
-simple_bar
-kmsg1 "[*] ALLOWED CPUIDLE TO USE DEEPEST STATE. "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]]; then
+	write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "1"
+	simple_bar
+	kmsg1 "[*] ALLOWED CPUIDLE TO USE DEEPEST STATE. "
+	simple_bar
 fi
 
 # Disable krait voltage boost
-if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]] 
-then
-write "/sys/module/acpuclock_krait/parameters/boost" "N"
-simple_bar
-kmsg1 "[*] DISABLED KRAIT VOLTAGE BOOST. "
-simple_bar
+if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]]; then
+	write "/sys/module/acpuclock_krait/parameters/boost" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED KRAIT VOLTAGE BOOST. "
+	simple_bar
 fi
 
 sync
@@ -1295,113 +1182,96 @@ kmsg1 "[*] APPLIED VM TWEAKS."
 simple_bar
 
 # MSM thermal tweaks
-if [[ -d "/sys/module/msm_thermal" ]]
-then
-write /sys/module/msm_thermal/vdd_restriction/enabled "0"
-write /sys/module/msm_thermal/core_control/enabled "1"
-write /sys/module/msm_thermal/parameters/enabled "Y"
-simple_bar
-kmsg1 "[*] APPLIED THERMAL TWEAKS. "
-simple_bar
+if [[ -d "/sys/module/msm_thermal" ]]; then
+	write /sys/module/msm_thermal/vdd_restriction/enabled "0"
+	write /sys/module/msm_thermal/core_control/enabled "1"
+	write /sys/module/msm_thermal/parameters/enabled "Y"
+	simple_bar
+	kmsg1 "[*] APPLIED THERMAL TWEAKS. "
+	simple_bar
 fi
 
 # Enable power efficient workqueue.
-if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]
-then 
-write "/sys/module/workqueue/parameters/power_efficient" "Y"
-simple_bar
-kmsg1 "[*] ENABLED POWER EFFICIENT WORKQUEUE. "
-simple_bar
+if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]; then
+	write "/sys/module/workqueue/parameters/power_efficient" "Y"
+	simple_bar
+	kmsg1 "[*] ENABLED POWER EFFICIENT WORKQUEUE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]
-then
-write "/sys/devices/system/cpu/sched_mc_power_savings" "1"
-simple_bar
-kmsg1 "[*] ENABLED MULTICORE POWER SAVINGS. "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]; then
+	write "/sys/devices/system/cpu/sched_mc_power_savings" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED MULTICORE POWER SAVINGS. "
+	simple_bar
 fi
 
 # Fix DT2W.
-if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
-simple_bar
-
-elif [[ -e "/proc/tp_gesture" ]]
-then
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
-simple_bar
-
-elif [[ -e "/sys/touchpanel/double_tap" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
-simple_bar
+if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
+	simple_bar
+elif [[ -e "/proc/tp_gesture" ]]; then
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
+	simple_bar
+elif [[ -e "/sys/touchpanel/double_tap" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN. "
+	simple_bar
 fi
 
 # Disable touch boost on balance and battery profile.
-if [[ -e /sys/module/msm_performance/parameters/touchboost ]]
-then
-write "/sys/module/msm_performance/parameters/touchboost" "0"
-simple_bar
-kmsg1 "[*] DISABLED TOUCH BOOST. "
-simple_bar
-
-elif [[ -e /sys/power/pnpmgr/touch_boost ]]
-then
-write "/sys/power/pnpmgr/touch_boost" "0"
-simple_bar
-kmsg1 "[*] DISABLED TOUCH BOOST. "
-simple_bar
+if [[ -e /sys/module/msm_performance/parameters/touchboost ]]; then
+	write "/sys/module/msm_performance/parameters/touchboost" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED TOUCH BOOST. "
+	simple_bar
+elif [[ -e /sys/power/pnpmgr/touch_boost ]]; then
+	write "/sys/power/pnpmgr/touch_boost" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED TOUCH BOOST. "
+	simple_bar
 fi
 
 
 # Enable KSM
-if [[ -e "/sys/kernel/mm/ksm/run" ]] 
-then
-write "/sys/kernel/mm/ksm/run" "1"
-simple_bar
-kmsg1 "[*] ENABLED KSM."
-simple_bar
-
+if [[ -e "/sys/kernel/mm/ksm/run" ]]; then
+	write "/sys/kernel/mm/ksm/run" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED KSM."
+	simple_bar
 # Enable UKSM
-elif [[ -e "/sys/kernel/mm/uksm/run" ]] 
-then
-write "/sys/kernel/mm/uksm/run" "1"
-simple_bar
-kmsg1 "[*] ENABLED UKSM."
-simple_bar
+elif [[ -e "/sys/kernel/mm/uksm/run" ]]; then
+	write "/sys/kernel/mm/uksm/run" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED UKSM."
+	simple_bar
 fi
 
-if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]] 
-then
-write "/sys/module/pm2/parameters/idle_sleep_mode" "Y"
-simple_bar
-kmsg1 "[*] ENABLED PM2 IDLE SLEEP MODE. "
-simple_bar
+if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]]; then
+	write "/sys/module/pm2/parameters/idle_sleep_mode" "Y"
+	simple_bar
+	kmsg1 "[*] ENABLED PM2 IDLE SLEEP MODE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/class/lcd/panel/power_reduce" ]] 
-then
-write "/sys/class/lcd/panel/power_reduce" "0"
-simple_bar
-kmsg1 "[*] DISABLED LCD POWER REDUCE. "
-simple_bar
+if [[ -e "/sys/class/lcd/panel/power_reduce" ]]; then
+	write "/sys/class/lcd/panel/power_reduce" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED LCD POWER REDUCE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]
-then
-write "/sys/kernel/sched/gentle_fair_sleepers" "1"
-simple_bar
-kmsg1 "[*] ENABLED GENTLE FAIR SLEEPERS. "
-simple_bar
+if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]; then
+	write "/sys/kernel/sched/gentle_fair_sleepers" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED GENTLE FAIR SLEEPERS. "
+	simple_bar
 fi
 
 simple_bar
@@ -1411,54 +1281,45 @@ simple_bar
 simple_bar
 kmsg1 "[*] END OF EXECUTION: $(date)"
 simple_bar
-exit=`date +%s`
+
+exit=$(date +%s)
 
 exectime=$((exit - init))
 simple_bar
 kmsg1 "[*] EXECUTION DONE IN $exectime SECONDS. "
 simple_bar
 
-         init=`date +%s`
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua1
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua1
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr1
-     	
-     	else
-     	toasteua1
-     	fi
+init=$(date +%s)
+
+if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+	toastbr1
+else
+	toasteua1
+fi
+
 }
 # Performance Profile
 performance() {
-        init=`date +%s`
-        killall raidenauto
-        	
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr
-     	
-     	else
-     	toasteua
-     	fi
+	init=$(date +%s)
+	killall raidenauto
+
+	if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+		toastbr
+	else
+		toasteua
+	fi
      	
 kmsg1 "----------------------- Info -----------------------"
 kmsg1 "[ * ] Date of execution: $(date) "
-kmsg1 "[ * ] Kernel: `uname -a` "
+kmsg1 "[ * ] Kernel: $(uname -a) "
 kmsg1 "[ * ] SOC: $mf, $soc "
 kmsg1 "[ * ] SDK: $sdk "
 kmsg1 "[ * ] CPU governor: $CPU_GOVERNOR "
@@ -1519,24 +1380,20 @@ simple_bar
 kmsg1 "[*] DISABLED STATSD AND LOGD. "
 simple_bar
 
-if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]
-then
-write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "50"
-simple_bar
-kmsg1 "[*] TWEAKED STUNE BOOST "
-simple_bar
+if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]; then
+	write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "50"
+	simple_bar
+	kmsg1 "[*] TWEAKED STUNE BOOST "
+	simple_bar
 fi
 
 for corectl in /sys/devices/system/cpu/cpu*/core_ctl
 do
-if [[ -e "${corectl}/enable" ]]
-then
-write "${corectl}/enable" "0"
-
-elif [[ -e "${corectl}/disable" ]]
-then
-write "${corectl}/disable" "1"
-fi
+	if [[ -e "${corectl}/enable" ]]; then
+		write "${corectl}/enable" "0"
+	elif [[ -e "${corectl}/disable" ]]; then
+		write "${corectl}/disable" "1"
+	fi
 done
 
 simple_bar
@@ -1544,34 +1401,31 @@ kmsg1 "[*] DISABLED CORE CONTROL. "
 simple_bar
 
 # Caf CPU Boost
-if [[ -d "/sys/module/cpu_boost" ]]
-then
-write "/sys/module/cpu_boost/parameters/input_boost_freq" "0:$cpumxfreq 1:$cpumxfreq 2:$cpumxfreq 3:$cpumxfreq 4:$cpumxfreq 5:$cpumxfreq 6:$cpumxfreq 7:$cpumxfreq"
-write "/sys/module/cpu_boost/parameters/input_boost_ms" "128"
-simple_bar
-kmsg1 "[*] TWEAKED CAF INPUT BOOST. "
-simple_bar
-
+if [[ -d "/sys/module/cpu_boost" ]]; then
+	write "/sys/module/cpu_boost/parameters/input_boost_freq" "0:$cpumxfreq 1:$cpumxfreq 2:$cpumxfreq 3:$cpumxfreq 4:$cpumxfreq 5:$cpumxfreq 6:$cpumxfreq 7:$cpumxfreq"
+	write "/sys/module/cpu_boost/parameters/input_boost_ms" "128"
+	simple_bar
+	kmsg1 "[*] TWEAKED CAF INPUT BOOST. "
+	simple_bar
 # CPU input boost
-elif [[ -d "/sys/module/cpu_input_boost" ]]
-then
-write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "128"
-write "/sys/module/cpu_input_boost/parameters/input_boost_freq_hp" "$cpumxfreq"
-write "/sys/module/cpu_input_boost/parameters/input_boost_freq_lp" "$cpumxfreq"
-simple_bar
-kmsg1 "[*] TWEAKED CPU INPUT BOOST. "
-simple_bar
+elif [[ -d "/sys/module/cpu_input_boost" ]]; then
+	write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "128"
+	write "/sys/module/cpu_input_boost/parameters/input_boost_freq_hp" "$cpumxfreq"
+	write "/sys/module/cpu_input_boost/parameters/input_boost_freq_lp" "$cpumxfreq"
+	simple_bar
+	kmsg1 "[*] TWEAKED CPU INPUT BOOST. "
+	simple_bar
 fi
 
 # I/O Scheduler Tweaks.
 for queue in /sys/block/*/queue/
 do
-write "${queue}add_random" 0
-write "${queue}iostats" 0
-write "${queue}read_ahead_kb" 512
-write "${queue}nomerges" 2
-write "${queue}rq_affinity" 2
-write "${queue}nr_requests" 256
+	write "${queue}add_random" 0
+	write "${queue}iostats" 0
+	write "${queue}read_ahead_kb" 512
+	write "${queue}nomerges" 2
+	write "${queue}rq_affinity" 2
+	write "${queue}nr_requests" 256
 done
 
 simple_bar
@@ -1580,39 +1434,37 @@ simple_bar
 
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-avail_govs=`cat "${cpu}scaling_available_governors"`
-if [[ "$avail_govs" == *"schedutil"* ]]
-then
-write "${cpu}scaling_governor" schedutil
-write "${cpu}schedutil/up_rate_limit_us" "500"
-write "${cpu}schedutil/down_rate_limit_us" "20000"
-write "${cpu}schedutil/pl" "1"
-write "${cpu}schedutil/iowait_boost_enable" "1"
-write "${cpu}schedutil/rate_limit_us" "20000"
-write "${cpu}schedutil/hispeed_load" "80"
-write "${cpu}schedutil/hispeed_freq" "$UINT_MAX"
-elif [[ "$avail_govs" == *"interactive"* ]]
-then
-write "${cpu}scaling_governor" interactive
-write "${cpu}interactive/timer_rate" "20000"
-write "${cpu}interactive/boost" "1"
-write "${cpu}interactive/timer_slack" "20000"
-write "${cpu}interactive/use_migration_notif" "1"
-write "${cpu}interactive/ignore_hispeed_on_notif" "1"
-write "${cpu}interactive/use_sched_load" "1"
-write "${cpu}interactive/fastlane" "1"
-write "${cpu}interactive/fast_ramp_down" "0"
-write "${cpu}interactive/sampling_rate" "20000"
-write "${cpu}interactive/sampling_rate_min" "20000"
-write "${cpu}interactive/min_sample_time" "20000"
-write "${cpu}interactive/go_hispeed_load" "80"
-write "${cpu}interactive/hispeed_freq" "$UINT_MAX"
-fi
+	avail_govs=$(cat "${cpu}scaling_available_governors")
+	if [[ "$avail_govs" == *"schedutil"* ]]; then
+		write "${cpu}scaling_governor" schedutil
+		write "${cpu}schedutil/up_rate_limit_us" "500"
+		write "${cpu}schedutil/down_rate_limit_us" "20000"
+		write "${cpu}schedutil/pl" "1"
+		write "${cpu}schedutil/iowait_boost_enable" "1"
+		write "${cpu}schedutil/rate_limit_us" "20000"
+		write "${cpu}schedutil/hispeed_load" "80"
+		write "${cpu}schedutil/hispeed_freq" "$UINT_MAX"
+	elif [[ "$avail_govs" == *"interactive"* ]]; then
+		write "${cpu}scaling_governor" interactive
+		write "${cpu}interactive/timer_rate" "20000"
+		write "${cpu}interactive/boost" "1"
+		write "${cpu}interactive/timer_slack" "20000"
+		write "${cpu}interactive/use_migration_notif" "1"
+		write "${cpu}interactive/ignore_hispeed_on_notif" "1"
+		write "${cpu}interactive/use_sched_load" "1"
+		write "${cpu}interactive/fastlane" "1"
+		write "${cpu}interactive/fast_ramp_down" "0"
+		write "${cpu}interactive/sampling_rate" "20000"
+		write "${cpu}interactive/sampling_rate_min" "20000"
+		write "${cpu}interactive/min_sample_time" "20000"
+		write "${cpu}interactive/go_hispeed_load" "80"
+		write "${cpu}interactive/hispeed_freq" "$UINT_MAX"
+	fi
 done
 	
 for cpu in /sys/devices/system/cpu/cpu*
 do
-write "$cpu/online" "1"
+	write "$cpu/online" "1"
 done
 
 simple_bar
@@ -1625,7 +1477,7 @@ write "$gpu/thermal_pwrlevel" "0"
 write "$gpu/devfreq/adrenoboost" "1"
 write "$gpu/force_no_nap" "0"
 write "$gpu/bus_split" "0"
-write "$gpu/devfreq/max_freq" `cat $gpu/max_gpuclk`
+write "$gpu/devfreq/max_freq" $(cat "$gpu"/max_gpuclk)
 write "$gpu/devfreq/min_freq" "100000000"
 write "$gpu/default_pwrlevel" "1"
 write "$gpu/force_bus_on" "0"
@@ -1633,25 +1485,21 @@ write "$gpu/force_clk_on" "0"
 write "$gpu/force_rail_on" "0"
 write "$gpu/idle_timer" "146"
 
-if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]] 
-then
-write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "0"
+if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]]; then
+	write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "0"
 fi
 
 # Enable dvfs
-if [[ -e "/proc/mali/dvfs_enable" ]] 
-then
-write "/proc/mali/dvfs_enable" "1"
+if [[ -e "/proc/mali/dvfs_enable" ]]; then
+	write "/proc/mali/dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]] 
-then
-write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
+if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]]; then
+	write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]
-then
-write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
+if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]; then
+	write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
 fi
 
 simple_bar
@@ -1659,75 +1507,65 @@ kmsg1 "[*] TWEAKED GPU "
 simple_bar
 
 # Disable adreno idler
-if [[ -d "/sys/module/adreno_idler" ]]
-then
-write "/sys/module/adreno_idler/parameters/adreno_idler_active" "N"
-simple_bar
-kmsg1 "[*] DISABLED ADRENO IDLER."
-simple_bar
+if [[ -d "/sys/module/adreno_idler" ]]; then
+	write "/sys/module/adreno_idler/parameters/adreno_idler_active" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED ADRENO IDLER."
+	simple_bar
 fi
 
 # Schedtune Tweaks
-if [[ -d "/dev/stune/" ]]
-then
-write "/dev/stune/background/schedtune.boost" "0"
-write "/dev/stune/background/schedtune.prefer_idle" "0"
-
-write "/dev/stune/foreground/schedtune.boost" "50"
-write "/dev/stune/foreground/schedtune.prefer_idle" "0"
-
-write "/dev/stune/rt/schedtune.boost" "0"
-write "/dev/stune/rt/schedtune.prefer_idle" "0"
-
-write "/dev/stune/top-app/schedtune.boost" "50"
-write "/dev/stune/top-app/schedtune.prefer_idle" "0"
-
-write "/dev/stune/schedtune.boost" "0"
-write "/dev/stune/schedtune.prefer_idle" "0"
-simple_bar
-kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS. "
-simple_bar
+if [[ -d "/dev/stune/" ]]; then
+	write "/dev/stune/background/schedtune.boost" "0"
+	write "/dev/stune/background/schedtune.prefer_idle" "0"
+	write "/dev/stune/foreground/schedtune.boost" "50"
+	write "/dev/stune/foreground/schedtune.prefer_idle" "0"
+	write "/dev/stune/rt/schedtune.boost" "0"
+	write "/dev/stune/rt/schedtune.prefer_idle" "0"
+	write "/dev/stune/top-app/schedtune.boost" "50"
+	write "/dev/stune/top-app/schedtune.prefer_idle" "0"
+	write "/dev/stune/schedtune.boost" "0"
+	write "/dev/stune/schedtune.prefer_idle" "0"
+	simple_bar
+	kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS. "
+	simple_bar
 fi
 
 # FS Tweaks.
-if [[ -d "/proc/sys/fs" ]]
-then
-write "/proc/sys/fs/dir-notify-enable" "0"
-write "/proc/sys/fs/lease-break-time" "20"
-write "/proc/sys/fs/leases-enable" "1"
-simple_bar
-kmsg1 "[*] APPLIED FS TWEAKS."
-simple_bar
+if [[ -d "/proc/sys/fs" ]]; then
+	write "/proc/sys/fs/dir-notify-enable" "0"
+	write "/proc/sys/fs/lease-break-time" "20"
+	write "/proc/sys/fs/leases-enable" "1"
+	simple_bar
+	kmsg1 "[*] APPLIED FS TWEAKS."
+	simple_bar
 fi
 
 # Enable dynamic_fsync.
-if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]
-then
-write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
-simple_bar
-kmsg1 "[*] ENABLED DYNAMIC FSYNC."
-simple_bar
+if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]; then
+	write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED DYNAMIC FSYNC."
+	simple_bar
 fi
 
 # Scheduler features.
-if [[ -e "/sys/kernel/debug/sched_features" ]]
-then
-write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
-write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
-write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
-write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
-simple_bar
-kmsg1 "[*] APPLIED SCHEDULER FEATURES. "
-simple_bar
+if [[ -e "/sys/kernel/debug/sched_features" ]]; then
+	write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
+	write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
+	write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
+	write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
+	simple_bar
+	kmsg1 "[*] APPLIED SCHEDULER FEATURES. "
+	simple_bar
 fi
 
 # OP Tweaks
-if [[ -d "/sys/module/opchain" ]]
-then
-write "/sys/module/opchain/parameters/chain_on" "0"
-simple_bar
-kmsg1 "[*] DISABLED ONEPLUS CHAIN. "
-simple_bar
+if [[ -d "/sys/module/opchain" ]]; then
+	write "/sys/module/opchain/parameters/chain_on" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED ONEPLUS CHAIN. "
+	simple_bar
 fi
 
 # Tweak some kernel settings to improve overall performance.
@@ -1756,52 +1594,47 @@ kmsg1 "[*] TWEAKED KERNEL SETTINGS. "
 simple_bar
 
 # Enable fingerprint boost.
-if [[ -e "/sys/kernel/fp_boost/enabled" ]]
-then
-write "/sys/kernel/fp_boost/enabled" "1"
-simple_bar
-kmsg1 "[*] ENABLED FINGERPRINT BOOST. "
-simple_bar
+if [[ -e "/sys/kernel/fp_boost/enabled" ]]; then
+	write "/sys/kernel/fp_boost/enabled" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED FINGERPRINT BOOST. "
+	simple_bar
 fi
 
 # Set max clocks in gaming / performance profile.
 for minclk in /sys/devices/system/cpu/cpufreq/policy*/
 do
-if [[ -e "${minclk}scaling_min_freq" ]]
-then
-write "${minclk}scaling_min_freq" "$cpumxfreq"
-write "${minclk}scaling_max_freq" "$cpumxfreq"
-fi
+	if [[ -e "${minclk}scaling_min_freq" ]]; then
+		write "${minclk}scaling_min_freq" "$cpumxfreq"
+		write "${minclk}scaling_max_freq" "$cpumxfreq"
+	fi
 done
 
 for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-if [[ -e "${mnclk}scaling_min_freq" ]]
-then
-write "${mnclk}scaling_min_freq" "$cpumxfreq"
-write "${mnclk}scaling_max_freq" "$cpumxfreq"
-fi
+	if [[ -e "${mnclk}scaling_min_freq" ]]; then
+		write "${mnclk}scaling_min_freq" "$cpumxfreq"
+		write "${mnclk}scaling_max_freq" "$cpumxfreq"
+	fi
 done
 
 simple_bar
 kmsg1 "[*] SET MIN AND MAX CPU CLOCKS. "
 simple_bar
 
-if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]] 
-then
-write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "0"
-simple_bar
-kmsg1 "[*] NOT ALLOWED CPUIDLE TO USE DEEPEST STATE. "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]]; then
+	write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "0"
+	simple_bar
+	kmsg1 "[*] NOT ALLOWED CPUIDLE TO USE DEEPEST STATE. "
+	simple_bar
 fi
 
 # Enable krait voltage boost
-if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]] 
-then
-write "/sys/module/acpuclock_krait/parameters/boost" "Y"
-simple_bar
-kmsg1 "[*] ENABLED KRAIT VOLTAGE BOOST "
-simple_bar
+if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]]; then
+	write "/sys/module/acpuclock_krait/parameters/boost" "Y"
+	simple_bar
+	kmsg1 "[*] ENABLED KRAIT VOLTAGE BOOST "
+	simple_bar
 fi
 
 sync
@@ -1823,131 +1656,112 @@ kmsg1 "[*] APPLIED VM TWEAKS "
 simple_bar
 
 # MSM thermal tweaks
-if [[ -d "/sys/module/msm_thermal" ]]
-then
-write /sys/module/msm_thermal/vdd_restriction/enabled "0"
-write /sys/module/msm_thermal/core_control/enabled "0"
-write /sys/module/msm_thermal/parameters/enabled "N"
-simple_bar
-kmsg1 "[*] APPLIED THERMAL TWEAKS "
-simple_bar
+if [[ -d "/sys/module/msm_thermal" ]]; then
+	write /sys/module/msm_thermal/vdd_restriction/enabled "0"
+	write /sys/module/msm_thermal/core_control/enabled "0"
+	write /sys/module/msm_thermal/parameters/enabled "N"
+	simple_bar
+	kmsg1 "[*] APPLIED THERMAL TWEAKS "
+	simple_bar
 fi
 
 # Disable power efficient workqueue.
-if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]
-then 
-write "/sys/module/workqueue/parameters/power_efficient" "N" 
-simple_bar
-kmsg1 "[*] DISABLED POWER EFFICIENT WORKQUEUE. "
-simple_bar
+if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]; then
+	write "/sys/module/workqueue/parameters/power_efficient" "N" 
+	simple_bar
+	kmsg1 "[*] DISABLED POWER EFFICIENT WORKQUEUE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]
-then
-write "/sys/devices/system/cpu/sched_mc_power_savings" "0"
-simple_bar
-kmsg1 "[*] DISABLED MULTICORE POWER SAVINGS "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]; then
+	write "/sys/devices/system/cpu/sched_mc_power_savings" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED MULTICORE POWER SAVINGS "
+	simple_bar
 fi
 
 # Fix DT2W.
-if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
-simple_bar
-
-elif [[ -e "/proc/tp_gesture" ]]
-then
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
-simple_bar
-
-elif [[ -e "/sys/touchpanel/double_tap" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
-simple_bar
+if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
+	simple_bar
+elif [[ -e "/proc/tp_gesture" ]]; then
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
+	simple_bar
+elif [[ -e "/sys/touchpanel/double_tap" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
+	simple_bar
 fi
 
 # Enable touch boost on gaming and performance profile.
-if [[ -e /sys/module/msm_performance/parameters/touchboost ]]
-then
-write "/sys/module/msm_performance/parameters/touchboost" "1"
-simple_bar
-kmsg1 "[*] ENABLED TOUCH BOOST "
-simple_bar
-
-elif [[ -e /sys/power/pnpmgr/touch_boost ]]
-then
-write "/sys/power/pnpmgr/touch_boost" "1"
-simple_bar
-kmsg1 "[*] ENABLED TOUCH BOOST "
-simple_bar
+if [[ -e /sys/module/msm_performance/parameters/touchboost ]]; then
+	write "/sys/module/msm_performance/parameters/touchboost" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED TOUCH BOOST "
+	simple_bar
+elif [[ -e /sys/power/pnpmgr/touch_boost ]]; then
+	write "/sys/power/pnpmgr/touch_boost" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED TOUCH BOOST "
+	simple_bar
 fi
 
 
 # Disable battery saver
-if [[ -d "/sys/module/battery_saver" ]]
-then
-write "/sys/module/battery_saver/parameters/enabled" "N"
-simple_bar
-kmsg1 "[*] DISABLED BATTERY SAVER "
-simple_bar
+if [[ -d "/sys/module/battery_saver" ]]; then
+	write "/sys/module/battery_saver/parameters/enabled" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED BATTERY SAVER "
+	simple_bar
 fi
 
 # Enable KSM
-if [[ -e "/sys/kernel/mm/ksm/run" ]] 
-then
-write "/sys/kernel/mm/ksm/run" "1"
-simple_bar
-kmsg1 "[*] ENABLED KSM."
-simple_bar
-
+if [[ -e "/sys/kernel/mm/ksm/run" ]]; then
+	write "/sys/kernel/mm/ksm/run" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED KSM."
+	simple_bar
 # Enable UKSM
-elif [[ -e "/sys/kernel/mm/uksm/run" ]] 
-then
-write "/sys/kernel/mm/uksm/run" "1"
-simple_bar
-kmsg1 "[*] ENABLED UKSM."
-simple_bar
+elif [[ -e "/sys/kernel/mm/uksm/run" ]]; then
+	write "/sys/kernel/mm/uksm/run" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED UKSM."
+	simple_bar
 fi
 
 # Disable arch power
-if [[ -e "/sys/kernel/sched/arch_power" ]] 
-then
-write "/sys/kernel/sched/arch_power" "0"
-simple_bar
-kmsg1 "[*] DISABLED ARCH POWER "
-simple_bar
+if [[ -e "/sys/kernel/sched/arch_power" ]]; then
+	write "/sys/kernel/sched/arch_power" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED ARCH POWER "
+	simple_bar
 fi
 
-if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]] 
-then
-write "/sys/module/pm2/parameters/idle_sleep_mode" "N"
-simple_bar
-kmsg1 "[*] DISABLED PM2 IDLE SLEEP MODE "
-simple_bar
+if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]]; then
+	write "/sys/module/pm2/parameters/idle_sleep_mode" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED PM2 IDLE SLEEP MODE "
+	simple_bar
 fi
 
-if [[ -e "/sys/class/lcd/panel/power_reduce" ]] 
-then
-write "/sys/class/lcd/panel/power_reduce" "0"
-simple_bar
-kmsg1 "[*] DISABLED LCD POWER REDUCE. "
-simple_bar
+if [[ -e "/sys/class/lcd/panel/power_reduce" ]]; then
+	write "/sys/class/lcd/panel/power_reduce" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED LCD POWER REDUCE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]
-then
-write "/sys/kernel/sched/gentle_fair_sleepers" "0"
-simple_bar
-kmsg1 "[*] DISABLED GENTLE FAIR SLEEPERS "
-simple_bar
+if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]; then
+	write "/sys/kernel/sched/gentle_fair_sleepers" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED GENTLE FAIR SLEEPERS "
+	simple_bar
 fi
 
 simple_bar
@@ -1957,54 +1771,44 @@ simple_bar
 simple_bar
 kmsg1 "[*] END OF EXECUTION: $(date)"
 simple_bar
-exit=`date +%s`
+exit=$(date +%s)
 
 exectime=$((exit - init))
 simple_bar
 kmsg1 "[*] EXECUTION DONE IN $exectime SECONDS. "
 simple_bar
 
-         init=`date +%s`
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua1
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua1
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr1
-     	
-     	else
-     	toasteua1
-     	fi
+init=$(date +%s)
+if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+	toastbr1
+else
+	toasteua1
+fi
+
 }
+
 # Gaming Profile
 gaming() {
-        init=`date +%s`
-        killall raidenauto
+	init=$(date +%s)
+	killall raidenauto
         	
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
+	if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
      	toasteua
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr
-     	
-     	else
-     	toasteua
-     	fi
+	elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+		toastbr
+	else
+		toasteua
+	fi
      	
 kmsg1 "----------------------- Info -----------------------"
 kmsg1 "[ * ] Date of execution: $(date) "
-kmsg1 "[ * ] Kernel: `uname -a` "
+kmsg1 "[ * ] Kernel: $(uname -a) "
 kmsg1 "[ * ] SOC: $mf, $soc "
 kmsg1 "[ * ] SDK: $sdk "
 kmsg1 "[ * ] CPU governor: $CPU_GOVERNOR "
@@ -2065,24 +1869,20 @@ simple_bar
 kmsg1 "[*] DISABLED STATSD AND LOGD "
 simple_bar
 
-if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]
-then
-write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "50"
-simple_bar
-kmsg1 "[*] TWEAKED STUNE BOOST "
-simple_bar
+if [[ -e "/sys/module/cpu_boost/parameters/dynamic_stune_boost" ]]; then
+	write "/sys/module/cpu_boost/parameters/dynamic_stune_boost" "50"
+	simple_bar
+	kmsg1 "[*] TWEAKED STUNE BOOST "
+	simple_bar
 fi
 
 for corectl in /sys/devices/system/cpu/cpu*/core_ctl
 do
-if [[ -e "${corectl}/enable" ]]
-then
-write "${corectl}/enable" "0"
-
-elif [[ -e "${corectl}/disable" ]]
-then
-write "${corectl}/disable" "1"
-fi
+	if [[ -e "${corectl}/enable" ]]; then
+		write "${corectl}/enable" "0"
+	elif [[ -e "${corectl}/disable" ]]; then
+		write "${corectl}/disable" "1"
+	fi
 done
 
 simple_bar
@@ -2090,34 +1890,31 @@ kmsg1 "[*] DISABLED CORE CONTROL. "
 simple_bar
 
 # Caf CPU Boost
-if [[ -d "/sys/module/cpu_boost" ]]
-then
-write "/sys/module/cpu_boost/parameters/input_boost_freq" "0:$cpumxfreq 1:$cpumxfreq 2:$cpumxfreq 3:$cpumxfreq 4:$cpumxfreq 5:$cpumxfreq 6:$cpumxfreq 7:$cpumxfreq"
-write "/sys/module/cpu_boost/parameters/input_boost_ms" "128"
-simple_bar
-kmsg1 "[*] TWEAKED CAF INPUT BOOST "
-simple_bar
-
+if [[ -d "/sys/module/cpu_boost" ]]; then
+	write "/sys/module/cpu_boost/parameters/input_boost_freq" "0:$cpumxfreq 1:$cpumxfreq 2:$cpumxfreq 3:$cpumxfreq 4:$cpumxfreq 5:$cpumxfreq 6:$cpumxfreq 7:$cpumxfreq"
+	write "/sys/module/cpu_boost/parameters/input_boost_ms" "128"
+	simple_bar
+	kmsg1 "[*] TWEAKED CAF INPUT BOOST "
+	simple_bar
 # CPU input boost
-elif [[ -d "/sys/module/cpu_input_boost" ]]
-then
-write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "128"
-write "/sys/module/cpu_input_boost/parameters/input_boost_freq_hp" "$cpumxfreq"
-write "/sys/module/cpu_input_boost/parameters/input_boost_freq_lp" "$cpumxfreq"
-simple_bar
-kmsg1 "[*] TWEAKED CPU INPUT BOOST"
-simple_bar
+elif [[ -d "/sys/module/cpu_input_boost" ]]; then
+	write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "128"
+	write "/sys/module/cpu_input_boost/parameters/input_boost_freq_hp" "$cpumxfreq"
+	write "/sys/module/cpu_input_boost/parameters/input_boost_freq_lp" "$cpumxfreq"
+	simple_bar
+	kmsg1 "[*] TWEAKED CPU INPUT BOOST"
+	simple_bar
 fi
 
 # I/O Scheduler Tweaks.
 for queue in /sys/block/*/queue/
 do
-write "${queue}add_random" 0
-write "${queue}iostats" 0
-write "${queue}read_ahead_kb" 512
-write "${queue}nomerges" 2
-write "${queue}rq_affinity" 2
-write "${queue}nr_requests" 256
+	write "${queue}add_random" 0
+	write "${queue}iostats" 0
+	write "${queue}read_ahead_kb" 512
+	write "${queue}nomerges" 2
+	write "${queue}rq_affinity" 2
+	write "${queue}nr_requests" 256
 done
 
 simple_bar
@@ -2127,40 +1924,38 @@ simple_bar
 # CPU Tweaks
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-avail_govs=`cat "${cpu}scaling_available_governors"`
-if [[ "$avail_govs" == *"schedutil"* ]]
-then
-write "${cpu}scaling_governor" schedutil
-write "${cpu}schedutil/up_rate_limit_us" "500"
-write "${cpu}schedutil/down_rate_limit_us" "20000"
-write "${cpu}schedutil/pl" "1"
-write "${cpu}schedutil/iowait_boost_enable" "1"
-write "${cpu}schedutil/rate_limit_us" "20000"
-write "${cpu}schedutil/hispeed_load" "80"
-write "${cpu}schedutil/hispeed_freq" "$UINT_MAX"
-elif [[ "$avail_govs" == *"interactive"* ]]
-then
-write "${cpu}scaling_governor" interactive
-write "${cpu}interactive/timer_rate" "20000"
-write "${cpu}interactive/boost" "1"
-write "${cpu}interactive/timer_slack" "20000"
-write "${cpu}interactive/use_migration_notif" "1"
-write "${cpu}interactive/ignore_hispeed_on_notif" "1"
-write "${cpu}interactive/use_sched_load" "1"
-write "${cpu}interactive/boostpulse" "0"
-write "${cpu}interactive/fastlane" "1"
-write "${cpu}interactive/fast_ramp_down" "0"
-write "${cpu}interactive/sampling_rate" "20000"
-write "${cpu}interactive/sampling_rate_min" "20000"
-write "${cpu}interactive/min_sample_time" "20000"
-write "${cpu}interactive/go_hispeed_load" "80"
-write "${cpu}interactive/hispeed_freq" "$UINT_MAX"
-fi
+	avail_govs=$(cat "${cpu}scaling_available_governors")
+	if [[ "$avail_govs" == *"schedutil"* ]]; then
+		write "${cpu}scaling_governor" schedutil
+		write "${cpu}schedutil/up_rate_limit_us" "500"
+		write "${cpu}schedutil/down_rate_limit_us" "20000"
+		write "${cpu}schedutil/pl" "1"
+		write "${cpu}schedutil/iowait_boost_enable" "1"
+		write "${cpu}schedutil/rate_limit_us" "20000"
+		write "${cpu}schedutil/hispeed_load" "80"
+		write "${cpu}schedutil/hispeed_freq" "$UINT_MAX"
+	elif [[ "$avail_govs" == *"interactive"* ]]; then
+		write "${cpu}scaling_governor" interactive
+		write "${cpu}interactive/timer_rate" "20000"
+		write "${cpu}interactive/boost" "1"
+		write "${cpu}interactive/timer_slack" "20000"
+		write "${cpu}interactive/use_migration_notif" "1"
+		write "${cpu}interactive/ignore_hispeed_on_notif" "1"
+		write "${cpu}interactive/use_sched_load" "1"
+		write "${cpu}interactive/boostpulse" "0"
+		write "${cpu}interactive/fastlane" "1"
+		write "${cpu}interactive/fast_ramp_down" "0"
+		write "${cpu}interactive/sampling_rate" "20000"
+		write "${cpu}interactive/sampling_rate_min" "20000"
+		write "${cpu}interactive/min_sample_time" "20000"
+		write "${cpu}interactive/go_hispeed_load" "80"
+		write "${cpu}interactive/hispeed_freq" "$UINT_MAX"
+	fi
 done
 
 for cpu in /sys/devices/system/cpu/cpu*
 do
-write "$cpu/online" "1"
+	write "$cpu/online" "1"
 done
 
 simple_bar
@@ -2173,33 +1968,29 @@ write "$gpu/thermal_pwrlevel" "0"
 write "$gpu/devfreq/adrenoboost" "2"
 write "$gpu/force_no_nap" "1"
 write "$gpu/bus_split" "0"
-write "$gpu/devfreq/max_freq" `cat $gpu/max_gpuclk`
-write "$gpu/devfreq/min_freq" $gpumx
-write "$gpu/default_pwrlevel" `cat $gpu/max_pwrlevel`
+write "$gpu/devfreq/max_freq" $(cat "$gpu"/max_gpuclk)
+write "$gpu/devfreq/min_freq" "$gpumx"
+write "$gpu/default_pwrlevel" $(cat "$gpu"/max_pwrlevel)
 write "$gpu/force_bus_on" "1"
 write "$gpu/force_clk_on" "1"
 write "$gpu/force_rail_on" "1"
 write "$gpu/idle_timer" "1050"
 
-if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]]
-then
-write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "1"
+if [[ -e "/proc/gpufreq/gpufreq_limited_thermal_ignore" ]]; then
+	write "/proc/gpufreq/gpufreq_limited_thermal_ignore" "1"
 fi
 
 # Enable dvfs
-if [[ -e "/proc/mali/dvfs_enable" ]] 
-then
-write "/proc/mali/dvfs_enable" "1"
+if [[ -e "/proc/mali/dvfs_enable" ]]; then
+	write "/proc/mali/dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]] 
-then
-write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
+if [[ -e "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" ]]; then
+	write "/sys/module/pvrsrvkm/parameters/gpu_dvfs_enable" "1"
 fi
 
-if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]
-then
-write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
+if [[ -e "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" ]]; then
+	write "/sys/module/simple_gpu_algorithm/parameters/simple_gpu_activate" "1"
 fi
 
 simple_bar
@@ -2207,75 +1998,64 @@ kmsg1 "[*] TWEAKED GPU "
 simple_bar
 
 # Disable adreno idler
-if [[ -d "/sys/module/adreno_idler" ]]
-then
-write "/sys/module/adreno_idler/parameters/adreno_idler_active" "N"
-simple_bar
-kmsg1 "[*] DISABLED ADRENO IDLER."
-simple_bar
+if [[ -d "/sys/module/adreno_idler" ]]; then
+	write "/sys/module/adreno_idler/parameters/adreno_idler_active" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED ADRENO IDLER."
+	simple_bar
 fi
 
 # Schedtune Tweaks
-if [[ -d "/dev/stune/" ]]
-then
-write "/dev/stune/background/schedtune.boost" "0"
-write "/dev/stune/background/schedtune.prefer_idle" "0"
-
-write "/dev/stune/foreground/schedtune.boost" "50"
-write "/dev/stune/foreground/schedtune.prefer_idle" "0"
-
-write "/dev/stune/rt/schedtune.boost" "0"
-write "/dev/stune/rt/schedtune.prefer_idle" "0"
-
-write "/dev/stune/top-app/schedtune.boost" "50"
-write "/dev/stune/top-app/schedtune.prefer_idle" "0"
-
-write "/dev/stune/schedtune.boost" "0"
-write "/dev/stune/schedtune.prefer_idle" "0"
-simple_bar
-kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS "
-simple_bar
+if [[ -d "/dev/stune/" ]]; then
+	write "/dev/stune/background/schedtune.boost" "0"write "/dev/stune/background/schedtune.prefer_idle" "0"
+	write "/dev/stune/foreground/schedtune.boost" "50"
+	write "/dev/stune/foreground/schedtune.prefer_idle" "0"
+	write "/dev/stune/rt/schedtune.boost" "0"
+	write "/dev/stune/rt/schedtune.prefer_idle" "0"
+	write "/dev/stune/top-app/schedtune.boost" "50"
+	write "/dev/stune/top-app/schedtune.prefer_idle" "0"
+	write "/dev/stune/schedtune.boost" "0"
+	write "/dev/stune/schedtune.prefer_idle" "0"
+	simple_bar
+	kmsg1 "[*] APPLIED SCHEDTUNE TWEAKS "
+	simple_bar
 fi
 
 # FS Tweaks.
-if [[ -d "/proc/sys/fs" ]]
-then
-write "/proc/sys/fs/dir-notify-enable" "0"
-write "/proc/sys/fs/lease-break-time" "20"
-write "/proc/sys/fs/leases-enable" "1"
-simple_bar
-kmsg1 "[*] APPLIED FS TWEAKS "
-simple_bar
+if [[ -d "/proc/sys/fs" ]]; then
+	write "/proc/sys/fs/dir-notify-enable" "0"
+	write "/proc/sys/fs/lease-break-time" "20"
+	write "/proc/sys/fs/leases-enable" "1"
+	simple_bar
+	kmsg1 "[*] APPLIED FS TWEAKS "
+	simple_bar
 fi
 
 # Enable dynamic_fsync.
-if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]
-then
-write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
-simple_bar
-kmsg1 "[*] ENABLED DYNAMIC FSYNC."
-simple_bar
+if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]; then
+	write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED DYNAMIC FSYNC."
+	simple_bar
 fi
 
 # Scheduler features.
-if [[ -e "/sys/kernel/debug/sched_features" ]]
-then
-write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
-write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
-write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
-write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
-simple_bar
-kmsg1 "[*] APPLIED SCHEDULER FEATURES "
-simple_bar
+if [[ -e "/sys/kernel/debug/sched_features" ]]; then
+	write "/sys/kernel/debug/sched_features" "NEXT_BUDDY"
+	write "/sys/kernel/debug/sched_features" "TTWU_QUEUE"
+	write "/sys/kernel/debug/sched_features" "NO_GENTLE_FAIR_SLEEPERS"
+	write "/sys/kernel/debug/sched_features" "NO_WAKEUP_PREEMPTION"
+	simple_bar
+	kmsg1 "[*] APPLIED SCHEDULER FEATURES "
+	simple_bar
 fi
 
 # OP Tweaks
-if [[ -d "/sys/module/opchain" ]]
-then
-write "/sys/module/opchain/parameters/chain_on" "0"
-simple_bar
-kmsg1 "[*] DISABLED ONEPLUS CHAIN "
-simple_bar
+if [[ -d "/sys/module/opchain" ]]; then
+	write "/sys/module/opchain/parameters/chain_on" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED ONEPLUS CHAIN "
+	simple_bar
 fi
 
 # Tweak some kernel settings to improve overall performance.
@@ -2304,52 +2084,48 @@ kmsg1 "[*] TWEAKED KERNEL SETTINGS "
 simple_bar
 
 # Enable fingerprint boost.
-if [[ -e "/sys/kernel/fp_boost/enabled" ]]
-then
-write "/sys/kernel/fp_boost/enabled" "1"
-simple_bar
-kmsg1 "[*] ENABLED FINGERPRINT BOOST "
-simple_bar
+if [[ -e "/sys/kernel/fp_boost/enabled" ]]; then
+	write "/sys/kernel/fp_boost/enabled" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED FINGERPRINT BOOST "
+	simple_bar
 fi
 
 # Set max clocks in gaming / performance profile.
 for minclk in /sys/devices/system/cpu/cpufreq/policy*/
 do
-if [[ -e "${minclk}scaling_min_freq" ]]
-then
-write "${minclk}scaling_min_freq" "$cpumxfreq"
-write "${minclk}scaling_max_freq" "$cpumxfreq"
-fi
+	if [[ -e "${minclk}scaling_min_freq" ]]; then
+		write "${minclk}scaling_min_freq" "$cpumxfreq"
+		write "${minclk}scaling_max_freq" "$cpumxfreq"
+	fi
 done
 
 for mnclk in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-if [[ -e "${mnclk}scaling_min_freq" ]]
-then
-write "${mnclk}scaling_min_freq" "$cpumxfreq"
-write "${mnclk}scaling_max_freq" "$cpumxfreq"
-fi
+	if [[ -e "${mnclk}scaling_min_freq" ]]
+	then
+		write "${mnclk}scaling_min_freq" "$cpumxfreq"
+		write "${mnclk}scaling_max_freq" "$cpumxfreq"
+	fi
 done
 
 simple_bar
 kmsg1 "[*] SET MIN AND MAX CPU CLOCKS "
 simple_bar
 
-if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]] 
-then
-write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "0"
-simple_bar
-kmsg1 "[*] NOT ALLOWED CPUIDLE TO USE DEEPEST STATE. "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/cpuidle/use_deepest_state" ]]; then
+	write "/sys/devices/system/cpu/cpuidle/use_deepest_state" "0"
+	simple_bar
+	kmsg1 "[*] NOT ALLOWED CPUIDLE TO USE DEEPEST STATE. "
+	simple_bar
 fi
 
 # Enable krait voltage boost
-if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]] 
-then
-write "/sys/module/acpuclock_krait/parameters/boost" "Y"
-simple_bar
-kmsg1 "[*] ENABLED KRAIT VOLTAGE BOOST "
-simple_bar
+if [[ -e "/sys/module/acpuclock_krait/parameters/boost" ]]; then
+	write "/sys/module/acpuclock_krait/parameters/boost" "Y"
+	simple_bar
+	kmsg1 "[*] ENABLED KRAIT VOLTAGE BOOST "
+	simple_bar
 fi
 
 sync
@@ -2371,131 +2147,112 @@ kmsg1 "[*] APPLIED VM TWEAKS."
 simple_bar
 
 # MSM thermal tweaks
-if [[ -d "/sys/module/msm_thermal" ]]
-then
-write /sys/module/msm_thermal/vdd_restriction/enabled "0"
-write /sys/module/msm_thermal/core_control/enabled "0"
-write /sys/module/msm_thermal/parameters/enabled "N"
-simple_bar
-kmsg1 "[*] APPLIED THERMAL TWEAKS "
-simple_bar
+if [[ -d "/sys/module/msm_thermal" ]]; then
+	write /sys/module/msm_thermal/vdd_restriction/enabled "0"
+	write /sys/module/msm_thermal/core_control/enabled "0"
+	write /sys/module/msm_thermal/parameters/enabled "N"
+	simple_bar
+	kmsg1 "[*] APPLIED THERMAL TWEAKS "
+	simple_bar
 fi
 
 # Disable power efficient workqueue.
-if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]
-then 
-write "/sys/module/workqueue/parameters/power_efficient" "N" 
-simple_bar
-kmsg1 "[*] DISABLED POWER EFFICIENT WORKQUEUE. "
-simple_bar
+if [[ -e "/sys/module/workqueue/parameters/power_efficient" ]]; then
+	write "/sys/module/workqueue/parameters/power_efficient" "N" 
+	simple_bar
+	kmsg1 "[*] DISABLED POWER EFFICIENT WORKQUEUE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]
-then
-write "/sys/devices/system/cpu/sched_mc_power_savings" "0"
-simple_bar
-kmsg1 "[*] DISABLED MULTICORE POWER SAVINGS "
-simple_bar
+if [[ -e "/sys/devices/system/cpu/sched_mc_power_savings" ]]; then
+	write "/sys/devices/system/cpu/sched_mc_power_savings" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED MULTICORE POWER SAVINGS "
+	simple_bar
 fi
 
 # Fix DT2W.
-if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
-simple_bar
-
-elif [[ -e "/proc/tp_gesture" ]]
-then
-write "/proc/tp_gesture" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
-simple_bar
-
-elif [[ -e "/sys/touchpanel/double_tap" ]]
-then
-write "/sys/touchpanel/double_tap" "1"
-simple_bar
-kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
-simple_bar
+if [[ -e "/sys/touchpanel/double_tap" && -e "/proc/tp_gesture" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
+	simple_bar
+elif [[ -e "/proc/tp_gesture" ]]; then
+	write "/proc/tp_gesture" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
+	simple_bar
+elif [[ -e "/sys/touchpanel/double_tap" ]]; then
+	write "/sys/touchpanel/double_tap" "1"
+	simple_bar
+	kmsg1 "[*] FIXED DOUBLE TAP TO WAKEUP IF BROKEN "
+	simple_bar
 fi
 
 # Enable touch boost on gaming and performance profile.
-if [[ -e /sys/module/msm_performance/parameters/touchboost ]]
-then
-write "/sys/module/msm_performance/parameters/touchboost" "1"
-simple_bar
-kmsg1 "[*] ENABLED TOUCH BOOST "
-simple_bar
-
-elif [[ -e /sys/power/pnpmgr/touch_boost ]]
-then
-write "/sys/power/pnpmgr/touch_boost" "1"
-simple_bar
-kmsg1 "[*] ENABLED TOUCH BOOST "
-simple_bar
+if [[ -e /sys/module/msm_performance/parameters/touchboost ]]; then
+	write "/sys/module/msm_performance/parameters/touchboost" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED TOUCH BOOST "
+	simple_bar
+elif [[ -e /sys/power/pnpmgr/touch_boost ]]; then
+	write "/sys/power/pnpmgr/touch_boost" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED TOUCH BOOST "
+	simple_bar
 fi
 
 
 # Disable battery saver
-if [[ -d "/sys/module/battery_saver" ]]
-then
-write "/sys/module/battery_saver/parameters/enabled" "N"
-simple_bar
-kmsg1 "[*] DISABLED BATTERY SAVER "
-simple_bar
+if [[ -d "/sys/module/battery_saver" ]]; then
+	write "/sys/module/battery_saver/parameters/enabled" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED BATTERY SAVER "
+	simple_bar
 fi
 
 # Enable KSM
-if [[ -e "/sys/kernel/mm/ksm/run" ]] 
-then
-write "/sys/kernel/mm/ksm/run" "1"
-simple_bar
-kmsg1 "[*] ENABLED KSM."
-simple_bar
-
+if [[ -e "/sys/kernel/mm/ksm/run" ]]; then
+	write "/sys/kernel/mm/ksm/run" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED KSM."
+	simple_bar
 # Enable UKSM
-elif [[ -e "/sys/kernel/mm/uksm/run" ]] 
-then
-write "/sys/kernel/mm/uksm/run" "1"
-simple_bar
-kmsg1 "[*] ENABLED UKSM."
-simple_bar
+elif [[ -e "/sys/kernel/mm/uksm/run" ]]; then
+	write "/sys/kernel/mm/uksm/run" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED UKSM."
+	simple_bar
 fi
 
 # Disable arch power
-if [[ -e "/sys/kernel/sched/arch_power" ]] 
-then
-write "/sys/kernel/sched/arch_power" "0"
-simple_bar
-kmsg1 "[*] DISABLED ARCH POWER "
-simple_bar
+if [[ -e "/sys/kernel/sched/arch_power" ]]; then
+	write "/sys/kernel/sched/arch_power" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED ARCH POWER "
+	simple_bar
 fi
 
-if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]] 
-then
-write "/sys/module/pm2/parameters/idle_sleep_mode" "N"
-simple_bar
-kmsg1 "[*] DISABLED PM2 IDLE SLEEP MODE "
-simple_bar
+if [[ -e "/sys/module/pm2/parameters/idle_sleep_mode" ]]; then
+	write "/sys/module/pm2/parameters/idle_sleep_mode" "N"
+	simple_bar
+	kmsg1 "[*] DISABLED PM2 IDLE SLEEP MODE "
+	simple_bar
 fi
 
-if [[ -e "/sys/class/lcd/panel/power_reduce" ]] 
-then
-write "/sys/class/lcd/panel/power_reduce" "0"
-simple_bar
-kmsg1 "[*] DISABLED LCD POWER REDUCE. "
-simple_bar
+if [[ -e "/sys/class/lcd/panel/power_reduce" ]]; then
+	write "/sys/class/lcd/panel/power_reduce" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED LCD POWER REDUCE. "
+	simple_bar
 fi
 
-if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]
-then
-write "/sys/kernel/sched/gentle_fair_sleepers" "0"
-simple_bar
-kmsg1 "[*] DISABLED GENTLE FAIR SLEEPERS. "
-simple_bar
+if [[ -e "/sys/kernel/sched/gentle_fair_sleepers" ]]; then
+	write "/sys/kernel/sched/gentle_fair_sleepers" "0"
+	simple_bar
+	kmsg1 "[*] DISABLED GENTLE FAIR SLEEPERS. "
+	simple_bar
 fi
 
 simple_bar
@@ -2505,54 +2262,43 @@ simple_bar
 simple_bar
 kmsg1 "[*] END OF EXECUTION: $(date)"
 simple_bar
-exit=`date +%s`
+exit=$(date +%s)
 
 exectime=$((exit - init))
 simple_bar
 kmsg1 "[*] EXECUTION DONE IN $exectime SECONDS. "
 simple_bar
 
-         if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua1
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua1
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr1
+if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+	toastbr1
+else
+	toasteua1
+fi
 
-     	else
-     	toasteua1
-     	fi
 }
 
 # Thermal Profile
 thermal() {
-     	init=`date +%s`
-        killall raidenauto
+	init=$(date +%s)
+	killall raidenauto
         	
-     	if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr
-     	
-     	else
-     	toasteua
-     	fi
+	if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+		toasteua
+	elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+		toastbr
+	else
+		toasteua
+	fi
 	
 kmsg1 "----------------------- Info -----------------------"
 kmsg1 "[ * ] Date of execution: $(date) "
-kmsg1 "[ * ] Kernel: `uname -a` "
+kmsg1 "[ * ] Kernel: $(uname -a) "
 kmsg1 "[ * ] SOC: $mf, $soc "
 kmsg1 "[ * ] SDK: $sdk "
 kmsg1 "[ * ] CPU governor: $CPU_GOVERNOR "
@@ -2607,53 +2353,49 @@ simple_bar
 # Disable logd and statsd to reduce overhead.
 stop logd
 stop statsd
+
 # CPU Tweaks
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/
 do
-avail_govs=`cat "${cpu}scaling_available_governors"`
-if [[ "$avail_govs" == *"schedutil"* ]]
-then
-write "${cpu}scaling_governor" schedutil
-write "${cpu}schedutil/up_rate_limit_us" "$((SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/down_rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/pl" "0"
-write "${cpu}schedutil/iowait_boost_enable" "0"
-write "${cpu}schedutil/rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
-write "${cpu}schedutil/hispeed_load" "99"
-write "${cpu}schedutil/hispeed_freq" "$cpumfreq"
-elif [[ "$avail_govs" == *"interactive"* ]]
-then
-write "${cpu}scaling_governor" interactive
-write "${cpu}interactive/timer_rate" "50000"
-write "${cpu}interactive/boost" "0"
-write "${cpu}interactive/timer_slack" "50000"
-write "${cpu}interactive/use_migration_notif" "1" 
-write "${cpu}interactive/ignore_hispeed_on_notif" "1"
-write "${cpu}interactive/use_sched_load" "1"
-write "${cpu}interactive/boostpulse" "0"
-write "${cpu}interactive/fastlane" "1"
-write "${cpu}interactive/fast_ramp_down" "1"
-write "${cpu}interactive/sampling_rate" "50000"
-write "${cpu}interactive/sampling_rate_min" "75000"
-write "${cpu}interactive/min_sample_time" "75000"
-write "${cpu}interactive/go_hispeed_load" "99"
-write "${cpu}interactive/hispeed_freq" "$cpumfreq"
-fi
+	avail_govs=$(cat "${cpu}scaling_available_governors")
+	if [[ "$avail_govs" == *"schedutil"* ]]; then
+		write "${cpu}scaling_governor" schedutil
+		write "${cpu}schedutil/up_rate_limit_us" "$((SCHED_PERIOD_BATTERY / 1000))"
+		write "${cpu}schedutil/down_rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
+		write "${cpu}schedutil/pl" "0"
+		write "${cpu}schedutil/iowait_boost_enable" "0"
+		write "${cpu}schedutil/rate_limit_us" "$((4 * SCHED_PERIOD_BATTERY / 1000))"
+		write "${cpu}schedutil/hispeed_load" "99"
+		write "${cpu}schedutil/hispeed_freq" "$cpumfreq"
+	elif [[ "$avail_govs" == *"interactive"* ]]; then
+		write "${cpu}scaling_governor" interactive
+		write "${cpu}interactive/timer_rate" "50000"
+		write "${cpu}interactive/boost" "0"
+		write "${cpu}interactive/timer_slack" "50000"
+		write "${cpu}interactive/use_migration_notif" "1" 
+		write "${cpu}interactive/ignore_hispeed_on_notif" "1"
+		write "${cpu}interactive/use_sched_load" "1"
+		write "${cpu}interactive/boostpulse" "0"
+		write "${cpu}interactive/fastlane" "1"
+		write "${cpu}interactive/fast_ramp_down" "1"
+		write "${cpu}interactive/sampling_rate" "50000"
+		write "${cpu}interactive/sampling_rate_min" "75000"
+		write "${cpu}interactive/min_sample_time" "75000"
+		write "${cpu}interactive/go_hispeed_load" "99"
+		write "${cpu}interactive/hispeed_freq" "$cpumfreq"
+	fi
 done
 
 for cpu in /sys/devices/system/cpu/cpu*
 do
-if [[ $percentage -le "20" ]]
-then
-write "/sys/devices/system/cpu/cpu1/online" "0"
-write "/sys/devices/system/cpu/cpu2/online" "0"
-write "/sys/devices/system/cpu/cpu5/online" "0"
-write "/sys/devices/system/cpu/cpu6/online" "0"
-
-elif [[ $percentage -ge "20" ]]
-then
-write "$cpu/online" "1"
-fi
+	if [[ $percentage -le "20" ]]; then
+		write "/sys/devices/system/cpu/cpu1/online" "0"
+		write "/sys/devices/system/cpu/cpu2/online" "0"
+		write "/sys/devices/system/cpu/cpu5/online" "0"
+		write "/sys/devices/system/cpu/cpu6/online" "0"
+	elif [[ $percentage -ge "20" ]]; then
+		write "$cpu/online" "1"
+	fi
 done
 
 simple_bar
@@ -2661,23 +2403,21 @@ kmsg1 "[*] CPU SET TWEAKS... "
 simple_bar
 
 # FS Tweaks
-if [[ -d "/proc/sys/fs" ]]
-then
-write "/proc/sys/fs/dir-notify-enable" "0"
-write "/proc/sys/fs/lease-break-time" "20"
-write "/proc/sys/fs/leases-enable" "1"
-simple_bar
-kmsg1 "[*] APPLIED FS TWEAKS "
-simple_bar
+if [[ -d "/proc/sys/fs" ]]; then
+	write "/proc/sys/fs/dir-notify-enable" "0"
+	write "/proc/sys/fs/lease-break-time" "20"
+	write "/proc/sys/fs/leases-enable" "1"
+	simple_bar
+	kmsg1 "[*] APPLIED FS TWEAKS "
+	simple_bar
 fi
     
 # Enable dynamic_fsync.
-if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]
-then
-write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
-simple_bar
-kmsg1 "[*] ENABLED DYNAMIC FSYNC."
-simple_bar
+if [[ -e "/sys/kernel/dyn_fsync/Dyn_fsync_active" ]]; then
+	write "/sys/kernel/dyn_fsync/Dyn_fsync_active" "1"
+	simple_bar
+	kmsg1 "[*] ENABLED DYNAMIC FSYNC."
+	simple_bar
 fi
 
 write "/dev/cpuset/audio-app/cpus" "0-1"
@@ -2699,9 +2439,9 @@ simple_bar
 
 write "/sys/module/adreno_idler/paremeters/adreno_idler_active" "Y"
 
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-kmsg1 "[*] CPU AND SCHEDTUNE OPTMIZER                       "
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+simple_bar
+kmsg1 "[*] CPU AND SCHEDTUNE OPTMIZER  "
+simple_bar
 
 write "/sys/module/cpu_input_boost/parameters/input_boost_duration" "0"
 write "/sys/module/cpu_input_boost/parameters/dynamic_stune_boost_duration" "0"
@@ -2745,55 +2485,49 @@ chmod 666 /sys/module/sync/parameters/fsync
 chown root /sys/module/sync/parameters/fsync
 write "/sys/module/sync/parameters/fsync" "0"
 
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+simple_bar
 kmsg1 "[*] FS KERNEL TWEAKS"
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+simple_bar
 
 write "/proc/sys/fs/dir-notify-enable" "0"
 write "/proc/sys/fs/lease-break-time" "15"
 write "/proc/sys/fs/aio-max-nr" "131072"
 
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" 
+simple_bar
 kmsg1 "[*] THERMAL SETTINGS"
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+simple_bar
 
-if [ -d "/sys/module/msm_thermal" ]
-then
-write "/sys/module/msm_thermal/parameters/enabled" "Y"
-write "/sys/module/msm_thermal/core_control/enabled" "1"
-write "/sys/module/msm_thermal/vdd_restriction/enabled" "1"
-write "/sys/module/msm_thermal/core_control/cpus_offlined" "2"
+if [ -d "/sys/module/msm_thermal" ]; then
+	write "/sys/module/msm_thermal/parameters/enabled" "Y"
+	write "/sys/module/msm_thermal/core_control/enabled" "1"
+	write "/sys/module/msm_thermal/vdd_restriction/enabled" "1"
+	write "/sys/module/msm_thermal/core_control/cpus_offlined" "2"
 fi
 
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------" 
+simple_bar
 kmsg1 "[*] $rtks_profile PROFILE APPLIED "
-kmsg1 "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+simple_bar
 
 simple_bar
 kmsg1 "[*] END OF EXECUTION: $(date)"
 simple_bar
-exit=`date +%s`
+exit=$(date +%s)
 
 exectime=$((exit - init))
 simple_bar
 kmsg1 "[*] EXECUTION DONE IN $exectime SECONDS. "
 simple_bar
 
-    if [[ `getprop persist.sys.locale` == "en-US" ]]
-     	then
-     	toasteua1
-     	
-     	elif [[ `getprop persist.sys.locale` == "en-GB" ]]
-         then
-         toasteua1
-         
-     	elif [[ `getprop persist.sys.locale` == "pt-BR" ]]
-     	then
-     	toastbr1
+if [[ $(getprop persist.sys.locale) == "en-US" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "en-GB" ]]; then
+	toasteua1
+elif [[ $(getprop persist.sys.locale) == "pt-BR" ]]; then
+	toastbr1
+else
+	toasteua1
+fi
 
-     	else
-     	toasteua1
-     	fi
 }
 
 boot_run_once=false
@@ -2802,100 +2536,79 @@ rtks_mode=$(getprop persist.raidentweaks.mode)
 
 while true
 do
-sleep 3
-if $boot_run_once
-then
-[ "$(getprop persist.raidentweaks.mode)" == "$rtks_mode" ] && continue
-else
-boot_run_once=true
-fi
-rtks_mode=$(getprop persist.raidentweaks.mode)
-loc=/data/adb/modules
+	sleep 3
+	if $boot_run_once
+	then
+		[ "$(getprop persist.raidentweaks.mode)" == "$rtks_mode" ] && continue
+	else
+		boot_run_once=true
+	fi
 
-if [[ "$rtks_mode" == "1" ]]
-then
-rtks_profilebr=Automático
+	rtks_mode=$(getprop persist.raidentweaks.mode)
+	loc=/data/adb/modules
 
-elif [[ "$rtks_mode" == "2" ]]
-then
-rtks_profilebr=Bateria
-        	
-elif [[ "$rtks_mode" == "3" ]]
-then
-rtks_profilebr=Balanceado
-        	
-elif [[ "$rtks_mode" == "4" ]]
-then
-rtks_profilebr=Performance
-        	
-elif [[ "$rtks_mode" == "5" ]]
-then
-rtks_profilebr=Gaming
-
-elif [[ "$rtks_mode" == "6" ]]
-then
-rtks_profilebr=Thermal
-fi
+	if [[ "$rtks_mode" == "1" ]]; then
+		rtks_profilebr=Automático
+	elif [[ "$rtks_mode" == "2" ]]; then
+		rtks_profilebr=Bateria
+	elif [[ "$rtks_mode" == "3" ]]; then
+		rtks_profilebr=Balanceado
+	elif [[ "$rtks_mode" == "4" ]]; then
+		rtks_profilebr=Performance
+	elif [[ "$rtks_mode" == "5" ]]; then
+		rtks_profilebr=Gaming
+	elif [[ "$rtks_mode" == "6" ]]; then
+		rtks_profilebr=Thermal
+	fi
 	 	
-if [[ "$rtks_mode" == "1" ]]
-then
-rtks_profile=Automatic
+	if [[ "$rtks_mode" == "1" ]]; then
+		rtks_profile=Automatic
+	elif [[ "$rtks_mode" == "2" ]]; then
+		rtks_profile=Battery
+	elif [[ "$rtks_mode" == "3" ]]; then
+		rtks_profile=Balanced
+	elif [[ "$rtks_mode" == "4" ]]; then
+		rtks_profile=Performance
+	elif [[ "$rtks_mode" == "5" ]]; then
+		rtks_profile=Gaming
+	elif [[ "$rtks_mode" == "6" ]]; then
+		rtks_profilebr=Thermal
+	fi
 
-elif [[ "$rtks_mode" == "2" ]]
-then
-rtks_profile=Battery
-        	
-elif [[ "$rtks_mode" == "3" ]]
-then
-rtks_profile=Balanced
-        	
-elif [[ "$rtks_mode" == "4" ]]
-then
-rtks_profile=Performance
+	case "$rtks_profile" in
+		"Automatic") {
+			sleep 5
+			settings delete global device_idle_constants
+			automatic
+		};;
 
-elif [[ "$rtks_mode" == "5" ]]
-then
-rtks_profile=Gaming
+  	"Battery") {
+			sleep 5
+			settings put global device_idle_constants inactive_to=60000,sensing_to=0,locating_to=0,location_accuracy=2000,motion_inactive_to=0,idle_after_inactive_to=0,idle_pending_to=60000,max_idle_pending_to=120000,idle_pending_factor=2.0,idle_to=900000,max_idle_to=21600000,idle_factor=2.0,max_temp_app_whitelist_duration=60000,mms_temp_app_whitelist_duration=30000,sms_temp_app_whitelist_duration=20000,light_after_inactive_to=10000,light_pre_idle_to=60000,light_idle_to=180000,light_idle_factor=2.0,light_max_idle_to=900000,light_idle_maintenance_min_budget=30000,light_idle_maintenance_max_budget=60000
+			battery
+		};;
 
-elif [[ "$rtks_mode" == "6" ]]
-then
-rtks_profilebr=Thermal
-fi
-
-case "$rtks_profile" in
- "Automatic") {
- 	sleep 5
- 	settings delete global device_idle_constants
-     automatic
-	 };;
-	 
-	 "Battery") {
-	 	sleep 5
-	 	settings put global device_idle_constants inactive_to=60000,sensing_to=0,locating_to=0,location_accuracy=2000,motion_inactive_to=0,idle_after_inactive_to=0,idle_pending_to=60000,max_idle_pending_to=120000,idle_pending_factor=2.0,idle_to=900000,max_idle_to=21600000,idle_factor=2.0,max_temp_app_whitelist_duration=60000,mms_temp_app_whitelist_duration=30000,sms_temp_app_whitelist_duration=20000,light_after_inactive_to=10000,light_pre_idle_to=60000,light_idle_to=180000,light_idle_factor=2.0,light_max_idle_to=900000,light_idle_maintenance_min_budget=30000,light_idle_maintenance_max_budget=60000
-	 	battery
-	 	};;
-	
-	 	"Balanced") {
-	 		sleep 5
+	  "Balanced") {
+			sleep 5
 	 		balanced
-	 		};;
-	 		
-	 		"Performance") {
-	 			sleep 5
-	 			settings delete global device_idle_constants
-	 			performance
-	 			};;
+		};;
 
-	 			"Gaming") {
-	 				sleep 5
-	 				settings delete global device_idle_constants
-	 				gaming
-	 				};;
-	 				
-	 			    "Thermal") {
-	 				sleep 5
-	 				thermal
-	 				};;
+	  "Performance") {
+			sleep 5
+			settings delete global device_idle_constants
+			performance
+		};;
+
+	  "Gaming") {
+			sleep 5
+			settings delete global device_idle_constants
+			gaming
+		};;
+	  
+	  "Thermal") {
+			sleep 5
+			thermal
+	   };;
 	 				
 esac
 done

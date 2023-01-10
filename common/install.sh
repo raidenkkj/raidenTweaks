@@ -1,8 +1,13 @@
+#!/system/bin/sh
+# raidenTweaks™ by Raiden Ishigami (raidenkkj @ GitHub).
+# If you use parts of this project, please credit the respective authors.
+
+modpath="/data/adb/modules_update/RTKS/"
+
 [[ "$IS64BIT" == "true" ]] && {
 	sed -i '/dalvik.vm.dex2oat64.enabled/s/.*/dalvik.vm.dex2oat64.enabled=true/' "${modpath}system.prop"
 	sed -i '/arm64.memtag.process.system_server/s/.*/arm64.memtag.process.system_server=off/' "${modpath}system.prop"
 }
-modpath="/data/adb/modules_update/RTKS/"
 
 awk '{print}' "${modpath}common/rtks_banner"
 ui_print ""
@@ -113,37 +118,30 @@ case "$PRFTEXT" in
    1)
       PRFTEXT="✗ | None"
       ;;
-
    2)
       PRFTEXT="✓ | AUTOMATIC"
       sed -i '/persist.raidentweaks.mode/s/.*/persist.raidentweaks.mode=1/' "${modpath}system.prop"
       ;;
-
    3)
       PRFTEXT="✓ | BATTERY"
       sed -i '/persist.raidentweaks.mode/s/.*/persist.raidentweaks.mode=2/' "${modpath}system.prop"
       ;;
-
    4)
       PRFTEXT="✓ | BALANCED"
       sed -i '/persist.raidentweaks.mode/s/.*/persist.raidentweaks.mode=3/' "${modpath}system.prop"
       ;;
-
    5)
       PRFTEXT="✓ | PERFORMANCE"
       sed -i '/persist.raidentweaks.mode/s/.*/persist.raidentweaks.mode=4/' "${modpath}system.prop"
       ;;
-
    6)
       PRFTEXT="✓ | GAMING"
       sed -i '/persist.raidentweaks.mode/s/.*/persist.raidentweaks.mode=5/' "${modpath}system.prop"
       ;;
-
    7)
       PRFTEXT="✓ | THERMAL"
       sed -i '/persist.raidentweaks.mode/s/.*/persist.raidentweaks.mode=6/' "${modpath}system.prop"
       ;;
-
 esac
 
 ui_print ""
@@ -152,229 +150,189 @@ ui_print ""
 sleep 3
 ui_print "[*] - Checking for possible conflicts..."
 
-if [ -d "$MODDIR"/FDE ]; then
+[[ -d "$MODDIR"/FDE ]] && {
    ui_print ""
    ui_print "[!] - FDE.AI Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/FDE/disable
-
-elif [ -d "$MODDIR"/ktweak ]; then
+} || [[ -d "$MODDIR"/ktweak ]] && {
    ui_print ""
    ui_print "[!] - KTweak Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/ktweak/disable
-
-elif [ -d "$MODDIR"/ZeetaaTweaks ]; then
+} || [[ -d "$MODDIR"/ZeetaaTweaks ]] && {
    ui_print ""
    ui_print "[!] - ZeetaaTweaks Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/ZeetaaTweaks/disable
-
-elif [ -d "$MODDIR"/lv-gpu-performance ]; then
+} || [[ -d "$MODDIR"/lv-gpu-performance ]] && {
    ui_print ""
    ui_print "[!] - Lv-gpu-performance Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/lv-gpu-performance/disable
-
-elif [ -d "$MODDIR"/R.kashyap ]; then
+} || [[ -d "$MODDIR"/R.kashyap ]] && {
    ui_print ""
    ui_print "[!] - Gamers Edition Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/R.kashyap/disable
-
-elif [ -d "$MODDIR"/ZTS ]; then
+} || [[ -d "$MODDIR"/ZTS ]] && {
    ui_print ""
    ui_print "[!] - ZTS Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/ZTS/disable
-
-elif [ -d "$MODDIR"/MAGNETAR ]; then
+} || [[ -d "$MODDIR"/MAGNETAR ]] && {
    ui_print ""
    ui_print "[!] - MAGNETAR Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/MAGNETAR/disable
-
-elif [ -d "$MODDIR"/Apollon ]; then
+} || [[ -d "$MODDIR"/Apollon ]] && {
    ui_print ""
    ui_print "[!] - Apollon Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/Apollon/disable
-
-elif [ -d "$MODDIR"/Apollon-plus ]; then
+} || [[ -d "$MODDIR"/Apollon-plus ]] && {
    ui_print ""
    ui_print "[!] - Apollon Plus Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/Apollon-plus/disable
-
-elif [ -d "$MODDIR"/gameexp ]; then
+} || [[ -d "$MODDIR"/gameexp ]] && {
    ui_print ""
    ui_print "[!] - Improve Game Xperience Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/gameexp/disable
-
-elif [ -d "$MODDIR"/lspeed ]; then
+} || [[ -d "$MODDIR"/lspeed ]] && {
    ui_print ""
    ui_print "[!] - LSpeed Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/lspeed/disable
-
-elif [ -d "$MODDIR"/fkm_spectrum_injector ]; then
+} || [[ -d "$MODDIR"/fkm_spectrum_injector ]] && {
    ui_print ""
    ui_print "[!] - FKM Injector Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/fkm_spectrum_injector/disable
-
-elif [ -d "$MODDIR"/KTSR ]; then
+} || [[ -d "$MODDIR"/KTSR ]] && {
    ui_print ""
    ui_print "[!] - KTSR Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/KSTR/disable
-
-elif [ -d "$MODDIR"/lazy ]; then
+} || [[ -d "$MODDIR"/lazy ]] && {
    ui_print ""
    ui_print "[!] - Lazy Tweaks Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/lazy/disable
-
-elif [ -d "$MODDIR"/injector ]; then
+} || [[ -d "$MODDIR"/injector ]] && {
    ui_print ""
    ui_print "[!] - NFS Injector Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/injector/disable
-
-elif [ -d $MODDIR/GamersExtreme ]; then
+} || [[ -d $MODDIR/GamersExtreme ]] && {
    ui_print ""
    ui_print "[!] - GamersExtreme Module Detected, disabling for security reasons."
    touch $MODDIR/GamersExtreme/disable
-
-elif [ -d $MODDIR/xengine ]; then
+} || [[ -d $MODDIR/xengine ]] && {
    ui_print ""
    ui_print "[!] - Xengine Module Detected, disabling for security reasons."
    touch "$MODDIR"/xengine/disable
-
-elif [ -d $MODDIR/PXT ]; then
+} || [[ -d $MODDIR/PXT ]] && {
    ui_print ""
    ui_print "[!] - PXT Module Detected, disabling for security reasons."
    touch "$MODDIR"/PXT/disable
-
-elif [ -d $MODDIR/Godspeed ]; then
+} || [[ -d $MODDIR/Godspeed ]] && {
    ui_print ""
    ui_print "[!] - GodSpeed Module Detected, disabling for security reasons."
    touch "$MODDIR"/GodSpeed/disable
-
-elif [ -d $MODDIR/MTK_VEST ]; then
+} [[ -d $MODDIR/MTK_VEST ]] && {
    ui_print ""
    ui_print "[!] - MTK_VEST Module Detected, disabling for security reasons."
    touch "$MODDIR"/MTK_VEST/disable
-
-elif [ -d $MODDIR/aosp_enhancer ]; then
+} || [[ -d $MODDIR/aosp_enhancer ]] && {
    ui_print ""
    ui_print "[!] - AOSP Enhancer Module Detected, disabling for security reasons."
    touch "$MODDIR"/aosp_enhancer/disable
-
-elif [ -d $MODDIR/GSFAB ]; then
+} || [[ -d $MODDIR/GSFAB ]] && {
    ui_print ""
    ui_print "[!] - GSMxFAB Module Detected, disabling for security reasons."
    touch "$MODDIR"/GSFAB/disable
-
-elif [ -d $MODDIR/GSNO ]; then
+} || [[ -d $MODDIR/GSNO ]] && {
    ui_print ""
    ui_print "[!] - GODSPEED NET OPTIMIZER Module Detected, disabling for security reasons."
    touch "$MODDIR"/GSNO/disable
-
-elif [ -d $MODDIR/PXT ]; then
+} || [[ -d $MODDIR/PXT ]] && {
    ui_print ""
    ui_print "[!] - PROJECT XTREME TWEAKS Module Detected, disabling for security reasons."
    touch "$MODDIR"/PXT/disable
-
-elif [ -d $MODDIR/BeastMode ]; then
+} || [[ -d $MODDIR/BeastMode ]] && {
    ui_print ""
    ui_print "[!] - BeastMode Module Detected, disabling for security reasons."
 touch "$MODDIR"/BeastMode/disable
-
-elif [ -d $MODDIR/STRP ]; then
+} || [[ -d $MODDIR/STRP ]] && {
    ui_print ""
    ui_print "[!] - Stratosphere Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRP/disable
-
-elif [ -d $MODDIR/STRPxEXYPOWER ]; then
+} || [[ -d $MODDIR/STRPxEXYPOWER ]] && {
    ui_print ""
    ui_print "[!] - STRP Exynos Power Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRPxEXYPOWER/disable
-
-elif [ -d $MODDIR/STRPxPUBGLE ]; then
+} || [[ -d $MODDIR/STRPxPUBGLE ]] && {
    ui_print ""
    ui_print "[!] - STRP Low End Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRPxPUBGLE/disable
-
-elif [ -d $MODDIR/STRPxMIUI ]; then
+} || [[ -d $MODDIR/STRPxMIUI ]] && {
    ui_print ""
    ui_print "[!] - STRP MIUI Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRPxMIUI/disable
-
-elif [ -d $MODDIR/STRPxPG ]; then
+} || [[ -d $MODDIR/STRPxPG ]] && {
    ui_print ""
    ui_print "[!] - STRP Pure Gaming Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRPxPG/disable
-
-elif [ -d $MODDIR/STRPxSPOOFER ]; then
+} || [[ -d $MODDIR/STRPxSPOOFER ]] && {
    ui_print ""
    ui_print "[!] - STRP Spoofer Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRPxSPOOFER/disable
-
-elif [ -d $MODDIR/STRPxULTRAxBATTERY ]; then
+} || [[ -d $MODDIR/STRPxULTRAxBATTERY ]] && {
    ui_print ""
    ui_print "[!] - STRP Ultra Battery Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRPxULTRAxBATTERY/disable
-
-elif [ -d $MODDIR/STRPxUNLOCKER ]; then
+} || [[ -d $MODDIR/STRPxUNLOCKER ]] && {
    ui_print ""
    ui_print "[!] - STRP Unlocker Module Detected, disabling for security reasons."
    touch "$MODDIR"/STRPxUNLOCKER/disable
-
-
-elif [ "$(pm list package magnetarapp)" ]; then
+} || [[ "$(pm list package magnetarapp)" ]] && {
    ui_print ""
-   ui_print "[!] - MAGNETAR App has been detected, removing the app to avoid conflicts..."
+   ui_print "[!] - MAGNETAR App has been detected, disabling the app to avoid conflicts..."
    ui_print ""
-   pm uninstall -k --user 0 com.magnetarapp
+   pm disable -k --user 0 com.magnetarapp
    sleep 1
-
-elif [ "$(pm list package pedrozzz)" ]; then
+} || [[ "$(pm list package pedrozzz)" ]] && {
    ui_print ""
-   ui_print "[!] - King Tweaks App has been detected, removing the app to avoid conflicts..."
-   pm uninstall -k --user 0 pedrozzz.king.tweaks
+   ui_print "[!] - King Tweaks App has been detected, disabling the app to avoid conflicts..."
+   pm disable -k --user 0 pedrozzz.king.tweaks
    sleep 1
-
-elif [ "$(pm list package lsandroid)" ]; then
+} || [[ "$(pm list package lsandroid)" ]] && {
    ui_print ""
-   ui_print "[!] - LSpeed App has been detected, removing the app to avoid conflicts..."
+   ui_print "[!] - LSpeed App has been detected, disabling the app to avoid conflicts..."
    ui_print ""
-   pm uninstall -k --user 0 com.paget96.lsandroid
+   pm disable -k --user 0 com.paget96.lsandroid
    sleep 1
-
-elif [ "$(pm list package feravolt)" ]; then
+} || [[ "$(pm list package feravolt)" ]] && {
    ui_print ""
-   ui_print "[!] - FDE.AI App has been detected, removing the app to avoid conflicts..."
+   ui_print "[!] - FDE.AI App has been detected, disabling the app to avoid conflicts..."
    ui_print ""
-   pm uninstall -k --user 0 com.feravolt.fdeai
+   pm disable -k --user 0 com.feravolt.fdeai
    sleep 1
-
-
-elif [ "$(pm list package kitana)" ]; then
+} || [[ "$(pm list package kitana)" ]] && {
    ui_print ""
-   ui_print "[!] - Kitana Tweak App has been detected, removing the app to avoid conflicts..."
+   ui_print "[!] - Kitana Tweak App has been detected, disabling the app to avoid conflicts..."
    ui_print ""
-   pm uninstall -k --user 0 com.tweak.kitana
+   pm disable -k --user 0 com.tweak.kitana
    sleep 1
-
-elif [ "$(pm list package nfs)" ]; then
+} || [[ "$(pm list package nfs)" ]] && {
    ui_print ""
-   ui_print "[!] - NFS Manager App has been detected, removing the app to avoid conflicts..."
+   ui_print "[!] - NFS Manager App has been detected, disabling the app to avoid conflicts..."
    ui_print ""
-   pm uninstall -k --user 0 com.nfs.nfsmanager
+   pm disable -k --user 0 com.nfs.nfsmanager
    sleep 1
-fi
+}
 
 ui_print ""
 ui_print "[*] - Conflict checker executed"
@@ -403,7 +361,7 @@ ui_print ""
 ui_print " 1 - None"
 ui_print " 2 - PUBG Mobile / BGMI / 90 FPS settings"
 ui_print " 3 - PUBG: New State / MAX settings"
-ui_print " 4 - COD Mobile / FIFA and BlackDesert Mobile / MAX settings"
+ui_print " 4 - COD Mobile And BlackDesert Mobile / MAX settings"
 ui_print " 5 - Mobile Legends / MAX settings"
 ui_print " 6 - Sky Children of the Light and Asphalt 9 / 60 FPS settings"
 ui_print " 7 - COD Mobile / 120 FPS settings"
@@ -437,13 +395,11 @@ done
 ui_print ""
 
 for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveData/Local/*/Setting; do
-
    case "$RU" in
       1)
          TEXT="✗ | None"
          UNTEXT="None"
          ;;
-
       2)
          TEXT="✓ | PUBG Mobile / BGMI / 90 FPS "
          UNTEXT="PUBG Mobile and BGMI 90 FPS"
@@ -453,7 +409,6 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=M2102K1C/' "${modpath}system.prop"
          sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=M2102K1C/' "${modpath}system.prop"
          ;;
-
       3)
          TEXT="✓ | PUBG: New State / MAX settings "
          UNTEXT="PUBG: New State MAX settings"
@@ -475,7 +430,6 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i -e 's/LastConfirmedAudioQualityLevel=1/LastConfirmedAudioQualityLevel=0/g' "$PUBGNS"
          chmod 0440 "$PUBGNS"
          ;;
-
       4)
          TEXT="✓ | COD Mobile And BlackDesert Mobile / MAX settings"
          UNTEXT="COD Mobile And BlackDesert Mobile MAX settings"
@@ -485,7 +439,6 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=SM-G965F/' "${modpath}system.prop"
          sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=SM-G965F/' "${modpath}system.prop"
          ;;
-
       5)
          TEXT="✓ | Mobile Legends / MAX settings "
          UNTEXT="Mobile Legends MAX settings"
@@ -495,13 +448,11 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=Mi 10 Pro/' "${modpath}system.prop"
          sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=Mi 10 Pro/' "${modpath}system.prop"
          ;;
-
       6)
          TEXT="✓ | Sky Children of the Light and Asphalt 9 / 60 FPS"
          UNTEXT="Sky Children of the Light and Asphalt 9 60 FPS settings"
          sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
          ;;
-
       7)
          TEXT="✓ | COD Mobile / 120 FPS "
          UNTEXT="COD Mobile / 120 FPS settings"
@@ -511,7 +462,6 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=SO-52A/' "${modpath}system.prop"
          sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=SO-52A/' "${modpath}system.prop"
          ;;
-
       8)
          TEXT="✓ | Fortnite settings "
          UNTEXT="Fortnite settings"
@@ -538,13 +488,11 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=GM1917/' "${modpath}system.prop"
          sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=GM1917/' "${modpath}system.prop"
          ;;
-
       10)
          TEXT="✓ | Forsaken World / 120 FPS"
          UNTEXT="Forsaken World 120 FPS"
          sed -i '/ro.product.model/s/.*/ro.product.model=ZS673KS-1B063IN/' "${modpath}system.prop"
          ;;
-
       11)
          TEXT="✓ | Life After / 120 FPS"
          UNTEXT="Life After / 120 FPS"
@@ -553,7 +501,6 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i 's/"frame": 2,/"frame": 4,/g' "$LIFE"
          sed -i 's/"frame": 3,/"frame": 4,/g' "$LIFE"
          ;;
-
       12)
          TEXT="✓ | Dead by Daylight / 120 FPS"
          UNTEXT="Dead by Daylight 120 FPS"
@@ -561,13 +508,11 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i 's/FrameRateLimit=30/FrameRateLimit=120/g' "$DBD"
          sed -i 's/FrameRateLimit=60/FrameRateLimit=120/g' "$DBD"
          ;;
-
       13)
          TEXT="✓ | LoL WR / MAX settings"
          UNTEXT="LoL WR MAX settings"
          sed -i '/ro.product.model/s/.*/ro.product.model=SM-G9880/' "${modpath}system.prop"
          ;;
-
       14)
          TEXT="✓ | LoL WR / MAX settings and Fortnite / 60 FPS"
          UNTEXT="LoL WR MAX settings and Fortnite 60 FPS"
@@ -577,20 +522,17 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          sed -i 's/MobileFPSMode=Mode_45Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
          sed -i '/ro.product.model/s/.*/ro.product.model=A2218/' "${modpath}system.prop"
          ;;
-
       15)
          TEXT="✓ | Game for Peace / 90 FPS settings"
          UNTEXT="Game for Peace 90 FPS settings"
          sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
          ;;
-
       16)
          TEXT="✓ | Free Fire 90 FPS"
          UNTEXT="Free Fire 90 FPS"
          sed -i '/ro.product.manufacturer/s/.*/ro.product.manufacturer=asus/' "${modpath}system.prop"
          sed -i '/ro.product.model/s/.*/ro.product.model=ASUS_Z01QD/' "${modpath}system.prop"
          ;;
-
       esac
 
 ui_print "[*] - Selected option: $TEXT "
@@ -637,10 +579,8 @@ case "$TEXTBRANCH" in
       TEXTBRANCH="Stable (Default)"
 			sed -i -e "/dbranch=/s/=.*/=stable/" "${modpath}module.prop"
 			;;
-
    2)
-			TEXTBRANCH="Beta"
-			sed -i -e "/dbranch=/s/=.*/=beta/" "${modpath}module.prop"
+	  TEXTBRANCH="Beta"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/raidentweaks/s/.*/wget -qO "${modpath}system\/bin\/raidentweaks" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/beta\/system\/bin\/raidentweaks"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/raidenauto/s/.*/wget -qO "${modpath}system\/bin\/raidenauto" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/beta\/system\/bin\/raidenauto"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/rtksmenu/s/.*/wget -qO "${modpath}system\/bin\/rtksmenu" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/beta\/system\/bin\/rtksmenu"/' "${modpath}service.sh"
@@ -657,7 +597,7 @@ case "$TEXTBRANCH" in
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/raidenauto/s/.*/wget -qO "${modpath}system\/bin\/raidenauto" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/system\/bin\/raidenauto"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/rtksmenu/s/.*/wget -qO "${modpath}system\/bin\/rtksmenu" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/system\/bin\/rtksmenu"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/lmkmenu/s/.*/wget -qO "${modpath}system\/bin\/lmkmenu" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/system\/bin\/lmkmenu"/' "${modpath}service.sh"
-			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/unlockermenu/s/.*/wget -qO "${modpath}system\/bin\/unlockermenu" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/beta\/system\/bin\/unlockermenu"/' "${modpath}service.sh"
+			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/system\/bin\/unlockermenu/s/.*/wget -qO "${modpath}system\/bin\/unlockermenu" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/system\/bin\/unlockermenu"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/cleaner/s/.*/wget -qO "${modpath}system\/bin\/cleaner" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/cleaner"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/fstrim/s/.*/wget -qO "${modpath}system\/bin\/fstrim" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/fstrim"/' "${modpath}service.sh"
 			sed -i '/https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/stable\/mod-util.sh/s/.*/wget -qO "${modpath}mod-util.sh" "https:\/\/raw.githubusercontent.com\/raidenkkj\/Raiden-Tweaks\/tests\/mod-util.sh"/' "${modpath}service.sh"

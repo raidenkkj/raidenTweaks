@@ -151,190 +151,169 @@ sleep 3
 ui_print "[*] - Checking for possible conflicts..."
 
 [[ -d "$MODDIR"/FDE ]] && {
-   ui_print ""
    ui_print "[!] - FDE.AI Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/FDE/disable
-} || [[ -d "$MODDIR"/ktweak ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/ktweak ]] && {
    ui_print "[!] - KTweak Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/ktweak/disable
-} || [[ -d "$MODDIR"/ZeetaaTweaks ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/ZeetaaTweaks ]] && {
    ui_print "[!] - ZeetaaTweaks Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/ZeetaaTweaks/disable
-} || [[ -d "$MODDIR"/lv-gpu-performance ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/lv-gpu-performance ]] && {
    ui_print "[!] - Lv-gpu-performance Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/lv-gpu-performance/disable
-} || [[ -d "$MODDIR"/R.kashyap ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/R.kashyap ]] && {
    ui_print "[!] - Gamers Edition Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/R.kashyap/disable
-} || [[ -d "$MODDIR"/ZTS ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/ZTS ]] && {
    ui_print "[!] - ZTS Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/ZTS/disable
-} || [[ -d "$MODDIR"/MAGNETAR ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/MAGNETAR ]] && {
    ui_print "[!] - MAGNETAR Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/MAGNETAR/disable
-} || [[ -d "$MODDIR"/Apollon ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/Apollon ]] && {
    ui_print "[!] - Apollon Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/Apollon/disable
-} || [[ -d "$MODDIR"/Apollon-plus ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/Apollon-plus ]] && {
    ui_print "[!] - Apollon Plus Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/Apollon-plus/disable
-} || [[ -d "$MODDIR"/gameexp ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/gameexp ]] && {
    ui_print "[!] - Improve Game Xperience Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/gameexp/disable
-} || [[ -d "$MODDIR"/lspeed ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/lspeed ]] && {
    ui_print "[!] - LSpeed Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/lspeed/disable
-} || [[ -d "$MODDIR"/fkm_spectrum_injector ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/fkm_spectrum_injector ]] && {
    ui_print "[!] - FKM Injector Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/fkm_spectrum_injector/disable
-} || [[ -d "$MODDIR"/KTSR ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/KTSR ]] && {
    ui_print "[!] - KTSR Module detected, disabling for security reasons."
    ui_print ""
-   touch "$MODDIR"/KSTR/disable
-} || [[ -d "$MODDIR"/lazy ]] && {
-   ui_print ""
+   touch "$MODDIR"/KTSR/disable
+} ; [[ -d "$MODDIR"/lazy ]] && {
    ui_print "[!] - Lazy Tweaks Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/lazy/disable
-} || [[ -d "$MODDIR"/injector ]] && {
-   ui_print ""
+} ; [[ -d "$MODDIR"/injector ]] && {
    ui_print "[!] - NFS Injector Module detected, disabling for security reasons."
    ui_print ""
    touch "$MODDIR"/injector/disable
-} || [[ -d $MODDIR/GamersExtreme ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/GamersExtreme ]] && {
    ui_print "[!] - GamersExtreme Module Detected, disabling for security reasons."
+   ui_print ""
    touch $MODDIR/GamersExtreme/disable
-} || [[ -d $MODDIR/xengine ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/xengine ]] && {
    ui_print "[!] - Xengine Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/xengine/disable
-} || [[ -d $MODDIR/PXT ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/PXT ]] && {
    ui_print "[!] - PXT Module Detected, disabling for security reasons."
-   touch "$MODDIR"/PXT/disable
-} || [[ -d $MODDIR/Godspeed ]] && {
    ui_print ""
+   touch "$MODDIR"/PXT/disable
+} ; [[ -d $MODDIR/Godspeed ]] && {
    ui_print "[!] - GodSpeed Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/GodSpeed/disable
-} [[ -d $MODDIR/MTK_VEST ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/MTK_VEST ]] && {
    ui_print "[!] - MTK_VEST Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/MTK_VEST/disable
-} || [[ -d $MODDIR/aosp_enhancer ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/aosp_enhancer ]] && {
    ui_print "[!] - AOSP Enhancer Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/aosp_enhancer/disable
-} || [[ -d $MODDIR/GSFAB ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/GSFAB ]] && {
    ui_print "[!] - GSMxFAB Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/GSFAB/disable
-} || [[ -d $MODDIR/GSNO ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/GSNO ]] && {
    ui_print "[!] - GODSPEED NET OPTIMIZER Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/GSNO/disable
-} || [[ -d $MODDIR/PXT ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/PXT ]] && {
    ui_print "[!] - PROJECT XTREME TWEAKS Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/PXT/disable
-} || [[ -d $MODDIR/BeastMode ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/BeastMode ]] && {
    ui_print "[!] - BeastMode Module Detected, disabling for security reasons."
+   ui_print ""
 touch "$MODDIR"/BeastMode/disable
-} || [[ -d $MODDIR/STRP ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRP ]] && {
    ui_print "[!] - Stratosphere Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRP/disable
-} || [[ -d $MODDIR/STRPxEXYPOWER ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRPxEXYPOWER ]] && {
    ui_print "[!] - STRP Exynos Power Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRPxEXYPOWER/disable
-} || [[ -d $MODDIR/STRPxPUBGLE ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRPxPUBGLE ]] && {
    ui_print "[!] - STRP Low End Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRPxPUBGLE/disable
-} || [[ -d $MODDIR/STRPxMIUI ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRPxMIUI ]] && {
    ui_print "[!] - STRP MIUI Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRPxMIUI/disable
-} || [[ -d $MODDIR/STRPxPG ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRPxPG ]] && {
    ui_print "[!] - STRP Pure Gaming Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRPxPG/disable
-} || [[ -d $MODDIR/STRPxSPOOFER ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRPxSPOOFER ]] && {
    ui_print "[!] - STRP Spoofer Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRPxSPOOFER/disable
-} || [[ -d $MODDIR/STRPxULTRAxBATTERY ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRPxULTRAxBATTERY ]] && {
    ui_print "[!] - STRP Ultra Battery Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRPxULTRAxBATTERY/disable
-} || [[ -d $MODDIR/STRPxUNLOCKER ]] && {
-   ui_print ""
+} ; [[ -d $MODDIR/STRPxUNLOCKER ]] && {
    ui_print "[!] - STRP Unlocker Module Detected, disabling for security reasons."
+   ui_print ""
    touch "$MODDIR"/STRPxUNLOCKER/disable
-} || [[ "$(pm list package magnetarapp)" ]] && {
+} ; [[ "$(pm list package magnetarapp | grep -o magnetarapp)" == "magnetarapp" ]] && {
+   ui_print "[!] - MAGNETAR App has been detected, removing the app to avoid conflicts..."
    ui_print ""
-   ui_print "[!] - MAGNETAR App has been detected, disabling the app to avoid conflicts..."
-   ui_print ""
-   pm disable -k --user 0 com.magnetarapp
+   pm uninstall -k --user 0 com.magnetarapp
    sleep 1
-} || [[ "$(pm list package pedrozzz)" ]] && {
+} ; [[ "$(pm list package pedrozzz | grep -o pedrozzz)" == "pedrozzz" ]] && {
+   ui_print "[!] - King Tweaks App has been detected, removing the app to avoid conflicts..."
    ui_print ""
-   ui_print "[!] - King Tweaks App has been detected, disabling the app to avoid conflicts..."
-   pm disable -k --user 0 pedrozzz.king.tweaks
+   pm uninstall -k --user 0 pedrozzz.king.tweaks
    sleep 1
-} || [[ "$(pm list package lsandroid)" ]] && {
+} ; [[ "$(pm list package lsandroid | grep -o lsandroid)" == "lsandroid" ]] && {
+   ui_print "[!] - LSpeed App has been detected, removing the app to avoid conflicts..."
    ui_print ""
-   ui_print "[!] - LSpeed App has been detected, disabling the app to avoid conflicts..."
-   ui_print ""
-   pm disable -k --user 0 com.paget96.lsandroid
+   pm uninstall -k --user 0 com.paget96.lsandroid
    sleep 1
-} || [[ "$(pm list package feravolt)" ]] && {
+} ; [[ "$(pm list package feravolt | grep -o feravolt)" == "feravolt" ]] && {
+   ui_print "[!] - FDE.AI App has been detected, removing the app to avoid conflicts..."
    ui_print ""
-   ui_print "[!] - FDE.AI App has been detected, disabling the app to avoid conflicts..."
-   ui_print ""
-   pm disable -k --user 0 com.feravolt.fdeai
+   pm uninstall -k --user 0 com.feravolt.fdeai
    sleep 1
-} || [[ "$(pm list package kitana)" ]] && {
+} ; [[ "$(pm list package kitana | grep -o kitana)" == "kitana" ]] && {
+   ui_print "[!] - Kitana Tweak App has been detected, removing the app to avoid conflicts..."
    ui_print ""
-   ui_print "[!] - Kitana Tweak App has been detected, disabling the app to avoid conflicts..."
-   ui_print ""
-   pm disable -k --user 0 com.tweak.kitana
+   pm uninstall -k --user 0 com.tweak.kitana
    sleep 1
-} || [[ "$(pm list package nfs)" ]] && {
+} ; [[ "$(pm list package nfs | grep -o nfs)" == "nfs" ]] && {
+   ui_print "[!] - NFS Manager App has been detected, removing the app to avoid conflicts..."
    ui_print ""
-   ui_print "[!] - NFS Manager App has been detected, disabling the app to avoid conflicts..."
-   ui_print ""
-   pm disable -k --user 0 com.nfs.nfsmanager
+   pm uninstall -k --user 0 com.nfs.nfsmanager
    sleep 1
 }
 
-ui_print ""
 ui_print "[*] - Conflict checker executed"
 sleep 1.5
 

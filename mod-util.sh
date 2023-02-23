@@ -51,8 +51,6 @@ elif [[ -x "$SYSTEM2"/xbin/busybox ]]; then
 elif [[ -x "$SYSTEM2"/bin/busybox ]]; then
   _bb="$SYSTEM2"/bin/busybox
 else
-  echo "- Busybox not detected!!"
-  echo "Please install it (@osm0sis busybox recommended)"
   false
 fi
 set_busybox $_bb
@@ -312,4 +310,89 @@ pcenter() {
   local hfCHAR=$((CHAR/2))
   local indent=$((hfCOLUMN-hfCHAR))
   echo "$(printf '%*s' "${indent}" '') $@"
+}
+
+# Help text
+# Shows help text with important information
+help_text() {
+  echo ""
+  echo "${Y}$MODT $VER($REL)"
+  echo "by ${B}$AUTHOR${N}"
+  echo "${Y}Usage: ${B}$_name${N}"
+  echo "${Y}or: ${B}$_name [options]...${N}"
+  echo "${Y}Telegram group: ${B}https://t.me/raidenprjktsgroup${N}"
+  echo ""
+  echo "${Y}Options:${N}"
+  echo "${Y}  -p --profile ${B}[1-6] [Switch between profiles without opening the terminal GUI, for a fast and seamless experience]${N}"
+  echo "${Y}  -c --clear-ram ${B}[1-3] [Higher value means more agressive memory reclaim, which includes killing apps at maximum value (3)]${N}"
+  echo "${Y}  -t --thermal ${B}[1-2] [Disable or enable thermal, option 1 will disable and option 2 will enable]${N}"
+  echo "${Y}  -u --update-all ${B}[Update module scripts to the latest available version]${N}"
+  echo "${Y}  -h --help ${B}[Show this message]${N}"
+  echo ""
+  exit 0
+}
+
+# Update all
+# Updates all module files
+updateall() {
+  commondir="/data/adb/modules/RTKS/"
+  updatedir="/data/adb/modules_update/RTKS/"
+  branch="$(grep_prop dbranch "$modpath"module.prop)"
+
+  if [[ -d "$commondir" ]]; then
+    modpath="/data/adb/modules/RTKS/"
+  elif [[ -d "$updatedir" ]]; then
+    modpath="/data/adb/modules_update/RTKS/"
+  fi
+
+  if [[ "$branch" == stable ]]; then
+    dbranch=stable
+  elif [[ "$branch" == beta ]]; then
+    dbranch=beta
+  elif [[ "$branch" == tests ]]; then
+    dbranch=tests
+  else
+    dbranch=stable
+  fi
+
+  echo ""
+  echo "$G[*] - Downloading the latest script(s) / application from GitHub...$N"
+  echo ""
+  wget -qO "${modpath}system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/raidentweaks"
+  wget -qO "${modpath}system/bin/raidenauto" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/raidenauto"
+  wget -qO "${modpath}system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/rtksmenu"
+  wget -qO "${modpath}system/bin/lmkmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/lmkmenu"
+  wget -qO "${modpath}system/bin/unlockermenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/unlockermenu"
+  wget -qO "${modpath}system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/cleaner"
+  wget -qO "${modpath}system/bin/rfstrim" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/rfstrim"
+  wget -qO "${modpath}mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/mod-util.sh"
+  wget -qO "/data/local/tmp/RaidenTweaks.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RaidenTweaks.apk?raw=true"
+  wget -qO "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RDToast.apk?raw=true"
+
+  echo ""
+  echo "$G[*] - Uninstalling old (if u have) and installing new version of the main application..$N."
+  echo ""
+  if [[ "$(pm list package org.rtks.raiden)" ]]; then
+    pm uninstall -k --user 0 org.rtks.raiden
+  elif [ "$(pm list package com.raidentweaks)" ]; then
+    pm uninstall -k --user 0 com.raidentweaks
+  fi
+
+  pm install /data/local/tmp/RaidenTweaks.apk
+
+  echo ""
+  echo "$G[*] - Uninstalling old (if u have) and installing new version of the toast application...$N"
+  if [ "$(pm list package bellavita.toast)" ]; then
+    echo ""
+    pm uninstall -k --user 0 bellavita.toast
+  fi
+
+  pm install /data/local/tmp/RDToast.apk
+  echo ""
+
+  echo "$G[*] - Setting permissions...$N"
+  chmod 755 ${modpath}system/bin/*
+  echo "$G[*] - Done, now the device will be rebooted!$N"
+  sleep 5
+  reboot system
 }

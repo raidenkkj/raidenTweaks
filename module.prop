@@ -1,10 +1,10 @@
 id=RTKS
-name=RaidenTweaks
-version=v4.6.6
-versionCode=466
+name=raidenTweaks
+version=v2.2.0
+versionCode=12
 author=@raidenkkj
 description=Module focused on maximizing user experience, multiple profiles you can change!
-codename=N4S4
+codename=
 bdate=
 unlocker=
 dbranch=

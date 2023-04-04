@@ -1,4 +1,4 @@
-### v4.6.6 - 13.11.2022
+### v2.2.0 - 13.11.2022
 * NASA-themed raidenTweaks initial release
 * Rebuilt unlockers
 * Fix unlockers not working
@@ -36,8 +36,7 @@
 * Four core will shut down when battery reaches 5% in certain profiles with simple usage
 * Other minor changes...
 
-### v4.5.5 (S) - 18.09.2022
-* Introducing stable version 
+### v2.1.0 - 18.09.2022
 * Core app with UX improvement
 * Rollback to old and working unlockers (temp)
 * Removal of obsolete props
@@ -52,11 +51,11 @@
 * Easter egg removed from menu
 * Persist added to fstrim
 
-### v4.5.4 (HOTFIX) - 18.08.2022
+### v2.0.0 - 18.08.2022
 * Changes to the installation script 
 * Attempt to fix bugs in unlockers
 
-### v4.5.4 - 15.08.2022
+### v1.7.0 - 15.08.2022
 * Added fstrim when starting the system 
 * Added new menu options (Disable and enable gapps whenever you want)
 * Added new unlocker options on installation (Several new options, there are so many that it is not possible to mention them here.)
@@ -67,11 +66,10 @@
 * There's an easter egg somewhere.
 * A few other small changes...
 
-### v3.4.4 (HOTFIX) - 18.04.2022
+### v1.6.1 - 18.04.2022
 * Zygisk issue has been resolved
-* Unlocker apex legends (test)
 
-### v3.4.4 - 10.04.2022
+### v1.6.0 - 10.04.2022
 * GMS optimization enabled
 * Remastering in the install script 
 * Translation into different languages ​​in the app 
@@ -82,17 +80,17 @@
 * Support since magisk 20.0+
 * Added zygisk support
 * Improvements in the menu
-* Improvements made to GitHub (update.json and changelog.md added)
+* update.json and changelog.md added
 * Removing files to make it lighter
 * The required files will be downloaded at installation (now whenever the module is updated on GitHub, just install it in your magisk)
 * Removed option to optimize apps on installation (many were having difficulties with this)
 * And some other adjustments...
 
-### v3.3.3 - 26.11.2021
-* Conflict checker (When installing the module)
-* Main script remaster
+### v1.5.0 - 26.11.2021
+* Conflict checker (when installing the module)
+* Main script remastered
 * Fixes in tweaks
-* Toast when applying profiles (Toasts are in English and Portuguese, it will detect your language automatically)
+* Toast when applying profiles (toasts are in english and portuguese, it will detect your language automatically)
 * Toast when running clear ram from the menu
 * Option to clean trash added to menu (Removal of unnecessary files)
 * Option to remove module via menu
@@ -101,7 +99,7 @@
 * Application image change
 * Some other adjustments...
 
-### v3.2.2 - 18.10.2021
+### v1.4.0 - 18.10.2021
 * Changing icons in the app. 
 * New tweaks for each profile.
 * Menu interface remaster.
@@ -110,25 +108,25 @@
 * Fixed bugs in the menu (menu did not close...)
 * Minor other fixes...
 
-### v3.1.1 - 05.10.2011
+### v1.3.0 - 05.10.2011
 * New application interface (few changes)
 * New tweaks in each profile
 * New menu with several possibilities (among them the option to change profile)
 * Possibility to clear battery status, compile application packages and do fstrim (all this on the menu)
-* Fixed 100% infinite logs bug (logs using a lot of memory)
+* Fixed infinite logs bug (logs using a lot of memory)
 * Minor modifications to the installation interface
 * Added menu logs 
 * New logs interface (application of profiles)
 * Other minor fixes...
 
-### v2.0.0 - 11.09.2021
+### v1.2.0 - 11.09.2021
 * Application bug not working after restart fixed.
 * Uncontrolled logs fixed. (possibly)
-* Install style in magisk, remastered!
+* Installation in magisk has been rebuilt!
 * Added options fstrim/compile apps packages on installation.
 * Small adjustments to profiles.
 
-### 1.9.8 - 21.07.2021
+### 1.1.0 - 21.07.2021
 * General corrections.
 * Menu removed
 * Semantic versioning.
@@ -140,5 +138,4 @@
 * And various other things...
 
 ### v1.0.0 - 25.02.2021
-* Initial build
-* All early versions were lost along with the changelogs
+* Initial release

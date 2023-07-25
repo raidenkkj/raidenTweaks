@@ -10,7 +10,7 @@ _name=$(basename "$0")
 ls /data >/dev/null 2>&1 || { echo "raidenTweaks needs to run as root!"; echo "type 'su' then '$_name' or su -c '$_name'"; exit 1; }
 
 # Magisk Mod Directory
-[ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules"
+[ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || [ -d "/data/adb/modules" ] && MOUNTPATH="/data/adb/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules"
 MODDIR="$MOUNTPATH/$ID"
 [ ! -d "$MODDIR" ] && { echo "[!] Raiden Tweaks missing..."; exit 1; }
 

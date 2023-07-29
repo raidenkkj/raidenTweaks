@@ -1,12 +1,15 @@
 #!/system/bin/sh
+
 # raidenTweaks™ by Raiden Ishigami (raidenkkj @ GitHub).
 # If you use parts of this project, please credit the respective authors.
 
+# Store module directory in a variable
 modpath="/data/adb/modules_update/RTKS/"
 
+# Enable 64-bit dex2oat and disable ARMv8.5-A memory tagging for 64-bit architecture
 [[ "$IS64BIT" == "true" ]] && {
-	sed -i '/dalvik.vm.dex2oat64.enabled/s/.*/dalvik.vm.dex2oat64.enabled=true/' "${modpath}system.prop"
-	sed -i '/arm64.memtag.process.system_server/s/.*/arm64.memtag.process.system_server=off/' "${modpath}system.prop"
+  sed -i '/dalvik.vm.dex2oat64.enabled/s/.*/dalvik.vm.dex2oat64.enabled=true/' "${modpath}system.prop"
+  sed -i '/arm64.memtag.process.system_server/s/.*/arm64.memtag.process.system_server=off/' "${modpath}system.prop"
 }
 
 # List of modules to check and disable
@@ -23,8 +26,8 @@ gameexp:Improve Game Xperience
 lspeed:LSpeed
 fkm_spectrum_injector:FKM Injector
 KTSR:KTSR
-lazy: LazyTweaks
-injector: NFSInjector
+lazy:LazyTweaks
+injector:NFSInjector
 GamersExtreme:GamersExtreme
 xengine:Xengine
 PXT:PROJECT XTREME TWEAKS
@@ -72,17 +75,22 @@ check_app() {
 mod_detected=false
 app_detected=false
 
+# Display raidenTweaks banner and version information
 awk '{print}' "${modpath}common/rtks_banner"
 ui_print ""
 ui_print "VERSION: $(grep_prop version "${modpath}module.prop") - $(grep_prop bdate "${modpath}module.prop")"
 ui_print ""
 ui_print "CODENAME: $(grep_prop codename "${modpath}module.prop")"
 sleep 2
+
+# Display message about module
 ui_print ""
 ui_print "With this module you can choose one of"
 ui_print "these profiles and improve your user experience."
 sleep 3
 ui_print ""
+
+# Display message about fstrim and prompt user for input
 sleep 0.5
 ui_print "[*] - Do you want to fstrim the partitions? [Recommended]"
 sleep 2
@@ -97,11 +105,15 @@ sleep 0.5
 ui_print " 2 - No "
 ui_print ""
 sleep 0.5
+
+# Prompt the user to make a selection
 ui_print "[*] - Select the desired option: "
 ui_print ""
 
+# Set the default option to 1
 FSTEXT=1
 
+# Loop until user selects an option
 while true; do
    ui_print "  ${FSTEXT}"
    if ${VKSEL}; then
@@ -123,10 +135,12 @@ case $FSTEXT in
       ;;
 esac
 
+# Print the selected option to the user
 ui_print ""
 ui_print "[*] - Selected: $FSTEXT "
 ui_print ""
 
+# Process fstrim according to the option selected by the user
 if [[ $FSTEXT == "Yes" ]]; then
    ui_print "[*] - Wait, process in progress..."
    ui_print ""
@@ -140,6 +154,7 @@ if [[ $FSTEXT == "Yes" ]]; then
    ui_print ""
 fi
 
+# Display message about profile selection
 ui_print "[*] - Do you want to select a default"
 ui_print "      profile for Raiden Tweaks?"
 ui_print ""
@@ -158,12 +173,16 @@ ui_print " 4 - Balanced "
 ui_print " 5 - Performance "
 ui_print " 6 - Gaming "
 ui_print " 7 - Thermal "
+
+# Prompt the user to make a selection
 ui_print ""
 ui_print "[*] - Select which you want: "
 ui_print ""
 
+# Set the default option to 1
 PRFTEXT=1
 
+# Loop until user selects an option
 while true; do
    ui_print "  ${PRFTEXT}"
    if ${VKSEL}; then
@@ -207,6 +226,7 @@ case "$PRFTEXT" in
       ;;
 esac
 
+# Print the selected profile to the user
 ui_print ""
 ui_print "[*] - Selected: $PRFTEXT "
 ui_print ""
@@ -238,14 +258,18 @@ fi
 ui_print "[*] Conflict checker executed!"
 sleep 1.5
 
+# Variables for specific games
 WR="H+vs4DOggQi7ygb7biEG29+ee0AT3YUrUUmFwfzaAweezd+i0T2OeYM9la0wt1RM/vyNFDXYA71W99xcn7nFBWr/K1bnzYZ6XSfbg7m/7SrVCHUeW/OX4d+6QBD9+rtaElCIyoWuaGEWDf1Q2WDjYH3cxkm8AGwl/OCuwMt/BsQHOSZtKDF/nL8DX2gt3ZSckQJl9SNEzt4GL9PShRE/bB+/WX+qPIWgBTUcLb9HBChgMNMHIAvnObvXhAntpej+T6KOl3GVGDZGA6m14Nf0pm74RI1opbaWuGU9/WMG9+vEdV3e7reQwR1AKmzeExTw3gOQgI0sZoGa/oEsLmVtnIKF4wBnkkEUVdnOaIVVcU5cSw6Y5E6O0sN9f+yJHdsC0Ki8+81TTt5r6ol7qNPX8vEJ70qAn6xdHqm02pSwqm7bXx15LLfYlp1tbd5+hHOWb/PtL20Vc7YXUHssWIzRFEgBr1SieqolbhNXnlCCJ2Iz3OstFvgtEgB6HSYMEKBg0Oyi7fjdpymO3Hve6WL/dgEiK4rybIV9oc4ySirx46OUkE/UrE7lh1A2/j2z5WmAtWGcivDnOqPPpDKLRXFj40Ds/iAC175JT4UNsRc/fs6huhEIGzlkxujuVsJ/f2o2Ciu28okSlTKOyRs/gSARTEkt45GO/wnVZfrxDd9NSsLXeF52IG6BDUkG9aV3ABMuF7cj5yZcB90eEkh/uLBdS5y+BBjpq9yq8t2ai6VRp0kY3YeCPLwJv2fK/6Is7BC+gHxV8pVomvZ/sonAT9Ta2ZoP92motacbaWMGK7MGLpw+qAvLh4AKZD9qCwjIBjLQDhhFCRlaPyr2iKx7ZMXo9cLIfcjaCNsx5CbyrYL7L07z19KI6TBzEIkMEwSjWwXMM1KEiXQpbWK6DAZPBAH8pwVJfdRz8kC5BLoVJbbYKtu9oFRbUISu9luFqg1nUX8Qh82BQAMyQyNHqilzbYwgRnMN0uqD/AbTeW6Mou1WOAjwg9rwG2fT28lNqE0GAl9Ud34Ez895ltVHi22NMizvxNth8rZay0CzjnMI+g4BpiztCx09+qgi4s7KZo4LP7l1Wu4by0WxQCdXdxdcU7VeC/45M9YaFcO/Srl/gFv4mrNlP958GJ4lkXDlWch2eUx2wVgNpQkffvcv+dHgH41mZlBAoEc7y734nHTsvjthbaO/oRXO0EdgKZqSksWnKI9fHDL47JxR2rN9jqn8B3SJMorarPSqa8RTqvw2CWVagupPhDlbZk5Naj2DyvllLSLDLZC/fW9dmVUb9Cu7cHDWDYSFhG/HTVZHcpk16+7fvw4ib37kJ1zKrfCCcJFaQQak3aX93iK+l50JTRywysUWbKImCjIOmMZZoyBcMp5P2X9dzOhb/kC+CUICh+s5GkrzOlAKIyr1cEtegYWzHVezeUEtbX9n9CXM6wB+e3LWaoffMh6EegbKrUnxpmxdRHu3clI3F+IAtXtz5NcH9gOwPgdHbUh1H3xkt7nNiBS3224fQyJzhLgD6TkyZeCdm7QQEHbsSoQC+n57LJQ9gyOMtDxCQN8JJIeWmPk8egHY3XIaAQP5UiaYxc6uE6Fnhu5TXoXtkFyGndccqIVAQtaaIcPpdRimQ5+EaBAUDQmCZvYuoFo9tsWDdsPZCYDFYsgNMG9HEeqA6nDtzzgw5kdgogMjchoMmTYOdCgaPkkgPNx8S5DCC5rpSR9x1O7MiquoCQhSBdLGWpYWi80rheP0WQfnmVbIjFJpoWTFOQ3T/7H3DzYaniPox+gXDvhZaB0i9ksSWiXlXklfPsO4X2QK/HfNyVV+1aA4ONRuMTdVan2jn+meBjraWlniUBe1Hs54"
 FTN="/data/data/com.epicgames.fortnite/files/UE4Game/FortniteGame/FortniteGame/Saved/Config/Android/GameUserSettings.ini"
 LIFE="/data/media/0/Android/data/com.netease.mrzhna/files/netease/g66/Documents/configs/qualityconfig"
 DBD="/data/data/com.bhvr.deadbydaylight/files/UE4Game/DeadByDaylight/DeadByDaylight/Saved/Config/Android/GameUserSettings.ini"
 PUBGNS="/data/data/com.pubg.newstate/files/UE4Game/Extreme/Extreme/Saved/Config/Android/GameUserSettings.ini"
 
+# Print the raidenUnlocker banner
 awk '{print}' "${modpath}common/ru_banner" 
 sleep 3
+
+# Print warning messages
 ui_print "[!] - Important: These settings can cause  "
 ui_print "                  errors in system applications.  "
 sleep 0.5
@@ -258,6 +282,8 @@ sleep 0.2
 ui_print " Vol - = Select option"
 sleep 1
 ui_print ""
+
+# Print the available game setting options
 ui_print " 1 - None"
 ui_print " 2 - PUBG Mobile / BGMI / 90 FPS settings"
 ui_print " 3 - PUBG: New State / MAX settings"
@@ -274,12 +300,16 @@ ui_print " 13 - LoL WR / MAX settings"
 ui_print " 14 - LoL WR / MAX settings and Fortnite / 60 FPS"
 ui_print " 15 - Game for Peace 90 FPS settings"
 ui_print " 16 - Free Fire 90 FPS"
+
+# Prompt the user to make a selection
 ui_print ""
 ui_print "[*] - Select which you want: "
 ui_print ""
 
+# Set the default option to 1
 RU=1
 
+# Loop until user selects an option
 while true; do
    ui_print "  ${RU}"
    if ${VKSEL}; then
@@ -292,8 +322,10 @@ while true; do
    fi
 done
 
+# Print empty line that serves as a divider
 ui_print ""
 
+# Set the game settings based on the selected option
 for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveData/Local/*/Setting; do
    case "$RU" in
       1)
@@ -435,13 +467,15 @@ for GS in /data/media/0/Android/data/com.riotgames.league.wildrift/files/SaveDat
          ;;
       esac
 
+# Print the selected option to the user
 ui_print "[*] - Selected option: $TEXT "
 ui_print ""
 
-# Set unlocker
+# Set unlocker in module.prop
 sed -i -e "/unlocker=/s/=.*/=${UNTEXT}/" "${modpath}module.prop"
-
 sleep 1
+
+# Provide information/idea on how branches are 
 ui_print "[*] - Select the branch for Raiden Tweaks!!"
 ui_print ""
 ui_print "[*] - The branch is from where the scripts will be downloaded from"
@@ -453,14 +487,21 @@ sleep 0.2
 ui_print " Vol - = Select option"
 sleep 1
 ui_print ""
+
+# Display the options to the user
 ui_print " 1 - Stable (default) "
 ui_print " 2 - Beta (not recommended yet) "
 ui_print " 3 - Tests (maybe unstable) "
+
+# Prompt the user to make a selection
 ui_print ""
 ui_print "[*] - Select which you want: "
 ui_print ""
 
+# Set the default option to 1
 TEXTBRANCH=1
+
+# Loop until user selects an option
 while true; do
    ui_print "  ${TEXTBRANCH}"
    if ${VKSEL}; then
@@ -505,6 +546,7 @@ case "$TEXTBRANCH" in
 
 esac
 
+# Print the selected option to the user
 ui_print ""
 ui_print "[*] - Selected: $TEXTBRANCH "
 ui_print ""
@@ -528,6 +570,7 @@ wget -O "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweak
 # Permissions 
 set_perm_recursive "${modpath}system/bin" 0 0 0777 0755
 
+# Uninstalling old version (if exists) and installing new version of the main application...
 ui_print "[*] - Uninstalling old (if u have) and installing new version of the main application..."
 
 if [ "$(pm list package org.rtks.raiden)" ]; then
@@ -538,9 +581,11 @@ fi
 
 pm install /data/local/tmp/RaidenTweaks.apk
 
+# Uninstalling old version (if exists) and installing new version of the toast application...
 ui_print ""
 ui_print "[*] - Uninstalling old (if u have) and installing new version of the toast application..."
 
+# Uninstall the app if installed
 if [ "$(pm list package bellavita.toast)" ]; then
    pm uninstall -k --user 0 bellavita.toast
 fi
@@ -577,6 +622,8 @@ sleep 0.5
 ui_print ""
 ui_print " - Thanks to everyone for the feedback, it helps a lot. ❤️"
 sleep 0.5
+
+# Displaying message about installation logs and recommendations
 ui_print ""
 ui_print "[i] - The logs are in a hidden place"
 ui_print "      if you want the logs, get it using rtksmenu."

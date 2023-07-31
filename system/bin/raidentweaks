@@ -291,7 +291,7 @@ magisk=$(magisk -c)
 totalram=$(free -m | awk '/Mem:/{print $2}')
 
 # Variable to battery actual capacity
-percentage=$( /sys/class/power_supply/battery/capacity)
+percentage=$(cat /sys/class/power_supply/battery/capacity)
 
 # Mod path
 modpath="/data/adb/modules/RTKS/"

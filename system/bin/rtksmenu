@@ -941,7 +941,7 @@ while [[ $# -gt 0 ]]; do
       exit
       ;;
     -t|--thermal)
-      if [[ "$2" == "1" ]]; then
+      if [[ "$2" == "disable" ]]; then
         echo ""
         echo "${G}[*] Disabling thermal...${N}"
         echo ""
@@ -952,7 +952,7 @@ while [[ $# -gt 0 ]]; do
         echo ""
         echo "${G}[*] Process finished.${N}"
         echo ""
-      elif [[ "$2" == "2" ]]; then
+      elif [[ "$2" == "enable" ]]; then
         echo ""
         echo "${G}[*] Enabling thermal engine...${N}"
         sleep 0.5
@@ -966,6 +966,73 @@ while [[ $# -gt 0 ]]; do
         echo ""
       fi
       shift
+      exit
+      ;;
+    -d|--downsample)
+      if [[ "$2" == "apply" ]]; then
+        screen_res="$(wm size | cut -d' ' -f3)"
+        
+        echo ""
+        echo "${G}[*] Starting screen downsampling...${N}"
+        sleep 1.5
+        echo ""
+        echo "${G}[*] Your current resolution is: ${B}$screen_res${N}"
+        sleep 0.5
+        
+        width="$(echo $screen_res | cut -dx -f1)"
+        height="$(echo $screen_res | cut -dx -f2)"
+        
+        new_width=$(( $width / 2 ))
+        new_height=$(( $height / 2 ))
+      
+        new_screen_res="${new_width}x${new_height}"
+      
+        backup_file="/data/local/screen_res.txt"
+        if [ ! -f "$backup_file" ]; then
+          echo ""
+          echo "${G}[*] Creating backup of resolution before modifying...${N}"
+          echo "$screen_res" > "$backup_file"
+          line="1"
+          echo "${G}[*] Done, backup created.${N}"
+          echo ""
+        fi
+        
+        if [[ ! "$line" == "1" ]]; then
+          echo ""
+        fi
+        echo "${G}[*] Applying new resolution...${N}"
+        sleep 1.5
+        wm size "$new_screen_res"
+        echo "${G}[*] New screen resolution applied: ${B}$new_screen_res${N}"
+        echo ""
+        echo "${G}[*] The downsample process has been completed.${N}"
+        echo ""
+      elif [[ "$2" == "restore" ]]; then
+        echo ""
+        echo "${G}[*] Starting the upsampling process...${N}"
+        sleep 1.5
+        backup_file="/data/local/screen_res.txt"
+        original_res="$(cat "$backup_file")"
+        screen_res="$(wm size | cut -d' ' -f3)"
+        
+        if [ "$original_res" = "$screen_res" ]; then
+          echo ""
+          echo "${R}[!] Original screen resolution is the same as current resolution, no changes made.${N}"
+          echo ""
+          exit 1
+        else
+          wm size "$original_res"
+          echo ""
+          echo "${G}[*] Original screen resolution restored: ${B}$original_res${N}"
+          echo ""
+          echo "${G}[*] The upsample process has been completed.${N}"
+          echo ""
+        fi
+      else
+        echo ""
+        echo "${R}[!] Error: invalid option or null output.${N}"
+        echo ""
+      fi
       exit
       ;;
     -h|--help)

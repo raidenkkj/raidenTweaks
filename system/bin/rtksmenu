@@ -1,6 +1,24 @@
 #!/system/bin/sh
-# veez21 @ xda-developers
-# raidenkkj @ github
+# shellcheck disable=SC2034
+# shellcheck disable=SC3010
+# shellcheck disable=SC1091
+# shellcheck disable=SC3014
+# shellcheck disable=SC3037
+# shellcheck disable=SC3043
+# shellcheck disable=SC2145
+#
+# raidenTweaks™ is a simple kernel tweaker.
+# Copyright (C) 2021~2023  Raiden Ishigami <contact.raidenishi69@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
 
 # Magisk Module ID **
 ID="RTKS"

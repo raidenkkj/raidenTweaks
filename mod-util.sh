@@ -325,8 +325,11 @@ help_text() {
   echo "${Y}Options:${N}"
   echo "${Y}  -p --profile ${B}[1-6] [Switch between profiles without opening the terminal GUI, for a fast and seamless experience]${N}"
   echo "${Y}  -c --clear-ram ${B}[1-3] [Higher value means more agressive memory reclaim, which includes killing apps at maximum value (3)]${N}"
-  echo "${Y}  -t --thermal ${B}[1-2] [Disable or enable thermal, option 1 will disable and option 2 will enable]${N}"
+  echo "${Y}  -t --thermal ${B}[enable|disable] [Disables or enables the thermal]${N}"
   echo "${Y}  -u --update-all ${B}[Update module scripts to the latest available version]${N}"
+  echo "${Y}  -d --downsample ${B}[apply|restore] ${N}"
+  echo "${Y}    apply ${B}[Apply downsampling to reduce screen resolution by a factor of 2]${N}"
+  echo "${Y}    restore ${B}[Restore original screen resolution]${N}"
   echo "${Y}  -h --help ${B}[Show this message]${N}"
   echo ""
   exit 0

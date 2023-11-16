@@ -25,12 +25,8 @@ mount -o remount,rw /cache 2>/dev/null
 mount -o rw,remount /cache 2>/dev/null
 
 # Check logs dir
-if [[ -d "/sdcard/.RTKS" ]]; then
-    # Dir exists, ignore then.
-    :
-else
-    # Dir does not exist, create it then.
-    mkdir /sdcard/.RTKS
+if [[ ! -d "/sdcard/.RTKS" ]]; then
+  mkdir /sdcard/.RTKS
 fi
 
 # > Logs should go in this file

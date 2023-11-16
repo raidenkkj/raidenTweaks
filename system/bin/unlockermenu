@@ -1,6 +1,17 @@
 #!/system/bin/sh
-# veez21 @ xda-developers
-# raidenkkj @ github
+#
+# raidenTweaks™ is a simple kernel tweaker.
+# Copyright (C) 2021~2023  Raiden Ishigami <contact.raidenishi69@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
 
 # Magisk Module ID **
 ID="RTKS"
@@ -10,9 +21,9 @@ _name=$(basename "$0")
 ls /data >/dev/null 2>&1 || { echo "$ID needs to run as root!"; echo "type 'su' then '$_name'"; exit 1; }
 
 # Magisk Mod Directory
-[ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules"
+[ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules" || [ -d "/data/adb/modules" ] && MOUNTPATH="/data/adb/modules"
 MODDIR="$MOUNTPATH/$ID"
-[ ! -d "$MODDIR" ] && { echo "[!] Raiden Tweaks missing..."; exit 1; }
+[ ! -d "$MODDIR" ] && { echo "[!] raidenTweaks missing..."; exit 1; }
 
 # Set path to your busybox if applicable
 _bb=
@@ -42,7 +53,6 @@ set -x 2>$VERUNLOG
 modpath="/data/adb/modules/RTKS/"
 
 # Utilities
-
 WR="H+vs4DOggQi7ygb7biEG29+ee0AT3YUrUUmFwfzaAweezd+i0T2OeYM9la0wt1RM/vyNFDXYA71W99xcn7nFBWr/K1bnzYZ6XSfbg7m/7SrVCHUeW/OX4d+6QBD9+rtaElCIyoWuaGEWDf1Q2WDjYH3cxkm8AGwl/OCuwMt/BsQHOSZtKDF/nL8DX2gt3ZSckQJl9SNEzt4GL9PShRE/bB+/WX+qPIWgBTUcLb9HBChgMNMHIAvnObvXhAntpej+T6KOl3GVGDZGA6m14Nf0pm74RI1opbaWuGU9/WMG9+vEdV3e7reQwR1AKmzeExTw3gOQgI0sZoGa/oEsLmVtnIKF4wBnkkEUVdnOaIVVcU5cSw6Y5E6O0sN9f+yJHdsC0Ki8+81TTt5r6ol7qNPX8vEJ70qAn6xdHqm02pSwqm7bXx15LLfYlp1tbd5+hHOWb/PtL20Vc7YXUHssWIzRFEgBr1SieqolbhNXnlCCJ2Iz3OstFvgtEgB6HSYMEKBg0Oyi7fjdpymO3Hve6WL/dgEiK4rybIV9oc4ySirx46OUkE/UrE7lh1A2/j2z5WmAtWGcivDnOqPPpDKLRXFj40Ds/iAC175JT4UNsRc/fs6huhEIGzlkxujuVsJ/f2o2Ciu28okSlTKOyRs/gSARTEkt45GO/wnVZfrxDd9NSsLXeF52IG6BDUkG9aV3ABMuF7cj5yZcB90eEkh/uLBdS5y+BBjpq9yq8t2ai6VRp0kY3YeCPLwJv2fK/6Is7BC+gHxV8pVomvZ/sonAT9Ta2ZoP92motacbaWMGK7MGLpw+qAvLh4AKZD9qCwjIBjLQDhhFCRlaPyr2iKx7ZMXo9cLIfcjaCNsx5CbyrYL7L07z19KI6TBzEIkMEwSjWwXMM1KEiXQpbWK6DAZPBAH8pwVJfdRz8kC5BLoVJbbYKtu9oFRbUISu9luFqg1nUX8Qh82BQAMyQyNHqilzbYwgRnMN0uqD/AbTeW6Mou1WOAjwg9rwG2fT28lNqE0GAl9Ud34Ez895ltVHi22NMizvxNth8rZay0CzjnMI+g4BpiztCx09+qgi4s7KZo4LP7l1Wu4by0WxQCdXdxdcU7VeC/45M9YaFcO/Srl/gFv4mrNlP958GJ4lkXDlWch2eUx2wVgNpQkffvcv+dHgH41mZlBAoEc7y734nHTsvjthbaO/oRXO0EdgKZqSksWnKI9fHDL47JxR2rN9jqn8B3SJMorarPSqa8RTqvw2CWVagupPhDlbZk5Naj2DyvllLSLDLZC/fW9dmVUb9Cu7cHDWDYSFhG/HTVZHcpk16+7fvw4ib37kJ1zKrfCCcJFaQQak3aX93iK+l50JTRywysUWbKImCjIOmMZZoyBcMp5P2X9dzOhb/kC+CUICh+s5GkrzOlAKIyr1cEtegYWzHVezeUEtbX9n9CXM6wB+e3LWaoffMh6EegbKrUnxpmxdRHu3clI3F+IAtXtz5NcH9gOwPgdHbUh1H3xkt7nNiBS3224fQyJzhLgD6TkyZeCdm7QQEHbsSoQC+n57LJQ9gyOMtDxCQN8JJIeWmPk8egHY3XIaAQP5UiaYxc6uE6Fnhu5TXoXtkFyGndccqIVAQtaaIcPpdRimQ5+EaBAUDQmCZvYuoFo9tsWDdsPZCYDFYsgNMG9HEeqA6nDtzzgw5kdgogMjchoMmTYOdCgaPkkgPNx8S5DCC5rpSR9x1O7MiquoCQhSBdLGWpYWi80rheP0WQfnmVbIjFJpoWTFOQ3T/7H3DzYaniPox+gXDvhZaB0i9ksSWiXlXklfPsO4X2QK/HfNyVV+1aA4ONRuMTdVan2jn+meBjraWlniUBe1Hs54"
 FTN="/data/data/com.epicgames.fortnite/files/UE4Game/FortniteGame/FortniteGame/Saved/Config/Android/GameUserSettings.ini"
 LIFE="/data/media/0/Android/data/com.netease.mrzhna/files/netease/g66/Documents/configs/qualityconfig"
@@ -54,103 +64,186 @@ sdk=$(getprop ro.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vendor.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vndk.version)
 
-ver="1.0.0-r2"
+ver="1.0.0-r3"
 dev="raidenkk"
-magisk=$(magisk -c)
+magisk=$(magisk -V)
 
-Menu() {
-    echo -e '\n'
-    printf "\033c"
-    echo "${Y}|           Welcome to Unlocker menu           |${N}"
-    echo "${Y}|  Created and written by $dev @ telegram  |${N}"
-    echo ""
-    echo "${Y}[*] Version:${B} $ver"
-    echo ""
-    echo "${Y}[*] Magisk version:${B} $magisk ${N}"
-    echo ""
-    echo "${Y}[*] Current unlocker:${B} $(grep_prop unlocker ${modpath}module.prop) ${N}"
-    echo ""
-    echo "------------------------------------------------"
-    echo "${C}[*] Unlocker selector ${N}"
-    echo "------------------------------------------------"
-    echo ""
-    echo "${G}[1] None ${N}"
-    echo ""
-    echo "${G}[2] PUBG Mobile / BGMI / 90 FPS settings${N}"
-    echo ""
-    echo "${G}[3] PUBG: New State / MAX settings${N}"
-    echo ""
-    echo "${G}[4] COD Mobile / FIFA and BlackDesert Mobile / MAX settings${N}"
-    echo ""
-    echo "${G}[5] Mobile Legends / MAX settings${N}"
-    echo ""
-    echo "${G}[6] Sky Children of the Light and Asphalt 9 / 60 FPS settings${N}"
-    echo ""
-    echo "${G}[7] COD Mobile / 120 FPS settings${N}"
-    echo ""
-    echo "${G}[8] Fortnite settings${N}"
-    echo ""
-    echo "${G}[9] Asphalt and PUBG Mobile / BGMI / 90 FPS settings${N}"
-    echo ""
-    echo "${G}[10] Forsaken World / 120 FPS settings${N}"
-    echo ""
-    echo "${G}[11] Life After / 120 FPS settings${N}"
-    echo ""
-    echo "${G}[12] Dead by Daylight / 120 FPS settings${N}"
-    echo ""
-    echo "${G}[13] LoL WR / MAX settings${N}"
-    echo ""
-    echo "${G}[14] LoL WR / MAX settings and Fortnite / 60 FPS${N}"
-    echo ""
-    echo "${G}[15] Game for Peace / 60 FPS settings${N}"
-    echo ""
-    echo "${G}[16] Free Fire 90 FPS settings${N}"
-    echo ""
-    echo "------------------------------------------------"
-    echo "${C}[*] Miscellaneous ${N}"
-    echo "------------------------------------------------"
-    echo ""
-    echo "${B}[B] Back to main menu ${C}(It will return to raidenTweaks menu)${N}"
-    echo ""
-    echo "${R}[0] Go out.${N}"
-    echo -e '\n'
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Option1 ;;
-        2) Option2 ;;
-        3) Option3 ;;
-        4) Option4 ;;
-        5) Option5 ;;
-        6) Option6 ;;
-        7) Option7 ;;
-        8) Option8 ;;
-        9) Option9 ;;
-        10) Option10 ;;
-        11) Option11 ;;
-        12) Option12 ;;
-        13) Option13 ;;
-        14) Option14 ;;
-        15) Option15 ;;
-        16) Option16 ;;
-        B) Back ;;
-        0) GoOut ;;
-        *) Menu ;;
+main_menu() {
+  echo -e '\n'
+  printf "\033c"
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${Y}      Welcome to Unlocker menu      ${C}║${N}"
+  echo "${C}║${Y}  Created and written by $dev @ telegram  ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${Y}[*] Version:${B} $ver"
+  echo ""
+  echo "${Y}[*] Magisk version:${B} $magisk ${N}"
+  echo ""
+  echo "${Y}[*] Current unlocker:${B} $(grep_prop unlocker ${modpath}module.prop) ${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}         [*] Unlocker selector         ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${G}[1] None ${N}"
+  echo ""
+  echo "${G}[2] PUBG Mobile / BGMI / 90 FPS settings${N}"
+  echo ""
+  echo "${G}[3] PUBG: New State / MAX settings${N}"
+  echo ""
+  echo "${G}[4] COD Mobile / FIFA and BlackDesert Mobile / MAX settings${N}"
+  echo ""
+  echo "${G}[5] Mobile Legends / MAX settings${N}"
+  echo ""
+  echo "${G}[6] Sky Children of the Light and Asphalt 9 / 60 FPS settings${N}"
+  echo ""
+  echo "${G}[7] COD Mobile / 120 FPS settings${N}"
+  echo ""
+  echo "${G}[8] Fortnite settings${N}"
+  echo ""
+  echo "${G}[9] Asphalt and PUBG Mobile / BGMI / 90 FPS settings${N}"
+  echo ""
+  echo "${G}[10] Forsaken World / 120 FPS settings${N}"
+  echo ""
+  echo "${G}[11] Life After / 120 FPS settings${N}"
+  echo ""
+  echo "${G}[12] Dead by Daylight / 120 FPS settings${N}"
+  echo ""
+  echo "${G}[13] LoL WR / MAX settings${N}"
+  echo ""
+  echo "${G}[14] LoL WR / MAX settings and Fortnite / 60 FPS${N}"
+  echo ""
+  echo "${G}[15] Game for Peace / 60 FPS settings${N}"
+  echo ""
+  echo "${G}[16] Free Fire 90 FPS settings${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}             [*] Miscellaneous                ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${B}[B] Back to main menu ${C}(It will return to raidenTweaks menu)${N}"
+  echo ""
+  echo "${R}[0] Go out.${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}               [*] Selection                  ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) disable_unlocker ;;
+    2) pubgm_bgmi ;;
+    3) pubgns ;;
+    4) codm_fifa_bdm ;;
+    5) mobile_legends ;;
+    6) sky_cl_asphalt ;;
+    7) cod_mobile ;;
+    8) fortnite ;;
+    9) asphalt_pubgm_bgmi ;;
+    10) forsaken_world ;;
+    11) life_after ;;
+    12) dead_by_daylight ;;
+    13) lol_wr ;;
+    14) lol_wr_fortnite ;;
+    15) game_for_peace ;;
+    16) free_fire ;;
+    B) back_to_rtksmenu ;;
+    0) go_out ;;
+    *) main_menu ;;
     esac
     }
 
-Option1 () {
-    printf "\033c"
-    echo "${G}Disabling current unlocker...${N}"
+disable_unlocker() {
+  printf "\033c"
+  echo "${G}Disabling current unlocker...${N}"
+  sleep 0.5
+  echo ""
+  UNM0="None"
+  sed -i -e "/unlocker=/s/=.*/=${UNM0}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model/' "${modpath}system.prop"
+  sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model/' "${modpath}system.prop"
+  sed -i '/ro.product.system.model/s/.*/ro.product.system.model/' "${modpath}system.prop"
+  sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model/' "${modpath}system.prop"
+  sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+pubgm_bgmi() {
+  printf "\033c"
+  UNM2="PUBG Mobile and BGMI 90 FPS"
+  echo "${G}Applying $UNM2... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM2}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=M2102K1C/' "${modpath}system.prop"
+  sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=M2102K1C/' "${modpath}system.prop"
+  sed -i '/ro.product.system.model/s/.*/ro.product.system.model=M2102K1C/' "${modpath}system.prop"
+  sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=M2102K1C/' "${modpath}system.prop"
+  sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=M2102K1C/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${G}Process finished.${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+pubgns() {
+  printf "\033c"
+  if [ "$(pm list package com.pubg.newstate)" ]; then
+    UNM3="PUBG: New State MAX settings"
+    echo "${G}Applying $UNM3... ${N}"
     sleep 0.5
     echo ""
-    UNM0="None"
-    sed -i -e "/unlocker=/s/=.*/=${UNM0}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model/' "${modpath}system.prop"
-    sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model/' "${modpath}system.prop"
-    sed -i '/ro.product.system.model/s/.*/ro.product.system.model/' "${modpath}system.prop"
-    sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model/' "${modpath}system.prop"
-    sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model/' "${modpath}system.prop"
+    sed -i -e "/unlocker=/s/=.*/=${UNM3}/" "${modpath}module.prop"
+    chmod 0777 "$PUBGNS"; magiskhide enable
+    magiskhide add com.pubg.newstate
+   settings put global adb_enabled 0 settings put global development_settings_enabled 0 magisk --denylist rm com.google.android.gms
+    mv /data/media/0/TWRP /data/media/0/PRWT
+    mv /data/media/0/Download/magisk_patched.img /data/media/0/Download/ksigam_dehctap.img
+    force-stop com.pubg.newstate
+    sed -i -e 's/InGameSetting=*/InGameSetting=(Brightness=135.000000,3e5fb0f167=HD,CameraFOV_FPP=95.000000,ee1cce4781=ULTRA,0e36c7ab25=ULTRA,52acd236cf=EXTREME90,30db48eba4=ULTRA,388652a957=OFF,CameraFOV_TPP=80.000000,d08a7d9304=ULTRA,AntiAliasingType=ON,d67592353d=ULTRA,728fe36b3e=ULTRA)/g' "$PUBGNS"
+    sed -i -e 's/FrameRateLimit=30.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
+    sed -i -e 's/FrameRateLimit=30.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
+    sed -i -e 's/FrameRateLimit=60.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
+    sed -i -e 's/FrameRateLimit=60.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
+    sed -i -e 's/AudioQualityLevel=2/AudioQualityLevel=0/g' "$PUBGNS"
+    sed -i -e 's/AudioQualityLevel=1/AudioQualityLevel=0/g' "$PUBGNS"
+    sed -i -e 's/LastConfirmedAudioQualityLevel=2/LastConfirmedAudioQualityLevel=0/g' "$PUBGNS"
+    sed -i -e 's/LastConfirmedAudioQualityLevel=1/LastConfirmedAudioQualityLevel=0/g' "$PUBGNS"; chmod 0440 "$PUBGNS"
     sleep 0.5
     echo ""
     echo "${G}Process finished!${N}"
@@ -158,27 +251,168 @@ Option1 () {
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo ""
-    echo "${C}Select your option ${N}: \c"
+    echo "${C}Select your option:${N} \c"
     read option
     case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option1 ;;
+      1) return_to_main_menu ;;
+      0) go_out ;;
+      *) 
+        echo ""
+        echo "${R}Invalid option, returning to menu.${N}"
+        sleep 2
+        return_to_main_menu
+        ;;
     esac
+  else
+    echo "${R}[!] You don't have PUBG: New State installed, returning to the menu...${N}"
+    sleep 5
+    return_to_main_menu
+  fi
 }
 
-Option2 () {
-    printf "\033c"
-    UNM2="PUBG Mobile and BGMI 90 FPS"
-    echo "${G}Applying $UNM2... ${N}"
+codm_fifa_bdm() {
+  printf "\033c"
+  UNM4="COD Mobile, FIFA and BlackDesert Mobile MAX settings"
+  echo "${G}Applying $UNM4... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM4}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=SM-G965F/' "${modpath}system.prop"
+  sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=SM-G965F/' "${modpath}system.prop"
+  sed -i '/ro.product.system.model/s/.*/ro.product.system.model=SM-G965F/' "${modpath}system.prop"
+  sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=SM-G965F/' "${modpath}system.prop"
+  sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=SM-G965F/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+mobile_legends() {
+  printf "\033c"
+  UNM5="Mobile Legends MAX settings"
+  echo "${G}Applying $UNM5... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM5}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=Mi 10 Pro/' "${modpath}system.prop"
+  sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=Mi 10 Pro/' "${modpath}system.prop"
+  sed -i '/ro.product.system.model/s/.*/ro.product.system.model=Mi 10 Pro/' "${modpath}system.prop"
+  sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=Mi 10 Pro/' "${modpath}system.prop"
+  sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=Mi 10 Pro/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+sky_cl_asphalt() {
+  printf "\033c"
+  UNM6="Sky Children of the Light and Asphalt 9 60 FPS settings"
+  echo "${G}Applying $UNM6... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM6}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+cod_mobile() {
+  printf "\033c"
+  UNM7="COD Mobile 120 FPS settings"
+  echo "${G}Applying $UNM7... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM7}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=SO-52A/' "${modpath}system.prop"
+  sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=SO-52A/' "${modpath}system.prop"
+  sed -i '/ro.product.system.model/s/.*/ro.product.system.model=SO-52A/' "${modpath}system.prop"
+  sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=SO-52A/' "${modpath}system.prop"
+  sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=SO-52A/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+fortnite() {
+  printf "\033c"
+  if [ "$(pm list package com.epicgames.fortnite)" ]; then
+    UNM8="Fortnite settings"
+    echo "${G}Applying $UNM8... ${N}"
     sleep 0.5
     echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM2}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=M2102K1C/' "${modpath}system.prop"
-    sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=M2102K1C/' "${modpath}system.prop"
-    sed -i '/ro.product.system.model/s/.*/ro.product.system.model=M2102K1C/' "${modpath}system.prop"
-    sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=M2102K1C/' "${modpath}system.prop"
-    sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=M2102K1C/' "${modpath}system.prop"
+    sed -i -e "/unlocker=/s/=.*/=${UNM8}/" "${modpath}module.prop"
+    chmod 0777 "$FTN"
+    magiskhide enable
+    magiskhide add com.epicgames.fortnite
+    settings put global adb_enabled 0 magisk --denylist rm com.google.android.gms
+    mv /data/media/0/TWRP /data/media/0/PRWT
+    mv /data/media/0/Download/magisk_patched.img /data/media/0/Download/ksigam_dehctap.img
+    am force-stop com.epicgames.fortnite
+    sed -i -e 's/MobileFPSMode=Mode_20Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
+    sed -i -e 's/MobileFPSMode=Mode_30Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
+    sed -i -e 's/MobileFPSMode=Mode_45Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
+    sed -i -e 's/MobileFPSMode=Mode_60Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
+    sed -i -e 's/MobileFPSMode=Mode_120Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
+    chmod 0440 "$FTN"
     sleep 0.5
     echo ""
     echo "${G}Process finished.${N}"
@@ -186,145 +420,132 @@ Option2 () {
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo ""
-    echo "${C}Select your option ${N}: \c"
+    echo "${C}Select your option:${N} \c"
     read option
     case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option2  ;;
+      1) return_to_main_menu ;;
+      0) go_out ;;
+      *) 
+        echo ""
+        echo "${R}Invalid option, returning to menu.${N}"
+        sleep 2
+        return_to_main_menu
+        ;;
     esac
+  else
+    echo "${R}[!] You don't have Fortnite installed, returning to the menu...${N}"
+    sleep 5
+    return_to_main_menu
+  fi
 }
 
-Option3 () {
-    printf "\033c"
-    if [ "$(pm list package com.pubg.newstate)" ]; then
-        UNM3="PUBG: New State MAX settings"
-        echo "${G}Applying $UNM3... ${N}"
-        sleep 0.5
-        echo ""
-        sed -i -e "/unlocker=/s/=.*/=${UNM3}/" "${modpath}module.prop"
-        chmod 0777 "$PUBGNS"; magiskhide enable
-        magiskhide add com.pubg.newstate
-        settings put global adb_enabled 0 settings put global development_settings_enabled 0 magisk --denylist rm com.google.android.gms
-        mv /data/media/0/TWRP /data/media/0/PRWT
-        mv /data/media/0/Download/magisk_patched.img /data/media/0/Download/ksigam_dehctap.img
-        force-stop com.pubg.newstate
-        sed -i -e 's/InGameSetting=*/InGameSetting=(Brightness=135.000000,3e5fb0f167=HD,CameraFOV_FPP=95.000000,ee1cce4781=ULTRA,0e36c7ab25=ULTRA,52acd236cf=EXTREME90,30db48eba4=ULTRA,388652a957=OFF,CameraFOV_TPP=80.000000,d08a7d9304=ULTRA,AntiAliasingType=ON,d67592353d=ULTRA,728fe36b3e=ULTRA)/g' "$PUBGNS"
-        sed -i -e 's/FrameRateLimit=30.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
-        sed -i -e 's/FrameRateLimit=30.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
-        sed -i -e 's/FrameRateLimit=60.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
-        sed -i -e 's/FrameRateLimit=60.000000/FrameRateLimit=90.000000/g' "$PUBGNS"
-        sed -i -e 's/AudioQualityLevel=2/AudioQualityLevel=0/g' "$PUBGNS"
-        sed -i -e 's/AudioQualityLevel=1/AudioQualityLevel=0/g' "$PUBGNS"
-        sed -i -e 's/LastConfirmedAudioQualityLevel=2/LastConfirmedAudioQualityLevel=0/g' "$PUBGNS"
-        sed -i -e 's/LastConfirmedAudioQualityLevel=1/LastConfirmedAudioQualityLevel=0/g' "$PUBGNS"; chmod 0440 "$PUBGNS"
-        sleep 0.5
-        echo ""
-        echo "${G}Process finished!${N}"
-        echo ""
-        echo "${B}[ 1 ] Return${N}"
-        echo "${B}[ 0 ] Go out${N}"
-        echo ""
-        echo "${C}Select your option ${N}: \c"
-        read option
-        case $option in
-            1) Return ;;
-            0) GoOut ;;
-            *) Option3 ;;
-        esac
-    else
-        echo "${R}[!] You don't have PUBG: New State installed, returning to the menu...${N}"
-        sleep 5
-        unlockermenu
-    fi
+asphalt_pubgm_bgmi() {
+  printf "\033c"
+  UNM9="Asphalt and PUBG Mobile and BGMI 90 FPS"
+  echo "${G}Applying $UNM9... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM9}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
+  sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=GM1917/' "${modpath}system.prop"
+  sed -i '/ro.product.system.model/s/.*/ro.product.system.model=GM1917/' "${modpath}system.prop"
+  sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=GM1917/' "${modpath}system.prop"
+  sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=GM1917/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option4 () {
-    printf "\033c"
-    UNM4="COD Mobile, FIFA and BlackDesert Mobile MAX settings"
-    echo "${G}Applying $UNM4... ${N}"
+forsaken_world() {
+  printf "\033c"
+  UNM10="Forsaken World 120 FPS"
+  echo "${G}Applying $UNM10... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM10}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=ZS673KS-1B063IN/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+life_after() {
+  printf "\033c"
+  if [ "$(pm list package com.netease.mrzhna)" ]; then
+    UNM11="Life After 120 FPS"
+    echo "${G}Applying $UNM11... ${N}"
     sleep 0.5
     echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM4}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=SM-G965F/' "${modpath}system.prop"
-    sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=SM-G965F/' "${modpath}system.prop"
-    sed -i '/ro.product.system.model/s/.*/ro.product.system.model=SM-G965F/' "${modpath}system.prop"
-    sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=SM-G965F/' "${modpath}system.prop"
-    sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=SM-G965F/' "${modpath}system.prop"
+    sed -i -e "/unlocker=/s/=.*/=${UNM11}/" "${modpath}module.prop"
+    am force-stop com.netease.mrzhna 2>/dev/null
+    sed -i 's/"frame": 1,/"frame": 4,/g' "$LIFE"
+    sed -i 's/"frame": 2,/"frame": 4,/g' "$LIFE"
+    sed -i 's/"frame": 3,/"frame": 4,/g' "$LIFE"
     sleep 0.5
     echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo ""
-    echo "${C}Select your option ${N}: \c"
+    echo "${C}Select your option:${N} \c"
     read option
     case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option4 ;;
+      1) return_to_main_menu ;;
+      0) go_out ;;
+      *) 
+        echo ""
+        echo "${R}Invalid option, returning to menu.${N}"
+        sleep 2
+        return_to_main_menu
+        ;;
     esac
+  else
+    echo "${R}[!] You don't have Life After installed, returning to the menu...${N}"
+    sleep 5
+    return_to_main_menu
+  fi
 }
 
-Option5 () {
-    printf "\033c"
-    UNM5="Mobile Legends MAX settings"
-    echo "${G}Applying $UNM5... ${N}"
+dead_by_daylight() {
+  printf "\033c"
+  if [ "$(pm list package com.bhvr.deadbydaylight)" ]; then
+    UNM12="Dead by Daylight 120 FPS"
+    echo "${G}Applying $UNM12... ${N}"
     sleep 0.5
     echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM5}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=Mi 10 Pro/' "${modpath}system.prop"
-    sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=Mi 10 Pro/' "${modpath}system.prop"
-    sed -i '/ro.product.system.model/s/.*/ro.product.system.model=Mi 10 Pro/' "${modpath}system.prop"
-    sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=Mi 10 Pro/' "${modpath}system.prop"
-    sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=Mi 10 Pro/' "${modpath}system.prop"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option5 ;;
-    esac
-}
-
-Option6 () {
-    printf "\033c"
-    UNM6="Sky Children of the Light and Asphalt 9 60 FPS settings"
-    echo "${G}Applying $UNM6... ${N}"
-    sleep 0.5
-    echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM6}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option5 ;;
-    esac
-}
-
-Option7 () {
-    printf "\033c"
-    UNM7="COD Mobile 120 FPS settings"
-    echo "${G}Applying $UNM7... ${N}"
-    sleep 0.5
-    echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM7}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=SO-52A/' "${modpath}system.prop"
-    sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=SO-52A/' "${modpath}system.prop"
-    sed -i '/ro.product.system.model/s/.*/ro.product.system.model=SO-52A/' "${modpath}system.prop"
-    sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=SO-52A/' "${modpath}system.prop"
-    sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=SO-52A/' "${modpath}system.prop"
+    sed -i -e "/unlocker=/s/=.*/=${UNM12}/" "${modpath}module.prop"
+    am force-stop com.bhvr.deadbydaylight 2>/dev/null
+    sed -i 's/FrameRateLimit=30/FrameRateLimit=120/g' "$DBD"
+    sed -i 's/FrameRateLimit=60/FrameRateLimit=120/g' "$DBD"
     sleep 0.5
     echo ""
     echo "${G}Process finished!${N}"
@@ -332,291 +553,174 @@ Option7 () {
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo ""
-    echo "${C}Select your option ${N}: \c"
+    echo "${C}Select your option:${N} \c"
     read option
     case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option7 ;;
+      1) return_to_main_menu ;;
+      0) go_out ;;
+      *) 
+        echo ""
+        echo "${R}Invalid option, returning to menu.${N}"
+        sleep 2
+        return_to_main_menu
+        ;;
     esac
+  else
+    echo "${R}[!] You don't have Dead by Daylight installed, returning to the menu...${N}"
+    sleep 5
+    return_to_main_menu
+  fi
 }
 
-Option8 () {
-    printf "\033c"
-    if [ "$(pm list package com.epicgames.fortnite)" ]; then
-        UNM8="Fortnite settings"
-        echo "${G}Applying $UNM8... ${N}"
-        sleep 0.5
-        echo ""
-        sed -i -e "/unlocker=/s/=.*/=${UNM8}/" "${modpath}module.prop"
-        chmod 0777 "$FTN"
-        magiskhide enable
-        magiskhide add com.epicgames.fortnite
-        settings put global adb_enabled 0 magisk --denylist rm com.google.android.gms
-        mv /data/media/0/TWRP /data/media/0/PRWT
-        mv /data/media/0/Download/magisk_patched.img /data/media/0/Download/ksigam_dehctap.img
-        am force-stop com.epicgames.fortnite
-        sed -i -e 's/MobileFPSMode=Mode_20Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
-        sed -i -e 's/MobileFPSMode=Mode_30Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
-        sed -i -e 's/MobileFPSMode=Mode_45Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
-        sed -i -e 's/MobileFPSMode=Mode_60Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
-        sed -i -e 's/MobileFPSMode=Mode_120Fps/MobileFPSMode=Mode_60Fps/g'  "$FTN"
-        chmod 0440 "$FTN"
-        sleep 0.5
-        echo ""
-        echo "${G}Process finished.${N}"
-        echo ""
-        echo "${B}[ 1 ] Return${N}"
-        echo "${B}[ 0 ] Go out${N}"
-        echo ""
-        echo "${C}Select your option ${N}: \c"
-        read option
-        case $option in
-            1) Return ;;
-            0) GoOut ;;
-            *) Option8  ;;
-        esac
-    else
-        echo "${R}[!] You don't have Fortnite installed, returning to the menu...${N}"
-        sleep 5
-        unlockermenu
-    fi
+lol_wr() {
+  printf "\033c"
+  UNM13="LoL WR MAX settings"
+  echo "${G}Applying $UNM13... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM13}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=SM-G9880/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${G}Process finished.${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option9 () {
-    printf "\033c"
-    UNM9="Asphalt and PUBG Mobile and BGMI 90 FPS"
-    echo "${G}Applying $UNM9... ${N}"
+lol_wr_fortnite() {
+  printf "\033c"
+  if [ "$(pm list package com.epicgames.fortnite)" ]; then
+    UNM14="LoL WR MAX settings and Fortnite 60 FPS"
+    echo "${G}Applying $UNM14... ${N}"
     sleep 0.5
     echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM9}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
-    sed -i '/ro.product.odm.model/s/.*/ro.product.odm.model=GM1917/' "${modpath}system.prop"
-    sed -i '/ro.product.system.model/s/.*/ro.product.system.model=GM1917/' "${modpath}system.prop"
-    sed -i '/ro.product.vendor.model/s/.*/ro.product.vendor.model=GM1917/' "${modpath}system.prop"
-    sed -i '/ro.product.system_ext.model/s/.*/ro.product.system_ext.model=GM1917/' "${modpath}system.prop"
-    sleep 0.5
-    echo ""
-    echo "${G}Process finished!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option9 ;;
-    esac
-}
-
-Option10 () {
-    printf "\033c"
-    UNM10="Forsaken World 120 FPS"
-    echo "${G}Applying $UNM10... ${N}"
-    sleep 0.5
-    echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM10}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=ZS673KS-1B063IN/' "${modpath}system.prop"
+    sed -i -e "/unlocker=/s/=.*/=${UNM14}/" "${modpath}module.prop"
+    am force-stop com.epicgames.fortnite
+    sed -i 's/MobileFPSMode=Mode_20Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
+    sed -i 's/MobileFPSMode=Mode_30Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
+    sed -i 's/MobileFPSMode=Mode_45Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
+    sed -i '/ro.product.model/s/.*/ro.product.model=A2218/' "${modpath}system.prop"
     sleep 0.5
     echo ""
     echo "${B}[ 1 ] Return${N}"
     echo "${B}[ 0 ] Go out${N}"
     echo ""
-    echo "${C}Select your option ${N}: \c"
+    echo "${C}Select your option:${N} \c"
     read option
     case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option10 ;;
+      1) return_to_main_menu ;;
+      0) go_out ;;
+      *) 
+        echo ""
+        echo "${R}Invalid option, returning to menu.${N}"
+        sleep 2
+        return_to_main_menu
+        ;;
     esac
+  else
+    echo "${R}[!] You don't have Fortnite installed, returning to the menu...${N}"
+    sleep 5
+    return_to_main_menu
+  fi
 }
 
-Option11 () {
-    printf "\033c"
-    if [ "$(pm list package com.netease.mrzhna)" ]; then
-        UNM11="Life After 120 FPS"
-        echo "${G}Applying $UNM11... ${N}"
-        sleep 0.5
-        echo ""
-        sed -i -e "/unlocker=/s/=.*/=${UNM11}/" "${modpath}module.prop"
-        am force-stop com.netease.mrzhna 2>/dev/null
-        sed -i 's/"frame": 1,/"frame": 4,/g' "$LIFE"
-        sed -i 's/"frame": 2,/"frame": 4,/g' "$LIFE"
-        sed -i 's/"frame": 3,/"frame": 4,/g' "$LIFE"
-        sleep 0.5
-        echo ""
-        echo "${B}[ 1 ] Return${N}"
-        echo "${B}[ 0 ] Go out${N}"
-        echo ""
-        echo "${C}Select your option ${N}: \c"
-        read option
-        case $option in
-            1) Return ;;
-            0) GoOut ;;
-            *) Option11 ;;
-        esac
-    else
-        echo "${R}[!] You don't have Life After installed, returning to the menu...${N}"
-        sleep 5
-        unlockermenu
-    fi
+game_for_peace() {
+  printf "\033c"
+  UNM15="Game for Peace 90 FPS"
+  echo "${G}Applying $UNM15... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM15}/" "${modpath}module.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+
+free_fire() {
+  printf "\033c"
+  UNM16="Free Fire 90 FPS"
+  echo "${G}Applying $UNM16... ${N}"
+  sleep 0.5
+  echo ""
+  sed -i -e "/unlocker=/s/=.*/=${UNM16}/" "${modpath}module.prop"
+  sed -i '/ro.product.manufacturer/s/.*/ro.product.manufacturer=asus/' "${modpath}system.prop"
+  sed -i '/ro.product.model/s/.*/ro.product.model=ASUS_Z01QD/' "${modpath}system.prop"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option12 () {
-    printf "\033c"
-    if [ "$(pm list package com.bhvr.deadbydaylight)" ]; then
-        UNM12="Dead by Daylight 120 FPS"
-        echo "${G}Applying $UNM12... ${N}"
-        sleep 0.5
-        echo ""
-        sed -i -e "/unlocker=/s/=.*/=${UNM12}/" "${modpath}module.prop"
-        am force-stop com.bhvr.deadbydaylight 2>/dev/null
-        sed -i 's/FrameRateLimit=30/FrameRateLimit=120/g' "$DBD"
-        sed -i 's/FrameRateLimit=60/FrameRateLimit=120/g' "$DBD"
-        sleep 0.5
-        echo ""
-        echo "${G}Process finished!${N}"
-        echo ""
-        echo "${B}[ 1 ] Return${N}"
-        echo "${B}[ 0 ] Go out${N}"
-        echo ""
-        echo "${C}Select your option ${N}: \c"
-        read option
-        case $option in
-            1) Return ;;
-            0) GoOut ;;
-            *) Option12 ;;
-        esac
-    else
-        echo "${R}[!] You don't have Dead by Daylight installed, returning to the menu...${N}"
-        sleep 5
-        unlockermenu
-    fi
+return_to_main_menu() {
+  printf "\033c"
+  unlockermenu
+  printf "\033c"
 }
 
-Option13 () {
-    printf "\033c"
-    UNM13="LoL WR MAX settings"
-    echo "${G}Applying $UNM13... ${N}"
-    sleep 0.5
-    echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM13}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=SM-G9880/' "${modpath}system.prop"
-    sleep 0.5
-    echo ""
-    echo "${G}Process finished.${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option13  ;;
-    esac
+back_to_rtksmenu() {
+  printf "\033c"
+  rtksmenu
+  printf "\033c"
 }
 
-Option14 () {
-    printf "\033c"
-    if [ "$(pm list package com.epicgames.fortnite)" ]; then
-        UNM14="LoL WR MAX settings and Fortnite 60 FPS"
-        echo "${G}Applying $UNM14... ${N}"
-        sleep 0.5
-        echo ""
-        sed -i -e "/unlocker=/s/=.*/=${UNM14}/" "${modpath}module.prop"
-        am force-stop com.epicgames.fortnite
-        sed -i 's/MobileFPSMode=Mode_20Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
-        sed -i 's/MobileFPSMode=Mode_30Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
-        sed -i 's/MobileFPSMode=Mode_45Fps/MobileFPSMode=Mode_60Fps/g' "$FTN"
-        sed -i '/ro.product.model/s/.*/ro.product.model=A2218/' "${modpath}system.prop"
-        sleep 0.5
-        echo ""
-        echo "${B}[ 1 ] Return${N}"
-        echo "${B}[ 0 ] Go out${N}"
-        echo ""
-        echo "${C}Select your option ${N}: \c"
-        read option
-        case $option in
-            1) Return ;;
-            0) GoOut ;;
-            *) Option15 ;;
-        esac
-    else
-        echo "${R}[!] You don't have Fortnite installed, returning to the menu...${N}"
-        sleep 5
-        unlockermenu
-    fi
+go_out() {
+  printf "\033c"
+  echo ""
+  bye_messages=("Bye bye, see you next time." 
+                 "Goodbye! Have a great day!"
+                 "See ya later, alligator!"
+                 "Farewell! Come back soon!"
+                 "Adios amigo! Hasta la vista!"
+                 "Take care of yourself and see you soon!"
+                 "Until next time, keep smiling!")
+  random_index=$((RANDOM % ${#bye_messages[@]}))
+  echo "${B}${bye_messages[$random_index]}${N}"
+  echo ""
+  exit
 }
 
-Option15 () {
-    printf "\033c"
-    UNM15="Game for Peace 90 FPS"
-    echo "${G}Applying $UNM15... ${N}"
-    sleep 0.5
-    echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM15}/" "${modpath}module.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=GM1917/' "${modpath}system.prop"
-    sleep 0.5
-    echo ""
-    echo "${G}Process finished!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option14 ;;
-    esac
-}
-
-Option16 () {
-    printf "\033c"
-    UNM16="Free Fire 90 FPS"
-    echo "${G}Applying $UNM16... ${N}"
-    sleep 0.5
-    echo ""
-    sed -i -e "/unlocker=/s/=.*/=${UNM16}/" "${modpath}module.prop"
-    sed -i '/ro.product.manufacturer/s/.*/ro.product.manufacturer=asus/' "${modpath}system.prop"
-    sed -i '/ro.product.model/s/.*/ro.product.model=ASUS_Z01QD/' "${modpath}system.prop"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option5 ;;
-    esac
-}
-
-Return() {
-    printf "\033c"
-    unlockermenu
-    printf "\033c"
-}
-
-Back() {
-    printf "\033c"
-    rtksmenu
-    printf "\033c"
-}
-
-GoOut() {
-    printf "\033c"
-    echo ""
-    echo "${B}Bye bye, see you next time.${N}"
-    echo ""
-    exit
-}
 printf "\033c"
-Menu
+main_menu

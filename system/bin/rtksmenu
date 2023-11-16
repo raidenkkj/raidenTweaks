@@ -1,6 +1,24 @@
 #!/system/bin/sh
-# veez21 @ xda-developers
-# raidenkkj @ github
+# shellcheck disable=SC2034
+# shellcheck disable=SC3010
+# shellcheck disable=SC1091
+# shellcheck disable=SC3014
+# shellcheck disable=SC3037
+# shellcheck disable=SC3043
+# shellcheck disable=SC2145
+#
+# raidenTweaks™ is a simple kernel tweaker.
+# Copyright (C) 2021~2023  Raiden Ishigami <contact.raidenishi69@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
 
 # Magisk Module ID **
 ID="RTKS"
@@ -12,7 +30,7 @@ ls /data >/dev/null 2>&1 || { echo "raidenTweaks needs to run as root!"; echo "t
 # Magisk Mod Directory
 [ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules" || [ -d "/data/adb/modules" ] && MOUNTPATH="/data/adb/modules"
 MODDIR="$MOUNTPATH/$ID"
-[ ! -d "$MODDIR" ] && { echo "[!] Raiden Tweaks missing..."; exit 1; }
+[ ! -d "$MODDIR" ] && { echo "[!] raidenTweaks missing..."; exit 1; }
 
 # Set path to your busybox if applicable
 _bb=
@@ -48,45 +66,49 @@ set -x 2>$VERLOG
 rtks_prof=$(getprop persist.raidentweaks.mode)
 modpath="/data/adb/modules/RTKS/"
 
+# Define variables for each GApps package
+GSF="com.google.android.gsf"
+GSF_LOGIN="com.google.android.gsf.login"
+GMS="com.google.android.gms"
+IMS="com.google.android.ims"
+CARRIER_LOG="com.google.android.apps.carrier.log"
+VENDING="com.android.vending"
+PLAY_GAMES="com.google.android.play.games"
+SYNC_CONTACTS="com.google.android.syncadapters.contacts"
+
+if pm list packages | grep -q $GMS; then
+  if pm list packages -d | grep -q $GMS; then
+    GAPPS_STATUS="Disabled"
+  else
+    GAPPS_STATUS="Enabled"
+  fi
+else
+  GAPPS_STATUS="Not installed"
+fi
+
 case "${rtks_prof}" in
-    1)
-        rtks_prof=Automatic
-        ;;
-    2)
-        rtks_prof=Battery
-        ;;
-    3)
-        rtks_prof=Balanced
-        ;;
-    4)
-        rtks_prof=Performance
-        ;;
-    5)
-        rtks_prof=Gaming
-        ;;
-    6)
-        rtks_prof=Thermal
-        ;;
+  1) rtks_prof="Automatic" ;;
+  2) rtks_prof="Battery" ;;
+  3) rtks_prof="Balanced" ;;
+  4) rtks_prof="Performance" ;;
+  5) rtks_prof="Gaming" ;;
+  6) rtks_prof="Thermal" ;;
 esac
 
 if [[ "$(getprop init.svc.thermal-engine)" == "running" ]]; then
-    ts=On
-
+  ts=On
 elif [[ "$(getprop init.svc.thermal-engine)" == "stopped" ]]; then
-    ts=Off
-
+  ts=Off
 else
-    ts=Unknown
+  ts=Unknown
 fi
 
 if [[ "$(grep_prop ro.config.low_ram ${modpath}system.prop)" == "true" ]]; then
-    lr=Enabled
-
+  lr=Enabled
 elif [[ "$(grep_prop ro.config.low_ram ${modpath}system.prop)" == "false" ]]; then
-    lr=Disabled
-
+  lr=Disabled
 else
-    lr=Unknown
+  lr=Unknown
 fi
 
 # Device SDK
@@ -94,273 +116,320 @@ sdk=$(getprop ro.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vendor.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vndk.version)
 
-moddev="raidenkk"
-modname="$(grep_prop name "$modpath"module.prop)"
-modver="$(grep_prop version "$modpath"module.prop)"
-modcodename="$(grep_prop codename "$modpath"module.prop)"
+dev="raidenkk"
 
-magisk=$(magisk -c)
+magisk=$(magisk -V)
 [[ "$(settings get global low_power)" == "1" ]] && low_power_mode="Enabled" || low_power_mode="Disabled"
 
-Menu() {
-    echo -e '\n'
-    printf "\033c"
-    echo "${Y}|         Welcome to raidenTweaks menu         |${N}"
-    echo "${Y}|  Created and written by $moddev @ telegram  |${N}"
+main_menu() {
+  echo -e '\n'
+  printf "\033c"
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}         Welcome to raidenTweaks menu         ${C}║${N}"
+  echo "${C}║${B}  Created and written by $dev @ telegram  ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${Y}[*] Your device:${B} $(getprop ro.product.model) ${N}"
+  echo ""
+  echo "${Y}[*] Your current profile:${B} $rtks_prof ${N}"
+  echo ""
+  echo "${Y}[*] Version:${B} $(grep_prop version "$modpath"module.prop) - $(grep_prop codename "$modpath"module.prop) ${N}"
+  echo ""
+  echo "${Y}[*] Magisk version:${B} $magisk ${N}"
+  echo ""
+  echo "${Y}[*] Thermal state:${B} $ts ${N}"
+  echo ""
+  echo "${Y}[*] Low ram state:${B} $lr ${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}             [*] Profile selector             ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${V}[AUT] Automatic: Focused on applying profiles in specific conditions. ${N}"
+  echo ""
+  echo "${B}[BAT] Battery: Focused on saving as much battery as possible.${N}"
+  echo ""
+  echo "${G}[BAL] Balanced: Focused on leaving the system balanced.${N}"
+  echo ""
+  echo "${Y}[PER] Performance: Focused on maximizing your device's performance.${N}"
+  echo ""
+  echo "${R}[GAM] Gaming: Focused on improving your gaming/all performance.${N}"
+  echo ""
+  echo "${C}[THE] Thermal: Focused on making your device heat free, cold.${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}             [*] Miscellaneous                ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  if [[ "$ts" == "On" ]]; then
+    echo "${Y}[1] Disable thermal-engine ${C}(This will disable the thermal-engine)${N}"
     echo ""
-    echo "${Y}[*] Your device:${B} $(getprop ro.product.model) ${N}"
+  elif [[ "$ts" == "Off" ]]; then
+    echo "${Y}[1] Enable thermal-engine ${C}(This will enable the thermal-engine)${N}"
     echo ""
-    echo "${Y}[*] Your current profile:${B} $rtks_prof ${N}"
+  else
+    echo "${Y}[1*] Thermal-engine ${R}(Disabled - Incompatibility)${N}"
     echo ""
-    echo "${Y}[*] Version:${B} $modver - $modcodename ${N}"
+  fi
+  if [[ "$low_power_mode" == "Disabled" ]]; then
+    echo "${Y}[2] Enable low power mode ${C}(This will enable maximum battery saver)${N}"
     echo ""
-    echo "${Y}[*] Magisk version:${B} $magisk ${N}"
+  elif [[ "$low_power_mode" == "Enabled" ]]; then
+    echo "${Y}[2] Disable low power mode ${C}(This will disable maximum battery saver)${N}"
     echo ""
-    echo "${Y}[*] Thermal state:${B} $ts ${N}"
+  else
+    echo "${Y}[2*] Low power mode ${R}(Disabled - Incompatibility)${N}"
     echo ""
-    echo "${Y}[*] Low ram state:${B} $lr ${N}"
+  fi
+  if [[ "$lr" == "Enabled" ]]; then
+    echo "${Y}[3] Disable low ram ${C}(This will disable low ram mode)${N}"
     echo ""
-    echo "------------------------------------------------"
-    echo "${C}[*] Profile selector ${N}"
-    echo "------------------------------------------------"
+  elif [[ "$lr" == "Disabled" ]]; then
+    echo "${Y}[3] Enable low ram ${C}(This will enable low ram mode)${N}"
     echo ""
-    echo "${V}[1] Automatic: Focused on applying profiles in specific conditions. ${N}"
+  elif [[ "$lr" == "Unknown" ]]; then
+    echo "${Y}[3] Enable low ram ${C}(This will enable low ram mode)${N}"
     echo ""
-    echo "${B}[2] Battery: Focused on saving as much battery as possible.${N}"
+  fi
+  if [[ "$GAPPS_STATUS" == "Disabled" ]]; then
+    echo "${Y}[4] Enable GApps ${C}(This will enable some of your gapps packages)${N}"
     echo ""
-    echo "${G}[3] Balanced: Focused on leaving the system balanced.${N}"
+  elif [[ "$GAPPS_STATUS" == "Enabled" ]]; then
+    echo "${Y}[4] Disable GApps ${C}(This will disable some of your gapps packages)${N}"
     echo ""
-    echo "${Y}[4] Performance: Focused on maximizing your device's performance.${N}"
+  else
+    echo "${Y}[4*] GApps ${R}(Disabled - Incompatibility)${N}"
     echo ""
-    echo "${R}[5] Gaming: Focused on improving your gaming/all performance.${N}"
-    echo ""
-    echo "${C}[6] Thermal: Focused on making your device heat free, cold.${N}"
-    echo ""
-    echo "------------------------------------------------"
-    echo "${C}[*] Miscellaneous ${N}"
-    echo "------------------------------------------------"
-    echo ""
-    if [[ "$ts" == "On" ]]; then
-        echo "${Y}[7] Disable thermal-engine ${C}(This will disable the thermal-engine)${N}"
-        echo ""
-    elif [[ "$ts" == "Off" ]]; then
-        echo "${Y}[7] Enable thermal-engine ${C}(This will enable the thermal-engine)${N}"
-        echo ""
-    fi
-    echo "${Y}[8] Fstrim on some partitions ${C}This will fstrim specific partitions)${N}"
-    echo ""
-    echo "${Y}[9] Optimize application package ${C}(This will optimize the application packages)${N}"
-    echo ""
-    echo "${Y}[10] Clear RAM [ ${B}BASIC ${Y}] ${C}(This one will just drop all caches)${N}"
-    echo ""
-    echo "${Y}[11] Clear RAM [ ${B}HEAVY ${Y}] ${C}(This will drop cache and kill background apps)${N}"
-    echo ""
-    echo "${Y}[12] Clear RAM [ ${B}ADVANCED ${Y}] ${C}(This will drop cache and kill all apps)${N}"
-    echo ""
-    echo "${Y}[13] Clean up unnecessary files ${C}(I.e. system logs, debug logs, etc.)${N}"
-    echo ""
-    echo "${Y}[14] Clear battery status ${C}(This will clear old battery status)${N}"
-    echo ""
-    if [[ "$low_power_mode" == "Disabled" ]]; then
-        echo "${Y}[15] Enable low power mode ${C}(This will enable maximum battery saver)${N}"
-        echo ""
-    elif [[ "$low_power_mode" == "Enabled" ]]; then
-        echo "${Y}[15] Disable low power mode ${C}(This will disable maximum battery saver)${N}"
-        echo ""
-    fi
-    [[ "$(pm list package com.google.android.gms)" ]] && {
-    echo "${Y}[16] Enable Gapps ${C}(This will enable some of your gapps packages)${N}"
-    echo ""
-    echo "${Y}[17] Disable Gapps ${C}(This will disable some of your gapps packages)${N}"
-    echo ""
-    }
-    if [[ "$lr" == "Enabled" ]]; then
-        echo "${Y}[18] Disable low ram ${C}(This will disable low ram mode)${N}"
-        echo ""
-    elif [[ "$lr" == "Disabled" ]]; then
-        echo "${Y}[18] Enable low ram ${C}(This will enable low ram mode)${N}"
-        echo ""
-    elif [[ "$lr" == "Unknown" ]]; then
-        echo "${Y}[18] Enable low ram ${C}(This will enable low ram mode)${N}"
-        echo ""
-    fi
-    echo "${Y}[19] Low memory killer menu ${C}(A secondary menu with lmk profiles)${N}"
-    echo ""
-    echo "${Y}[20] Unlocker menu ${C}(A tertiary menu with possibility to change unlockers)${N}"
-    echo ""
-    echo "${Y}[21] Telegram group ${C}(To answer your questions / report bugs)${N}"
-    echo ""
-    echo "${B}[A] About the module ${C}(Informations)${N}"
-    echo ""
-    echo "${B}[S] Send logs to developer ${C}(This will prepare the logs to be sent to dev)${N}"
-    echo ""
-    echo "${R}[U] Uninstall Raiden Tweaks ${C}(Will remove the module / files from your system)${N}"
-    echo ""
-    echo "${R}[0] Go out.${N}"
-    echo -e '\n'
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Option1 ;;
-        2) Option2 ;;
-        3) Option3 ;;
-        4) Option4 ;;
-        5) Option5 ;;
-        6) Option6 ;;
-        7) Option7 ;;
-        8) Option8 ;;
-        9) Option9 ;;
-        10) Option10 ;;
-        11) Option11 ;;
-        12) Option12 ;;
-        13) Option13 ;;
-        14) Option14 ;;
-        15) Option15 ;;
-        16) Option16 ;;
-        17) Option17 ;;
-        18) Option18 ;;
-        19) Option19 ;;
-        20) Option20 ;;
-        21) Option21 ;;
-        A) About ;;
-        S) SendLogs ;;
-        U) Uninstall ;;
-        0) GoOut ;;
-        *) Menu ;;
-    esac
+  fi    
+  echo "${Y}[5] Fstrim on some partitions ${C}This will fstrim specific partitions)${N}"
+  echo ""
+  echo "${Y}[6] Optimize application package ${C}(This will optimize the application packages)${N}"
+  echo ""
+  echo "${Y}[7] Clear RAM [ ${B}BASIC ${Y}] ${C}(This one will just drop all  caches)${N}"
+  echo ""
+  echo "${Y}[8] Clear RAM [ ${B}HEAVY ${Y}] ${C}(This will drop cache and kill background apps)${N}"
+  echo ""
+  echo "${Y}[9] Clear RAM [ ${B}ADVANCED ${Y}] ${C}(This will drop cache and kill all apps)${N}"
+  echo ""
+  echo "${Y}[10] Clean up unnecessary files ${C}(I.e. system logs, debug logs, etc.)${N}"
+  echo ""
+  echo "${Y}[11] Clear battery status ${C}(This will clear old battery status)${N}"
+  echo ""
+  echo "${Y}[12] Low memory killer menu ${C}(A secondary menu with lmk profiles)${N}"
+  echo ""
+  echo "${Y}[13] Unlocker menu ${C}(A tertiary menu with possibility to change unlockers)${N}"
+  echo ""
+  echo "${Y}[T] Telegram group ${C}(To answer your questions / report bugs)${N}"
+  echo ""
+  echo "${B}[A] About the module ${C}(Informations)${N}"
+  echo ""
+  echo "${B}[S] Send logs to developer ${C}(This will prepare the logs to be sent to dev)${N}"
+  echo ""
+  echo "${R}[U] Uninstall raidenTweaks ${C}(Will remove the module / files from your system)${N}"
+  echo ""
+  echo "${R}[G] Go out.${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}               [*] Selection                  ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  option=$(echo $option | tr '[:lower:]' '[:upper:]')
+  case $option in
+    AUT) automatic_profile ;;
+    BAT) battery_profile ;;
+    BAL) battery_profile ;;
+    PER) performance_profile ;;
+    GAM) gaming_profile ;;
+    THE) thermal_profile ;;
+    1) enable_disable_thermal ;;
+    2) enable_disable_lowpower ;;
+    3) enable_disable_low_ram ;;
+    4) enable_disable_gapps ;;
+    5) run_fstrim ;;
+    6) optimize_packages ;;
+    7) clear_ram_basic ;;
+    8) clear_ram_heavy ;;
+    9) clear_ram_advanced ;;
+    10) clean_trash ;;
+    11) clear_battery_status ;;
+    12) open_lmkmenu ;;
+    13) open_unlockermenu ;;
+    T) open_telegram_group ;;
+    A) about ;;
+    S) send_logs ;;
+    U) uninstall_module ;;
+    G) go_out ;;
+    *)
+      echo "${R}[*] Unknown option, returning to menu."
+      sleep 2
+      main_menu 
+      ;;
+  esac
 }
 
-Option1 () {
-    printf "\033c"
-    echo "${G}Putting the profile in automatic mode...${N}"
-    sleep 0.5
-    echo ""
-    setprop persist.raidentweaks.mode "1" 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option1 ;;
-    esac
+automatic_profile() {
+  printf "\033c"
+  echo "${G}Putting the profile in automatic mode...${N}"
+  sleep 0.5
+  echo ""
+  setprop persist.raidentweaks.mode "1" 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option2 () {
-    printf "\033c"
-    echo "${G}Putting the profile in battery mode...${N}"
-    sleep 0.5
-    echo ""
-    setprop persist.raidentweaks.mode "2" 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option2  ;;
-    esac
+battery_profile() {
+  printf "\033c"
+  echo "${G}Putting the profile in battery mode...${N}"
+  sleep 0.5
+  echo ""
+  setprop persist.raidentweaks.mode "2" 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option3 () {
-    printf "\033c"
-    echo "${G}Putting the profile in balanced mode...${N}"
-    sleep 0.5
-    echo ""
-    setprop persist.raidentweaks.mode "3" 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option3 ;;
-    esac
+balanced_profile() {
+  printf "\033c"
+  echo "${G}Putting the profile in balanced mode...${N}"
+  sleep 0.5
+  echo ""
+  setprop persist.raidentweaks.mode "3" 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option4 () {
-    printf "\033c"
-    echo "${G}Putting the profile in performance mode...${N}"
-    sleep 0.5
-    echo ""
-    setprop persist.raidentweaks.mode "4" 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option4 ;;
-    esac
+performance_profile() {
+  printf "\033c"
+  echo "${G}Putting the profile in performance mode...${N}"
+  sleep 0.5
+  echo ""
+  setprop persist.raidentweaks.mode "4" 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option5 () {
-    printf "\033c"
-    echo "${G}Putting the profile in gaming mode...${N}"
-    sleep 0.5
-    echo ""
-    setprop persist.raidentweaks.mode "5" 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) "Unknown command, sorry." ; echo ; Option5 ;;
-    esac
+gaming_profile() {
+  printf "\033c"
+  echo "${G}Putting the profile in gaming mode...${N}"
+  sleep 0.5
+  echo ""
+  setprop persist.raidentweaks.mode "5" 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option6 () {
-    printf "\033c"
-    echo "${G}Putting the profile in thermal mode...${N}"
-    sleep 0.5
-    echo ""
-    setprop persist.raidentweaks.mode "6" 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${G}Process finished!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option6 ;;
-    esac
+thermal_profile() {
+  printf "\033c"
+  echo "${G}Putting the profile in thermal mode...${N}"
+  sleep 0.5
+  echo ""
+  setprop persist.raidentweaks.mode "6" 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option7 () {
-    printf "\033c"
-    if [[ "$ts" == "On" ]]; then
+enable_disable_thermal() {
+  printf "\033c"
+  if [[ "$ts" == "On" ]]; then
     echo "${G}Disabling thermal...${N}"
     echo ""
     echo "${R}Warning: Your device may get hot.${N}"
@@ -370,459 +439,515 @@ Option7 () {
     echo ""
     echo "${G}Process finished.${N}"
     echo ""
-    elif [[ "$ts" == "Off" ]]; then
+  elif [[ "$ts" == "Off" ]]; then
     echo "${G}Enabling thermal engine...${N}"
     sleep 0.5
     start thermal-engine
     echo ""
     echo "${G}Process finished.${N}"
     echo ""
-    fi
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option7 ;;
-    esac
+  else
+    echo "${R}Thermal status not detected, returning to menu...${N}"
+    sleep 3
+    rtksmenu
+  fi
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option8 () {
-    printf "\033c"
-    echo "${G}Fstrim initializing, please wait.${N}"
-    rfstrim 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option8 ;;
-    esac
-}
-
-Option9 () {
-    printf "\033c"
-    echo "${G}Optimizing application packages, please wait...${N}"
+enable_disable_lowpower() {
+  printf "\033c"
+  if [[ "$low_power_mode" == "Disabled" ]]; then
+    echo "${G}Enabling low power mode...${N}"
     sleep 0.5
     echo ""
-    echo "${G}[!] This process takes time under certain circumstances.${N}"
-    echo ""
-    pm compile -a -f --compile-layouts
-    cmd package bg-dexopt-job
+    settings put global low_power 1 2>/dev/null
+    settings put global low_power_sticky 1 2>/dev/null
+    settings put global app_standby_enabled 1 2>/dev/null
+    settings put global forced_app_standby_enabled 1 2>/dev/null
+    settings put global app_auto_restriction_enabled true 2>/dev/null
+    settings put global forced_app_standby_for_small_battery_enabled 1 2>/dev/null
     echo ""
     echo "${G}Process finished.${N}"
     echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option9 ;;
-    esac
-}
-
-Option10 () {
-    printf "\033c"
-    echo "${G}Dropping all caches, wait, it's very fast.${N}"
+  elif [[ "$low_power_mode" == "Enabled" ]]; then
+    echo "${G}Disabling low power mode...${N}"
     sleep 0.5
-    sync
-    echo "3" >"/proc/sys/vm/drop_caches"
-    echo ""
-    echo "${G}Process finished!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option10 ;;
-    esac
-}
-
-Option11 () {
-    printf "\033c"
-    echo "${G}Dropping caches and killing background processes, wait patiently...${N}"
-    sleep 0.5
-    sync
-    echo "3" >"/proc/sys/vm/drop_caches"
-    am kill-all
-    echo ""
-    echo "${G}Process finished!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option11 ;;
-    esac
-}
-
-Option12 () {
-    printf "\033c"
-    echo "${G}Dropping all caches and killing all processes, wait there.${N}"
-    sleep 0.5
-    sync
-    echo "3" >"/proc/sys/vm/drop_caches"
-    am kill-all
-    sleep 2
-	while IFS= read -r pkg_nm; do
-      [[ "$pkg_nm" != "com.termux" ]] && [[ "$pkg_nm" != "jackpal.androidterm" ]] && [[ "$pkg_nm" != "yarolegovich.materialterminal" ]] && [[ "$pkg_nm" != "com.google.android.inputmethod.latin" ]] && [[ "$pkg_nm" != "com.termoneplus" ]] && [[ "$pkg_nm" != "com.pittvandewitt.viperfx" ]] && [[ "$pkg_nm" != "com.topjohnwu.magisk" ]] && [[ "$pkg_nm" != "ridmik.keyboard" ]] && [[ "$pkg_nm" != "com.maxmpz.equalizer" ]] && [[ "$pkg_nm" != "com.miui.screenrecorder" ]] && am force-stop "$pkg_nm"
-#  done <<<"$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
-    echo ""
-    echo "${G}Process finished!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option12 ;;
-    esac
-}
-
-Option13 () {
-    printf "\033c"
-    echo "${G}Cleaning up useless residual files...${N}"
-    sleep 1
-    cleaner 2>/dev/null
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option13 ;;
-    esac
-}
-
-Option14 () {
-    printf "\033c"
-    echo "${G}Clearing battery status, please wait.${N}"
-    sleep 0.5
-    rm -f /data/system/batterystats.bin
-    echo ""
-    echo "${G}Process finished!${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option14 ;;
-    esac
-}
-
-Option15 () {
-    printf "\033c"
-    if [[ "$low_power_mode" == "Disabled" ]]; then
-        echo "${G}Enabling low power mode...${N}"
-        sleep 0.5
-        echo ""
-        settings put global low_power 1 2>/dev/null
-        settings put global low_power_sticky 1 2>/dev/null
-        settings put global app_standby_enabled 1 2>/dev/null
-        settings put global forced_app_standby_enabled 1 2>/dev/null
-        settings put global app_auto_restriction_enabled true 2>/dev/null
-        settings put global forced_app_standby_for_small_battery_enabled 1 2>/dev/null
+    settings put global low_power 0 2>/dev/null
+    settings reset global low_power 2>/dev/null
+    settings put global low_power_sticky 0 2>/dev/null
+    settings reset global low_power_sticky 2>/dev/null
+    settings put global app_standby_enabled 1 2>/dev/null
+    settings reset global app_standby_enabled 2>/dev/null
+    settings put global forced_app_standby_enabled 0 2>/dev/null
+    settings reset global forced_app_standby_enabled 2>/dev/null
+    settings put global app_auto_restriction_enabled false 2>/dev/null
+    settings reset global app_auto_restriction_enabled 2>/dev/null
+    settings put global forced_app_standby_for_small_battery_enabled 0 2>/dev/null
     echo ""
     echo "${G}Process finished.${N}"
     echo ""
-    elif [[ "$low_power_mode" == "Enabled" ]]; then
-        echo "${G}Disabling low power mode...${N}"
-        sleep 0.5
-        settings put global low_power 0 2>/dev/null
-        settings reset global low_power 2>/dev/null
-        settings put global low_power_sticky 0 2>/dev/null
-        settings reset global low_power_sticky 2>/dev/null
-        settings put global app_standby_enabled 1 2>/dev/null
-        settings reset global app_standby_enabled 2>/dev/null
-        settings put global forced_app_standby_enabled 0 2>/dev/null
-        settings reset global forced_app_standby_enabled 2>/dev/null
-        settings put global app_auto_restriction_enabled false 2>/dev/null
-        settings reset global app_auto_restriction_enabled 2>/dev/null
-        settings put global forced_app_standby_for_small_battery_enabled 0 2>/dev/null
-    echo ""
-    echo "${G}Process finished.${N}"
-    echo ""
-    fi
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option15 ;;
-    esac
+  fi
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option16 () {
-    printf "\033c"
-    echo "${G}Enabling gapps, please wait...${N}"
+enable_disable_low_ram() {
+  printf "\033c"
+  if [[ "$lr" == "Enabled" ]]; then
+    echo "${G}Disabling low ram.${N}"
     sleep 0.5
-    pm enable com.google.android.gsf 2>/dev/null
-    pm enable com.google.android.gsf.login 2>/dev/null
-    pm enable com.google.android.gms 2>/dev/null
-    pm enable com.google.android.ims 2>/dev/null 
-    pm enable com.google.android.apps.carrier.log 2>/dev/null
-    pm enable com.android.vending 2>/dev/null
-    pm enable com.google.android.play.games 2>/dev/null
-    pm enable com.google.android.syncadapters.contacts 2>/dev/null
+    sed -i '/ro.config.low_ram=/s/.*/ro.config.low_ram=false/' "${modpath}system.prop"
     echo ""
     echo "${G}Process finished.${N}"
     echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
+    echo "${G}Reboot for the changes to take effect.${N}"
     echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option16 ;;
-    esac
+  elif [[ "$lr" == "Disabled" ]]; then
+    echo "${G}Enabling low ram...${N}"
+    echo ""
+    echo "${G}Features affected by the low-ram property:${N}"
+    echo "${C}- Flat recent / multitasking UI, multi-users disabled${N}"
+    sleep 0.8
+    echo "${C}- High-end graphics disabled${N}"
+    sleep 0.8
+    echo "${C}- Less recent apps cache${N}"
+    sleep 0.8
+    echo "${C}- Multi-windows disabled${N}"
+    sleep 0.8
+    echo "${C}- Minor notification icons changes${N}"
+    sleep 0.8
+    echo "${C}- Less logger buffer sizes (devs)${N}"
+    sleep 0.8
+    echo "${C}- No apps notifications access / zen access / VR listeners / picture in picture (PIP) accesses.​${N}"
+    sleep 1.5
+    sed -i '/ro.config.low_ram=/s/.*/ro.config.low_ram=true/' "${modpath}system.prop"
+    echo ""
+    echo "${G}Process finished.${N}"
+    echo ""
+    echo "${G}Reboot for the changes to take effect.${N}"
+    echo ""
+  elif [[ "$lr" == "Unknown" ]]; then
+    echo "${G}Enabling low ram...${N}"
+    echo ""
+    echo "${G}Features affected by the low-ram property:${N}"
+    echo "${C}- Flat recent / multitasking UI, multi-users disabled${N}"
+    sleep 0.8
+    echo "${C}- High-end graphics disabled${N}"
+    sleep 0.8
+    echo "${C}- Less recent apps cache${N}"
+    sleep 0.8
+    echo "${C}- Multi-windows disabled${N}"
+    sleep 0.8
+    echo "${C}- Minor notification icons changes${N}"
+    sleep 0.8
+    echo "${C}- Less logger buffer sizes (devs)${N}"
+    sleep 0.8
+    echo "${C}- No apps notifications access / zen access / VR listeners / picture in picture (PIP) accesses.​${N}"
+    sleep 1.5
+    sed -i '/ro.config.low_ram=/s/.*/ro.config.low_ram=true/' "${modpath}system.prop"
+    echo ""
+    echo "${G}Process finished.${N}"
+    echo ""
+    echo "${G}Reboot for the changes to take effect.${N}"
+    echo ""
+  fi
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option17 () {
-    printf "\033c"
+enable_disable_gapps() {
+  printf "\033c"
+  if [[ "$GAPPS_STATUS" == "Enabled" ]]; then
     echo "${G}Disabling gapps, please wait...${N}"
     sleep 0.5
-    pm disable com.google.android.gsf 2>/dev/null
-    pm disable com.google.android.gsf.login 2>/dev/null
-    pm disable com.google.android.gms 2>/dev/null
-    pm disable com.google.android.ims 2>/dev/null
-    pm disable com.google.android.apps.carrier.log 2>/dev/null
-    pm disable com.android.vending 2>/dev/null
-    pm disable com.google.android.play.games 2>/dev/null
-    pm disable com.google.android.syncadapters.contacts 2>/dev/null
-    echo ""
-    echo "${G}Process finished.${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option17 ;;
-    esac
-}
-
-Option18 () {
-    printf "\033c"
-    if [[ "$lr" == "Enabled" ]]; then
-        echo "${G}Disabling low ram.${N}"
-        sleep 0.5
-        sed -i '/ro.config.low_ram=/s/.*/ro.config.low_ram=false/' "${modpath}system.prop"
-        echo ""
-        echo "${G}Process finished.${N}"
-        echo ""
-        echo "${G}Reboot for the changes to take effect.${N}"
-        echo ""
-    elif [[ "$lr" == "Disabled" ]]; then
-        echo "${G}Enabling low ram...${N}"
-        echo ""
-        echo "${G}Features affected by the low-ram property:${N}"
-        echo "${C}- Flat recent / multitasking UI, multi-users disabled${N}"
-        sleep 0.8
-        echo "${C}- High-end graphics disabled${N}"
-        sleep 0.8
-        echo "${C}- Less recent apps cache${N}"
-        sleep 0.8
-        echo "${C}- Multi-windows disabled${N}"
-        sleep 0.8
-        echo "${C}- Minor notification icons changes${N}"
-        sleep 0.8
-        echo "${C}- Less logger buffer sizes (devs)${N}"
-        sleep 0.8
-        echo "${C}- No apps notifications access / zen access / VR listeners / picture in picture (PIP) accesses.​${N}"
-        sleep 1.5
-        sed -i '/ro.config.low_ram=/s/.*/ro.config.low_ram=true/' "${modpath}system.prop"
-        echo ""
-        echo "${G}Process finished.${N}"
-        echo ""
-        echo "${G}Reboot for the changes to take effect.${N}"
-        echo ""
-    elif [[ "$lr" == "Unknown" ]]; then
-        echo "${G}Enabling low ram...${N}"
-        echo ""
-        echo "${G}Features affected by the low-ram property:${N}"
-        echo "${C}- Flat recent / multitasking UI, multi-users disabled${N}"
-        sleep 0.8
-        echo "${C}- High-end graphics disabled${N}"
-        sleep 0.8
-        echo "${C}- Less recent apps cache${N}"
-        sleep 0.8
-        echo "${C}- Multi-windows disabled${N}"
-        sleep 0.8
-        echo "${C}- Minor notification icons changes${N}"
-        sleep 0.8
-        echo "${C}- Less logger buffer sizes (devs)${N}"
-        sleep 0.8
-        echo "${C}- No apps notifications access / zen access / VR listeners / picture in picture (PIP) accesses.​${N}"
-        sleep 1.5
-        sed -i '/ro.config.low_ram=/s/.*/ro.config.low_ram=true/' "${modpath}system.prop"
-        echo ""
-        echo "${G}Process finished.${N}"
-        echo ""
-        echo "${G}Reboot for the changes to take effect.${N}"
-        echo ""
-    fi
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option18 ;;
-    esac
-}
-
-Option19 () {
-    printf "\033c"
-    echo "${G}Opening low memory killer menu...${N}"
-    sleep 2
-    lmkmenu
-}
-
-Option20 () {
-    printf "\033c"
-    echo "${G}Opening unlocker menu...${N}"
-    sleep 2
-    unlockermenu
-}
-
-Option21 () {
-    printf "\033c"
-    echo "${G}Access telegram group (support)${N}"
-    sleep 2
-    am start -a android.intent.action.VIEW -d https://t.me/raidenprjktsgroup
-    rtksmenu
-}
-
-About () {
-    printf "\033c"
-    echo "${G}Module informations:${N}"
-    echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste.${N}"
-    echo "${C}Enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) About ;;
-    esac
-}
-
-SendLogs () {
-    printf "\033c"
-    upload_logs
-    echo ""
-    echo "${N}${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo "${B}[ T ] Open telegram group${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        0) GoOut ;;
-        T) Option20 ;;
-        *) Menu ;;
-    esac
-}
-
-Uninstall () {
-    printf "\033c"
-    echo "${G}Okay, i understand... uninstalling the Raiden Tweaks module...${N}"
+    pm disable $GSF 2>/dev/null
+    pm disable $GSF_LOGIN 2>/dev/null
+    pm disable $GMS 2>/dev/null
+    pm disable $IMS 2>/dev/null
+    pm disable $CARRIER_LOG 2>/dev/null
+    pm disable $VENDING 2>/dev/null
+    pm disable $PLAY_GAMES 2>/dev/null
+    pm disable $SYNC_CONTACTS 2>/dev/null
+  elif [[ "$GAPPS_STATUS" == "Disabled" ]]; then
+    echo "${G}Enabling gapps, please wait...${N}"
     sleep 0.5
-    echo ""
-    rm -rf /data/adb/modules/RTKS
-    rm -rf /storage/emulated/0/.RTKS
-    rm -rf /data/local/RaidenTweaks.apk
-    rm -rf /data/local/RDToast.apk
-
-    if [ "$(pm list package org.rtks.raiden)" ]; then
-        pm uninstall -k --user 0 org.rtks.raiden
-    fi
-
-    if [ "$(pm list package bellavita.toast)" ]; then
-        pm uninstall -k --user 0 bellavita.toast
-    fi
-
-    echo "${G}Module uninstalled, now we will restart your device.${N}"
-    sleep 1
-    echo "${G}In a few seconds the device will restart.${N}"
-    echo ""
-    sleep 1.7
-    # This progress bar is not a real process
-    echo "${G} - Progress bar -"
-    echo -ne "${B}[${W}==>             ${B}]   ${BGBL}[20%]\r"
-    sleep 1.5
-    echo -ne "${N}${B}[${W}=======>        ${B}]   ${BGBL}[40%]\r"
-    sleep 1.6
-    echo -ne "${N}${B}[${W}===========>    ${B}]   ${BGBL}[60%]\r"
-    sleep 1.5
-    echo -ne "${N}${B}[${W}==============> ${B}]   ${BGBL}[80%]\r"
-    sleep 1.7
-    echo -ne "${N}${B}[${W}===============>${B}]  ${BGBL}[100%]\r"
-    echo -ne '\n'
-    reboot system
+    pm enable $GSF 2>/dev/null
+    pm enable $GSF_LOGIN 2>/dev/null
+    pm enable $GMS 2>/dev/null
+    pm enable $IMS 2>/dev/null 
+    pm enable $CARRIER_LOG 2>/dev/null
+    pm enable $VENDING 2>/dev/null
+    pm enable $PLAY_GAMES 2>/dev/null
+    pm enable $SYNC_CONTACTS 2>/dev/null
+  else
+    echo "${R}[!] Due to incompatibility you cannot use this option, returning to the menu..."
+    sleep 2
+    return_rtksmenu
+  fi
+  echo ""
+  echo "${G}Process finished.${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Return() {
-    printf "\033c"
-    rtksmenu
-    printf "\033c"
+run_fstrim() {
+  printf "\033c"
+  echo "${G}Fstrim initializing, please wait.${N}"
+  rfstrim 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-GoOut() {
-    printf "\033c"
-    echo ""
-    echo "${B}Bye bye, see you next time.${N}"
-    echo ""
-    exit
+optimize_packages() {
+  printf "\033c"
+  echo "${G}Optimizing application packages, please wait...${N}"
+  sleep 0.5
+  echo ""
+  echo "${G}[!] This process takes time under certain circumstances.${N}"
+  echo ""
+  pm compile -a -f --compile-layouts
+  cmd package bg-dexopt-job
+  echo ""
+  echo "${G}Process finished.${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+clear_ram_basic() {
+  printf "\033c"
+  echo "${G}Dropping all caches, wait, it's very fast.${N}"
+  sleep 0.5
+  sync
+  echo "3" > "/proc/sys/vm/drop_caches"
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+clear_ram_advanced() {
+  printf "\033c"
+  echo "${G}Dropping caches and killing background processes, wait patiently...${N}"
+  sleep 0.5
+  sync
+  echo "3" > "/proc/sys/vm/drop_caches"
+  am kill-all
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+clear_ram_heavy() {
+  printf "\033c"
+  echo "${G}Dropping all caches and killing all processes, wait there.${N}"
+  sleep 0.5
+  sync
+  echo "3" > "/proc/sys/vm/drop_caches"
+  am kill-all
+  sleep 2
+  echo ""
+  clear_ram_advanced
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+clean_trash() {
+  printf "\033c"
+  echo "${G}Cleaning up useless residual files...${N}"
+  sleep 1
+  cleaner 2>/dev/null
+  [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+clear_battery_status() {
+  printf "\033c"
+  echo "${G}Clearing battery status, please wait.${N}"
+  sleep 0.5
+  rm -f /data/system/batterystats.bin
+  echo ""
+  echo "${G}Process finished!${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+open_lmkmenu() {
+  printf "\033c"
+  echo "${G}Opening low memory killer menu...${N}"
+  sleep 2
+  lmkmenu
+}
+
+open_unlockermenu() {
+  printf "\033c"
+  echo "${G}Opening unlocker menu...${N}"
+  sleep 2
+  unlockermenu
+}
+
+open_telegram_group() {
+  printf "\033c"
+  echo "${G}Access telegram group (support)${N}"
+  sleep 2
+  am start -a android.intent.action.VIEW -d https://t.me/raidenprjktsgroup
+  rtksmenu
+}
+
+about() {
+  printf "\033c"
+  echo "${G}Module informations:${N}"
+  echo "${C}This module is focused on your experience, that's right, with this module you can choose several profiles according to your taste.${N}"
+  echo "${C}Enjoy your time with what you love to do, good luck!! Please give me feedback on my telegram :)${N}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) Return ;;
+    0) GoOut ;;
+    *) About ;;
+  esac
+}
+
+send_logs() {
+  printf "\033c"
+  upload_logs
+  echo ""
+  echo "${N}${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo "${B}[ T ] Open telegram group${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) Return ;;
+    0) GoOut ;;
+    *) About ;;
+  esac
+}
+
+uninstall_module() {
+  printf "\033c"
+  echo "${G}Okay, i understand... uninstalling the raidenTweaks module...${N}"
+  sleep 0.5
+  echo ""
+  rm -rf /data/adb/modules/RTKS
+  rm -rf /storage/emulated/0/.RTKS
+  rm -rf /data/local/RaidenTweaks.apk
+  rm -rf /data/local/RDToast.apk
+
+  if [ "$(pm list package org.rtks.raiden)" ]; then
+    uninstall_app org.rtks.raiden
+  fi
+
+  if [ "$(pm list package bellavita.toast)" ]; then
+    uninstall_app bellavita.toast
+  fi
+
+  echo "${G}Module uninstalled, now we will restart your device.${N}"
+  sleep 1
+  echo "${G}In a few seconds the device will restart.${N}"
+  echo ""
+  sleep 1.7
+  # This progress bar is not a real process
+  echo "${G} - Progress bar -"
+  echo -ne "${B}[${W}==>             ${B}]   ${BGBL}[20%]\r"
+  sleep 1.5
+  echo -ne "${N}${B}[${W}=======>        ${B}]   ${BGBL}[40%]\r"
+  sleep 1.6
+  echo -ne "${N}${B}[${W}===========>    ${B}]   ${BGBL}[60%]\r"
+  sleep 1.5
+  echo -ne "${N}${B}[${W}==============> ${B}]   ${BGBL}[80%]\r"
+  sleep 1.7
+  echo -ne "${N}${B}[${W}===============>${B}]  ${BGBL}[100%]\r"
+  echo -ne '\n'
+  reboot system
+}
+
+return_to_main_menu() {
+  printf "\033c"
+  rtksmenu
+  printf "\033c"
+}
+
+go_out() {
+  printf "\033c"
+  echo ""
+  bye_messages=("Bye bye, see you next time." 
+                 "Goodbye! Have a great day!"
+                 "See ya later, alligator!"
+                 "Farewell! Come back soon!"
+                 "Adios amigo! Hasta la vista!"
+                 "Take care of yourself and see you soon!"
+                 "Until next time, keep smiling!")
+  random_index=$((RANDOM % ${#bye_messages[@]}))
+  echo "${B}${bye_messages[$random_index]}${N}"
+  echo ""
+  exit
 }
 
 # Test if input is empty
 if [ $# -eq 0 ]; then
-  Menu
+  main_menu
 fi
 
 # Parse command line arguments
@@ -831,59 +956,17 @@ while [[ $# -gt 0 ]]; do
   case $key in
     -p|--profile)
       if [[ "$2" == "1" ]]; then
-        rtks_profile=automatic
-        echo ""
-        echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}"
-        setprop persist.raidentweaks.mode "1" 2>/dev/null
-        sleep 1
-        echo ""
-        echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
-        echo ""
+        apply_profile "1" "automatic"
       elif [[ "$2" == "2" ]]; then
-        rtks_profile=balanced
-        echo ""
-        echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}"
-        setprop persist.raidentweaks.mode "2" 2>/dev/null
-        sleep 1
-        echo ""
-        echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
-        echo ""
+        apply_profile "2" "balanced"
       elif [[ "$2" == "3" ]]; then
-        rtks_profile=battery
-        echo ""
-        echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}"
-        setprop persist.raidentweaks.mode "3" 2>/dev/null
-        sleep 1
-        echo ""
-        echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
-        echo ""
+        apply_profile "3" "battery"
       elif [[ "$2" == "4" ]]; then
-        rtks_profile=performance
-        echo ""
-        echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}"
-        setprop persist.raidentweaks.mode "4" 2>/dev/null
-        sleep 1
-        echo ""
-        echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
-        echo ""
+        apply_profile "4" "performance"
       elif [[ "$2" == "5" ]]; then
-        rtks_profile=gaming
-        echo ""
-        echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}"
-        setprop persist.raidentweaks.mode "5" 2>/dev/null
-        sleep 1
-        echo ""
-        echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
-        echo ""
+        apply_profile "5" "gaming"
       elif [[ "$2" == "6" ]]; then
-        rtks_profile=thermal
-        echo ""
-        echo "${Y}[*] Applying ${B}$rtks_profile ${N}${Y}profile...${N}"
-        setprop persist.raidentweaks.mode "6" 2>/dev/null
-        sleep 1
-        echo ""
-        echo "${G}[*] Done, ${B}$rtks_profile ${N}${Y}profile applied.${N}"
-        echo ""
+        apply_profile "6" "thermal"
       else
         echo ""
         echo "${R}[!] Error: invalid option or null output.${N}"
@@ -893,7 +976,7 @@ while [[ $# -gt 0 ]]; do
       exit
       ;;
     -u|--update-all)
-      updateall
+      update_all
       shift
       exit
       ;;
@@ -925,9 +1008,8 @@ while [[ $# -gt 0 ]]; do
         echo "3" >"/proc/sys/vm/drop_caches"
         am kill-all
         sleep 2
-        while IFS= read -r pkg_nm; do
-          [[ "$pkg_nm" != "com.termux" ]] && [[ "$pkg_nm" != "jackpal.androidterm" ]] && [[ "$pkg_nm" != "yarolegovich.materialterminal" ]] && [[ "$pkg_nm" != "com.google.android.inputmethod.latin" ]] && [[ "$pkg_nm" != "com.termoneplus" ]] && [[ "$pkg_nm" != "com.pittvandewitt.viperfx" ]] && [[ "$pkg_nm" != "com.topjohnwu.magisk" ]] && [[ "$pkg_nm" != "ridmik.keyboard" ]] && [[ "$pkg_nm" != "com.maxmpz.equalizer" ]] && [[ "$pkg_nm" != "com.miui.screenrecorder" ]] && am force-stop "$pkg_nm"
-        done <<<"$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
+        echo ""
+        clear_ram_advanced
         echo ""
         echo "${G}[*] Done.${N}"
         echo ""
@@ -969,8 +1051,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     -d|--downsample)
       if [[ "$2" == "apply" ]]; then
+        # Variable for current resolution
         screen_res="$(wm size | cut -d' ' -f3)"
         
+        # Message to inform the user about the start of the process
         echo ""
         echo "${G}[*] Starting screen downsampling...${N}"
         sleep 1.5
@@ -978,14 +1062,18 @@ while [[ $# -gt 0 ]]; do
         echo "${G}[*] Your current resolution is: ${B}$screen_res${N}"
         sleep 0.5
         
+        # Separate width and height into variables
         width="$(echo $screen_res | cut -dx -f1)"
         height="$(echo $screen_res | cut -dx -f2)"
         
+        # Divide the individual values ​​by two
         new_width=$(( $width / 2 ))
         new_height=$(( $height / 2 ))
       
+        # New resolution 
         new_screen_res="${new_width}x${new_height}"
       
+        # Backup original screen resolution settings
         backup_file="/data/local/screen_res.txt"
         if [ ! -f "$backup_file" ]; then
           echo ""
@@ -996,20 +1084,23 @@ while [[ $# -gt 0 ]]; do
           echo ""
         fi
         
+        # Apply new screen resolution
         if [[ ! "$line" == "1" ]]; then
           echo ""
         fi
         echo "${G}[*] Applying new resolution...${N}"
         sleep 1.5
-        wm size "$new_screen_res"
+        # wm size "$new_screen_res"
         echo "${G}[*] New screen resolution applied: ${B}$new_screen_res${N}"
         echo ""
         echo "${G}[*] The downsample process has been completed.${N}"
         echo ""
       elif [[ "$2" == "restore" ]]; then
+        # Inform the user about starting the restore
         echo ""
         echo "${G}[*] Starting the upsampling process...${N}"
         sleep 1.5
+        # Restore original screen resolution
         backup_file="/data/local/screen_res.txt"
         original_res="$(cat "$backup_file")"
         screen_res="$(wm size | cut -d' ' -f3)"

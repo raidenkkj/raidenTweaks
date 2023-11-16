@@ -6,8 +6,18 @@
 #
 ##########################################################################################
 
+# Log variables
+RLOG=/sdcard/.RTKS/raidenTweaks.log
+oldRLOG=/sdcard/.RTKS/raidenTweaks-old.log
+RTKSLOG=/sdcard/.RTKS/raidenTweaks-menu-verbose.log
+oldRTKSLOG=/sdcard/.RTKS/raidenTweaks-menu-verbose-old.log
+LMKLOG=/sdcard/.RTKS/raidenTweaks-lmkmenu-verbose.log
+oldLMKLOG=/sdcard/.RTKS/raidenTweaks-lmkmenu-verbose-old.log
+UNLOG=/sdcard/.RTKS/raidenTweaks-unlocker-menu-verbose.log
+oldUNLOG=/sdcard/.RTKS/raidenTweaks-unlocker-menu-verbose-old.log
+
 # Versions
-MODUTILVER=v2.6.1
+MODUTILVER=v2.6.1-r2
 MODUTILVCODE=261
 
 # Check A/B slot
@@ -139,15 +149,15 @@ if [[ "$ABILONG" = "arm64-v8a" ]]; then ARCH=arm64; ARCH32=arm; IS64BIT=true; fi
 if [[ "$ABILONG" = "x86_64" ]]; then ARCH=x64; ARCH32=x86; IS64BIT=true; fi;
   
 # Version Number
-VER=$(grep_prop version "$MODDIR"/module.prop)
+VER=$(grep "^version=" "$MODDIR"/module.prop | cut -d'=' -f2)
 # Version Code
-REL=$(grep_prop versionCode "$MODDIR"/module.prop)
+REL=$(grep "^versionCode=" "$MODDIR"/module.prop | cut -d'=' -f2)
 # Author
-AUTHOR=$(grep_prop author "$MODDIR"/module.prop)
+AUTHOR=$(grep "^author=" "$MODDIR"/module.prop | cut -d'=' -f2)
 # Mod Name/Title
-MODT=$(grep_prop name "$MODDIR"/module.prop)
+MODT=$(grep "^name=" "$MODDIR"/module.prop | cut -d'=' -f2)
 # Mod Codename
-CODNM=$(grep_prop codename "$MODDIR"/module.prop)
+CODNM=$(grep "^codename=" "$MODDIR"/module.prop | cut -d'=' -f2)
 
 # Colors
 G='\e[01;32m'		# GREEN TEXT
@@ -198,7 +208,7 @@ set_file_prop() {
 # https://github.com/fearside/ProgressBar
 # ProgressBar <progress> <total>
 ProgressBar() {
-# Determine Screen Size
+  # Determine Screen Size
   if [[ "$COLUMNS" -le "57" ]]; then
     local var1=2
 	local var2=20
@@ -221,19 +231,18 @@ printf "\rProgress : ${BGBL}|${N}${_done// /${BGBL}$loadBar${N}}${_left// / }${B
 #https://github.com/fearside/SimpleProgressSpinner
 # Spinner <message>
 Spinner() {
+  # Choose which character to show.
+  case ${_indicator} in
+    "|") _indicator="/";;
+    "/") _indicator="-";;
+    "-") _indicator="\\";;
+    "\\") _indicator="|";;
+    # Initiate spinner character
+    *) _indicator="\\";;
+  esac
 
-# Choose which character to show.
-case ${_indicator} in
-  "|") _indicator="/";;
-  "/") _indicator="-";;
-  "-") _indicator="\\";;
-  "\\") _indicator="|";;
-  # Initiate spinner character
-  *) _indicator="\\";;
-esac
-
-# Print simple progress spinner
-printf "\r${@} [${_indicator}]"
+  # Print simple progress spinner
+  printf "\r${@} [${_indicator}]"
 }
 
 # cmd & spinner <message>
@@ -261,7 +270,6 @@ test_connection() {
   ) && echo "" && echo "${G}[*] - Done, all right.${N}" || { echo "" && echo "${R}[*] - You are not connected to the internet!${N}"; false; }
 }
 
-
 # Log files will be uploaded to termbin.com
 # Logs included: VERLOG LOG oldVERLOG oldLOG
 upload_logs() {
@@ -272,15 +280,30 @@ upload_logs() {
     echo ""
     [[ -s $VERLOG ]] && verUp=$(cat "$VERLOG" | nc termbin.com 9999) || verUp=none
     [[ -s $oldVERLOG ]] && oldverUp=$(cat "$oldVERLOG" | nc termbin.com 9999) || oldverUp=none
-    [[ -s $RLOG ]] && logUp=$(cat "$RLOG" | nc termbin.com 9999) || logUp=none
-    [[ -s $oldLOG ]] && oldlogUp=$(cat "$oldLOG" | nc termbin.com 9999) || oldlogUp=none
+    [[ -s $RLOG ]] && RLOGUp=$(cat "$RLOG" | nc termbin.com 9999) || RLOGUp=none
+    [[ -s $oldRLOG ]] && oldRLOG=$(cat "$oldRLOG" | nc termbin.com 9999) || oldRLOG=none
+    [[ -s $RTKSLOG ]] && RTMlogUp=$(cat "$RTKSLOG" | nc termbin.com 9999) || RTMlogUp=none
+    [[ -s $oldRTKSLOG ]] && oldRTMlog=$(cat "$oldRTKSLOG" | nc termbin.com 9999) || oldRTMlog=none
+    [[ -s $UNLOG ]] && UNlogUp=$(cat "$UNLOG" | nc termbin.com 9999) || UNlogUp=none
+    [[ -s $oldUNLOG ]] && oldUNlog=$(cat "$oldUNLOG" | nc termbin.com 9999) || oldUNlog=none
+    [[ -s $LMKLOG ]] && LMKlogUp=$(cat "$LMKLOG" | nc termbin.com 9999) || LMKlogUp=none
+    [[ -s $oldLMKLOG ]] && oldLMKlog=$(cat "$oldLMKLOG" | nc termbin.com 9999) || oldLMKlog=none
     [[ -s $stdoutLOG ]] && stdoutUp=$(cat "$stdoutLOG" | nc termbin.com 9999) || stdoutUp=none
     [[ -s $oldstdoutLOG ]] && oldstdoutUp=$(cat "$oldstdoutLOG" | nc termbin.com 9999) || oldstdoutUp=none
     echo -n "${C}[*] - Link: ${BGBL}"
     echo "$MODEL ($DEVICE) API $API \n$ROM \r$MODT - $CDNM
     
-    rT-log: $logUp
-    O_rT: $oldlogUp
+    rT-log: $RLOGUp
+    O_rT: $oldRLOG
+    
+    rT_M-log: $RTMlogUp
+    O_rT-M: $oldRTMlog
+    
+    UN-log: $UNlogUp
+    O_UN: $oldUNlog
+    
+    LMK-log: $LMKlogUp
+    O_LMK: $oldLMKlog
     
     Verbose: $verUp
     O_Verbose: $oldverUp
@@ -335,19 +358,47 @@ help_text() {
   exit 0
 }
 
+# Check internal storage
+# Checks the existence of the internal storage directory and stores it in a variable.
+check_internal_storage() {
+  if [[ -d "/storage/emulated/0/" ]]; then
+    internal_storage="/storage/emulated/0/"
+  elif [[ -d "/sdcard/" ]]; then
+    internal_storage="/sdcard/"
+  fi
+}
+
+# Apply profile
+# Will apply profile specified using variables $1 and $2
+apply_profile() {
+  profile_code="$1"
+  profile_name="$2"
+
+  echo ""
+  echo "${Y}[*] Applying ${B}$profile_name ${N}${Y}profile...${N}"
+  setprop persist.raidentweaks.mode "$profile_code" 2>/dev/null
+  sleep 1
+  echo ""
+  echo "${G}[*] Done, ${B}$profile_name ${N}${Y}profile applied.${N}"
+  echo ""
+}
+
 # Update all
 # Updates all module files
-updateall() {
+update_files() {
+  # Define important variables
   commondir="/data/adb/modules/RTKS/"
   updatedir="/data/adb/modules_update/RTKS/"
   branch="$(grep_prop dbranch "$modpath"module.prop)"
 
+  # Check current module directory
   if [[ -d "$commondir" ]]; then
     modpath="/data/adb/modules/RTKS/"
   elif [[ -d "$updatedir" ]]; then
     modpath="/data/adb/modules_update/RTKS/"
   fi
 
+  # Check which branch to use
   if [[ "$branch" == stable ]]; then
     dbranch=stable
   elif [[ "$branch" == beta ]]; then
@@ -357,7 +408,7 @@ updateall() {
   else
     dbranch=stable
   fi
-
+  
   echo ""
   echo "$G[*] - Downloading the latest script(s) / application from GitHub...$N"
   echo ""
@@ -373,29 +424,79 @@ updateall() {
   wget -qO "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RDToast.apk?raw=true"
 
   echo ""
-  echo "$G[*] - Uninstalling old (if u have) and installing new version of the main application..$N."
+  echo "$G[*] Uninstalling old version (if exists) and installing new version of the main application...$N"
   echo ""
   if [[ "$(pm list package org.rtks.raiden)" ]]; then
-    pm uninstall -k --user 0 org.rtks.raiden
-  elif [ "$(pm list package com.raidentweaks)" ]; then
-    pm uninstall -k --user 0 com.raidentweaks
+    # Uninstalling org.rtks.raiden if it exists
+    uninstall_app org.rtks.raiden
+  elif [[ "$(pm list package com.raidentweaks)" ]]; then
+    # Uninstalling com.raidentweaks if it exists
+    uninstall_app com.raidentweaks
   fi
 
-  pm install /data/local/tmp/RaidenTweaks.apk
+  # Installing new version of RaidenTweaks.apk
+  install_app /data/local/tmp/RaidenTweaks.apk
 
   echo ""
-  echo "$G[*] - Uninstalling old (if u have) and installing new version of the toast application...$N"
-  if [ "$(pm list package bellavita.toast)" ]; then
-    echo ""
-    pm uninstall -k --user 0 bellavita.toast
+  echo "$G[*] Uninstalling old version (if exists) and installing new version of the toast application...$N"
+  if [[ "$(pm list package bellavita.toast)" ]]; then
+  # Uninstalling bellavita.toast if it exists
+  uninstall_app bellavita.toast
   fi
 
-  pm install /data/local/tmp/RDToast.apk
-  echo ""
+  # Installing new version of RDToast.apk
+  install_app /data/local/tmp/RDToast.apk
 
   echo "$G[*] - Setting permissions...$N"
   chmod 755 ${modpath}system/bin/*
   echo "$G[*] - Done, now the device will be rebooted!$N"
   sleep 5
   reboot system
+}
+
+# Clear ram advanced
+# Look for applications that are running and force stop them
+clear_ram_advanced() {
+  # File path of the configuration file
+  check_internal_storage
+  config_file="${internal_storage}packages.cfg"
+
+  # Download file if not present 
+  if [[ ! -f "$config_file" ]]; then
+    wget -O "${config_file}" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/packages.cfg"
+  fi
+  
+  # Read the list of package names to keep from the configuration file
+  keep_list=()
+  awk -v RS= -v IGNORECASE=1 '/### Important packages/{print $0}' "${config_file}" | grep -v '### Important packages' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' > tmp_file
+  while IFS= read -r keep_pkg; do
+    keep_list+=( "$keep_pkg" )
+  done < tmp_file
+  rm tmp_file
+
+  # Loop through the list of running packages and force stop any that are not in the keep list
+  while IFS= read -r pkg_nm; do
+    keep_pkg=false
+    for keep_item in "${keep_list[@]}"; do
+      if [[ "$pkg_nm" == "$keep_item" ]]; then
+        keep_pkg=true
+        break
+      fi
+    done
+    if ! $keep_pkg; then
+      echo "${Y}[*] Killing package: ${B}$pkg_nm${N}"
+      am force-stop "$pkg_nm"
+      sleep 0.3
+    fi
+  done <<< "$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
+}
+
+# Function to install an application
+install_app() {
+  pm install "$1" > /dev/null 2>&1
+}
+
+# Function to uninstall an application
+uninstall_app() {
+  pm uninstall -k --user 0 "$1" > /dev/null 2>&1
 }

@@ -1,7 +1,17 @@
 #!/system/bin/sh
-# veez21 @ xda-developers
-# raidenkkj @ github
-# Please credit me if you use parts of this project.
+#
+# raidenTweaks™ is a simple kernel tweaker.
+# Copyright (C) 2021~2023  Raiden Ishigami <contact.raidenishi69@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
 
 # Magisk Module ID **
 ID="RTKS"
@@ -11,9 +21,9 @@ _name=$(basename "$0")
 ls /data >/dev/null 2>&1 || { echo "$ID needs to run as root!"; echo "type 'su' then '$_name'"; exit 1; }
 
 # Magisk Mod Directory
-[ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules"
+[[ -d "/sbin/.magisk" ] && MOUNTPATH="/sbin/.magisk/modules" || MOUNTPATH="$(find /dev -mindepth 2 -maxdepth 2 -type d -name ".magisk")/modules" || [ -d "/data/adb/modules" ] && MOUNTPATH="/data/adb/modules"
 MODDIR="$MOUNTPATH/$ID"
-[ ! -d "$MODDIR" ] && { echo "[!] Raiden Tweaks missing..."; exit 1; }
+[ ! -d "$MODDIR" ] && { echo "[!] raidenTweaks missing..."; exit 1; }
 
 # Set path to your busybox if applicable
 _bb=
@@ -40,19 +50,18 @@ mv -f $VERKLOG $oldVERKLOG 2>/dev/null; mv -f $KLOG $oldKLOG 2>/dev/null; mv -f 
 set -x 2>$VERKLOG
 
 # Profiles
-
 if [[ "$(cat /sys/module/lowmemorykiller/parameters/minfree)" == "2560,5120,7680,8960,10240,12800" ]]; then
-    lmkprof=Light
+  lmkprof=Light
 elif [[ "$(cat /sys/module/lowmemorykiller/parameters/minfree)" == "512,1024,1280,2048,3072,4096" ]]; then
-    lmkprof=Light+
+  lmkprof=Light+
 elif [[ "$(cat /sys/module/lowmemorykiller/parameters/minfree)" == "1024,2048,4096,8192,12288,16384" ]]; then
-    lmkprof=Medium
+  lmkprof=Medium
 elif [[ "$(cat /sys/module/lowmemorykiller/parameters/minfree)" == "6400,7680,11520,25600,35840,38400" ]]; then
-    lmkprof=Agressive
+  lmkprof=Agressive
 elif [[ "$(cat /sys/module/lowmemorykiller/parameters/minfree)" == "2560,5120,11520,25600,35840,38400" ]]; then
-    lmkprof=Gaming
+  lmkprof=Gaming
 else
-    lmkprof=Default
+  lmkprof=Default
 fi
 
 # Device SDK
@@ -60,247 +69,300 @@ sdk=$(getprop ro.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vendor.build.version.sdk)
 [[ "$sdk" == "" ]] && sdk=$(getprop ro.vndk.version)
 
-ver="1.0.0-r1"
+ver="1.0.0-r2"
 dev="raidenkk"
 modpath="/data/adb/modules/RTKS/"
 magisk=$(magisk -V)
 
-Menu() {
-    echo -e '\n'
-    if [[ "$lmkprof" == "Default" ]]; then
-        cp /sys/module/lowmemorykiller/parameters/minfree /data/local/tmp/minfree
-    fi
-    printf "\033c"
-    echo "${Y}|              Welcome to LMK menu             |${N}"
-    echo "${Y}|  Created and written by $dev @ telegram  |${N}"
-    echo ""
-    echo "${Y}[*] Version:${B} $ver${N}"
-    echo ""
-    echo "${Y}[*] Magisk version:${B} $magisk ${N}"
-    echo ""
-    echo "${Y}[*] LMK profile:${B} $lmkprof ${N}"
-    echo ""
-    echo "----------------------------"
-    echo "${C}[*] Profile selector ${N}"
-    echo "----------------------------"
-    echo ""
-    echo "${V}[1] Light${N}"
-    echo ""
-    echo "${B}[2] Light+${N}"
-    echo ""
-    echo "${G}[3] Medium${N}"
-    echo ""
-    echo "${Y}[4] Aggressive${N}"
-    echo ""
-    echo "${R}[5] Gaming${N}"
-    echo ""
-    echo "----------------------------"
-    echo "${C}[*] Misc ${N}"
-    echo "----------------------------"
-    echo ""
-    echo "${B}[6] Restore to default profile ${C}(This will reset to the default profile) ${N}"
-    echo ""
-    echo "${B}[7] What is low memory killer? ${C}(It will show detailed information about what the low memory killer is all about) ${N}"
-    echo ""
-    echo "${B}[8] Profile details ${C}(This will show detailed information about each profile) ${N}"
-    echo ""
-    echo "${B}[B] Back to main menu ${C}(It will return to raidenTweaks menu)${N}"
-    echo ""
-    echo "${R}[0] Go out.${N}"
-    echo -e '\n'
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Option1 ;;
-        2) Option2 ;;
-        3) Option3 ;;
-        4) Option4 ;;
-        5) Option5 ;;
-        6) Option6 ;;
-        7) Option7 ;;
-        8) Option8 ;;
-        B) Back ;;
-        0) GoOut ;;
-        *) Menu ;;
-    esac
-    }
+main_menu() {
+  echo -e '\n'
+  if [[ "$lmkprof" == "Default" ]]; then
+    cp /sys/module/lowmemorykiller/parameters/minfree /data/local/tmp/minfree
+  fi
+  exit "\033c"
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${Y}      Welcome to LMK menu      ${C}║${N}"
+  echo "${C}║${Y}  Created and written by $dev @ telegram  ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${Y}[*] Version:${B} $ver${N}"
+  echo ""
+  echo "${Y}[*] Magisk version:${B} $magisk ${N}"
+  echo ""
+  echo "${Y}[*] LMK profile:${B} $lmkprof ${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}             [*] Profile selector             ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${V}[LIG] Light${N}"
+  echo ""
+  echo "${B}[LIP] Light+${N}"
+  echo ""
+  echo "${G}[MED] Medium${N}"
+  echo ""
+  echo "${Y}AGG] Aggressive${N}"
+  echo ""
+  echo "${R}[GAM] Gaming${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}             [*] Miscellaneous                ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${B}[1] Restore to default profile ${C}(This will reset to the default profile) ${N}"
+  echo ""
+  echo "${B}[2] What is low memory killer? ${C}(It will show detailed information about what the low memory killer is all about) ${N}"
+  echo ""
+  echo "${B}[3] Profile details ${C}(This will show detailed information about each profile) ${N}"
+  echo ""
+  echo "${B}[B] Back to main menu ${C}(It will return to raidenTweaks menu)${N}"
+  echo ""
+  echo "${R}[0] Go out.${N}"
+  echo ""
+  echo "${C}╔══════════════════════════════════════════════╗${N}"
+  echo "${C}║${B}               [*] Selection                  ${C}║${N}"
+  echo "${C}╚══════════════════════════════════════════════╝${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  option=$(echo $option | tr '[:lower:]' '[:upper:]')
+  read option
+  case $option in
+    LIG) light_mode ;;
+    LIP) light_plus_mode ;;
+    MED) medium_mode ;;
+    AGG) aggressive_mode ;;
+    GAM) gaming_mode ;;
+    1) restore_to_default ;;
+    2) what_is_lmk ;;
+    3) info_about_profiles ;;
+    B) return_to_rtksmenu ;;
+    0) go_out ;;
+    *) main_menu ;;
+  esac
+}
 
-Option1 () {
-    printf "\033c"
-    echo "${G}Putting the lmk profile in light mode...${N}"
+light_mode() {
+  exit "\033c"
+  echo "${G}Putting the lmk profile in light mode...${N}"
     sleep 0.5
-    echo ""
-    echo 2560,5120,7680,8960,10240,12800 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
+  echo ""
+  echo 2560,5120,7680,8960,10240,12800 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
+    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+light_plus_mode() {
+  exit "\033c"
+  echo "${G}Putting the lmk profile in light+ mode...${N}"
+    sleep 0.5
+  echo ""
+  echo 512,1024,1280,2048,3072,4096 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
+    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+medium_mode() {
+  exit "\033c"
+  echo "${G}Putting the lmk profile in medium mode...${N}"
+  sleep 0.5
+  echo ""
+  echo 1024,2048,4096,8192,12288,16384 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
     [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
     sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option1 ;;
-    esac
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option2 () {
-    printf "\033c"
-    echo "${G}Putting the lmk profile in light+ mode...${N}"
-    sleep 0.5
-    echo ""
-    echo 512,1024,1280,2048,3072,4096 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
+aggressive_mode() {
+  exit "\033c"
+  echo "${G}Putting the lmk profile in aggressive mode...${N}"
+  sleep 0.5
+  echo ""
+  echo 6400,7680,11520,25600,35840,38400 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
     [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option2  ;;
-    esac
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option3 () {
-    printf "\033c"
-    echo "${G}Putting the lmk profile in medium mode...${N}"
-    sleep 0.5
-    echo ""
-    echo 1024,2048,4096,8192,12288,16384 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
+gaming_mode() {
+  exit "\033c"
+  echo "${G}Putting the lmk profile in gaming mode...${N}"
+  sleep 0.5
+  echo ""
+  echo 2560,5120,11520,25600,35840,38400 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
     [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option3 ;;
-    esac
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option4 () {
-    printf "\033c"
-    echo "${G}Putting the lmk profile in agressive mode...${N}"
-    sleep 0.5
-    echo ""
-    echo 6400,7680,11520,25600,35840,38400 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
+restore_to_default() {
+  exit "\033c"
+  echo "${G}Restoring to default profile...${N}"
+  echo ""
+  cp /data/local/tmp/minfree /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
     [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
+  sleep 0.5
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
+}
+
+what_is_lmk() {
+  exit "\033c"
+  echo ""
+  am start -a android.intent.action.VIEW -d https://source.android.com/docs/core/perf/lmkd#:~:text=The%20Android%20low%20memory%20killer,system%20performing%20at%20acceptable%20levels
+  lmkmenu
+}
+
+info_about_profiles() {
+  exit "\033c"
+  echo "${B}Information about profiles of the LMK CLI:${N}"
     sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option4 ;;
-    esac
+  echo ""
+  echo "${V}Light: ${C}The light profile should be ideal for users not doing heavy multitasking. On devices with a small number of applications installed, this profile will kick LMK less frequently, saving some CPU cycles and reducing battery drain.${N}"
+  echo ""
+  echo "${B}Light+: ${C}Same as profile light but a little more aggressive.${N}"
+  echo ""
+  echo "${G}Medium: ${C}This profile is the junction of aggressive and light, not so aggressive and not so light.${N}"
+  echo ""
+  echo "${Y}Aggressive: ${C}This profile will aggressively start killing processes at 150 MB of free RAM. At 100 MB it will start killing Hidden Applications.${N}"
+  echo ""
+  echo "${R}Gaming: ${C}This profile is acting just like aggressive profile, except on Foreground and Visible Applications categories. It makes sure that, if a game makes use of big amounts of memory, it will not get killed by the LMK while it is running on the screen.${C}"
+  echo ""
+  echo "${B}[ 1 ] Return${N}"
+  echo "${B}[ 0 ] Go out${N}"
+  echo ""
+  echo "${C}Select your option:${N} \c"
+  read option
+  case $option in
+    1) return_to_main_menu ;;
+    0) go_out ;;
+    *) 
+      echo ""
+      echo "${R}Invalid option, returning to menu.${N}"
+      sleep 2
+      return_to_main_menu
+      ;;
+  esac
 }
 
-Option5 () {
-    printf "\033c"
-    echo "${G}Putting the lmk profile in gaming mode...${N}"
-    sleep 0.5
-    echo ""
-    echo 2560,5120,11520,25600,35840,38400 > /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option5 ;;
-    esac
+return_to_main_menu() {
+  exit "\033c"
+  lmkmenu
+  exit "\033c"
 }
 
-Option6() {
-    printf "\033c"
-    echo "${G}Restoring to default profile...${N}"
-    echo ""
-    cp /data/local/tmp/minfree /sys/module/lowmemorykiller/parameters/minfree 2>/dev/nullnull
-    [[ $? == "0" ]] && echo "${G}Process finished!" || echo "${R}Something went wrong!${N}"
-    sleep 0.5
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option5 ;;
-    esac
+return_to_rtksmenu() {
+  exit "\033c"
+  rtksmenu
+  exit "\033c"
 }
 
-Option7 () {
-    printf "\033c"
-    echo ""
-    am start -a android.intent.action.VIEW -d https://source.android.com/docs/core/perf/lmkd#:~:text=The%20Android%20low%20memory%20killer,system%20performing%20at%20acceptable%20levels
-    lmkmenu
+go_out() {
+  printf "\033c"
+  echo ""
+  bye_messages=("Bye bye, see you next time." 
+                 "Goodbye! Have a great day!"
+                 "See ya later, alligator!"
+                 "Farewell! Come back soon!"
+                 "Adios amigo! Hasta la vista!"
+                 "Take care of yourself and see you soon!"
+                 "Until next time, keep smiling!")
+  random_index=$((RANDOM % ${#bye_messages[@]}))
+  echo "${B}${bye_messages[$random_index]}${N}"
+  echo ""
+  exit
 }
 
-Option8 () {
-    printf "\033c"
-    echo "${B}Information about profiles of the LMK CLI:${N}"
-    sleep 0.5
-    echo ""
-    echo "${V}Light: ${C}The light profile should be ideal for users not doing heavy multitasking. On devices with a small number of applications installed, this profile will kick LMK less frequently, saving some CPU cycles and reducing battery drain.${N}"
-    echo ""
-    echo "${B}Light+: ${C}Same as profile light but more cleaner.${N}"
-    echo ""
-    echo "${G}Medium: ${C}This profile is the junction of aggressive and light, not so aggressive and not so light.${N}"
-    echo ""
-    echo "${Y}Aggressive: ${C}This profile will aggressively start killing processes at 150 MB of free RAM. At 100 MB it will start killing Hidden Applications.${N}"
-    echo ""
-    echo "${R}Gaming: ${C}This profile is acting just like aggressive profile, except on Foreground and Visible Applications categories. It makes sure that, if a game makes use of big amounts of memory, it will not get killed by the LMK while it is running on the screen.${C}"
-    echo ""
-    echo "${B}[ 1 ] Return${N}"
-    echo "${B}[ 0 ] Go out${N}"
-    echo ""
-    echo "${C}Select your option ${N}: \c"
-    read option
-    case $option in
-        1) Return ;;
-        0) GoOut ;;
-        *) Option8 ;;
-    esac
-}
-
-Return() {
-    printf "\033c"
-    lmkmenu
-    printf "\033c"
-}
-
-Back() {
-    printf "\033c"
-    rtksmenu
-    printf "\033c"
-}
-
-GoOut() {
-    printf "\033c"
-    echo ""
-    echo "${B}Bye bye, see you next time.${N}"
-    exit
-}
 printf "\033c"
 Menu

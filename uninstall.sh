@@ -1,3 +1,4 @@
+# Remove specific files and uninstall certain packages if a file exists
 if [[ -e "/sdcard/.RTKS" ]]; then
   rm -rf /sdcard/.RTKS
   rm -rf /data/local/tmp/RaidenTweaks.apk
@@ -6,6 +7,7 @@ if [[ -e "/sdcard/.RTKS" ]]; then
   pm uninstall -k --user 0 bellavita.toast
 fi
 
+# Check if a file exists, then perform operations based on its content
 if [ -f $INFO ]; then
   while read LINE; do
     if [ "$(echo -n $LINE | tail -c 1)" == "~" ]; then

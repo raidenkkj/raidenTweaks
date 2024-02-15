@@ -1,4 +1,7 @@
-### v2.2.0 - 13.11.2022
+### v2.2.0 - 14.02.2024
+* ???
+
+### v2.1.0 - 13.11.2022
 * NASA-themed raidenTweaks initial release
 * Rebuilt unlockers
 * Fix unlockers not working
@@ -36,7 +39,7 @@
 * Four core will shut down when battery reaches 5% in certain profiles with simple usage
 * Other minor changes...
 
-### v2.1.0 - 18.09.2022
+### v2.0.0 - 18.09.2022
 * Core app with UX improvement
 * Rollback to old and working unlockers (temp)
 * Removal of obsolete props
@@ -51,11 +54,11 @@
 * Easter egg removed from menu
 * Persist added to fstrim
 
-### v2.0.0 - 18.08.2022
+### v1.9.0 - 18.08.2022
 * Changes to the installation script 
 * Attempt to fix bugs in unlockers
 
-### v1.7.0 - 15.08.2022
+### v1.8.0 - 15.08.2022
 * Added fstrim when starting the system 
 * Added new menu options (Disable and enable gapps whenever you want)
 * Added new unlocker options on installation (Several new options, there are so many that it is not possible to mention them here.)
@@ -66,7 +69,7 @@
 * There's an easter egg somewhere.
 * A few other small changes...
 
-### v1.6.1 - 18.04.2022
+### v1.7.0 - 18.04.2022
 * Zygisk issue has been resolved
 
 ### v1.6.0 - 10.04.2022

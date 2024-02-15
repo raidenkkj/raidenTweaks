@@ -177,6 +177,16 @@ loadBar=' '			# Load UI
   G=''; R=''; Y=''; B=''; V=''; Bl=''; C=''; W=''; N=''; BGBL=''; loadBar='=';
 }
 
+# Variable for menu, will define if the menu has ever been opened
+FIRST_TIME=true
+
+# Variables for branches
+STABLE_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable"
+BETA_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/beta"
+TESTS_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/tests"
+RAIDENTWEAKS_FILES="system/bin/raidentweaks system/bin/raidenauto system/bin/rtksmenu system/bin/lmkmenu system/bin/unlockermenu cleaner fstrim mod-util.sh"
+SERVICE_SH="${modpath}service.sh"
+
 # No. of characters in $MODTITLE, $VER, and $REL
 character_no=$(echo "$MODTITLE $VER $REL" | wc -c)
 
@@ -208,7 +218,7 @@ set_file_prop() {
 # https://github.com/fearside/ProgressBar
 # ProgressBar <progress> <total>
 ProgressBar() {
-# Determine Screen Size
+  # Determine Screen Size
   if [[ "$COLUMNS" -le "57" ]]; then
     local var1=2
 	local var2=20
@@ -231,19 +241,18 @@ printf "\rProgress : ${BGBL}|${N}${_done// /${BGBL}$loadBar${N}}${_left// / }${B
 #https://github.com/fearside/SimpleProgressSpinner
 # Spinner <message>
 Spinner() {
+  # Choose which character to show.
+  case ${_indicator} in
+    "|") _indicator="/";;
+    "/") _indicator="-";;
+    "-") _indicator="\\";;
+    "\\") _indicator="|";;
+    # Initiate spinner character
+    *) _indicator="\\";;
+  esac
 
-# Choose which character to show.
-case ${_indicator} in
-  "|") _indicator="/";;
-  "/") _indicator="-";;
-  "-") _indicator="\\";;
-  "\\") _indicator="|";;
-  # Initiate spinner character
-  *) _indicator="\\";;
-esac
-
-# Print simple progress spinner
-printf "\r${@} [${_indicator}]"
+  # Print simple progress spinner
+  printf "\r${@} [${_indicator}]"
 }
 
 # cmd & spinner <message>
@@ -273,7 +282,6 @@ test_connection() {
 
 # Log files will be uploaded to termbin.com
 # Logs included: VERLOG LOG oldVERLOG oldLOG
-
 upload_logs() {
   $BBok && {
     test_connection || exit
@@ -350,26 +358,57 @@ help_text() {
   echo "${Y}Options:${N}"
   echo "${Y}  -p --profile ${B}[1-6] [Switch between profiles without opening the terminal GUI, for a fast and seamless experience]${N}"
   echo "${Y}  -c --clear-ram ${B}[1-3] [Higher value means more agressive memory reclaim, which includes killing apps at maximum value (3)]${N}"
-  echo "${Y}  -t --thermal ${B}[1-2] [Disable or enable thermal, option 1 will disable and option 2 will enable]${N}"
+  echo "${Y}  -t --thermal ${B}[enable|disable] [Disables or enables the thermal]${N}"
   echo "${Y}  -u --update-all ${B}[Update module scripts to the latest available version]${N}"
+  echo "${Y}  -d --downsample ${B}[apply|restore] ${N}"
+  echo "${Y}    apply ${B}[Apply downsampling to reduce screen resolution by a factor of 2]${N}"
+  echo "${Y}    restore ${B}[Restore original screen resolution]${N}"
   echo "${Y}  -h --help ${B}[Show this message]${N}"
   echo ""
   exit 0
 }
 
+# Check internal storage
+# Checks the existence of the internal storage directory and stores it in a variable.
+check_internal_storage() {
+  if [[ -d "/storage/emulated/0/" ]]; then
+    internal_storage="/storage/emulated/0/"
+  elif [[ -d "/sdcard/" ]]; then
+    internal_storage="/sdcard/"
+  fi
+}
+
+# Apply profile
+# Will apply profile specified using variables $1 and $2
+apply_profile() {
+  profile_code="$1"
+  profile_name="$2"
+
+  echo ""
+  echo "${Y}[*] Applying ${B}$profile_name ${N}${Y}profile...${N}"
+  setprop persist.raidentweaks.mode "$profile_code" 2>/dev/null
+  sleep 1
+  echo ""
+  echo "${G}[*] Done, ${B}$profile_name ${N}${Y}profile applied.${N}"
+  echo ""
+}
+
 # Update all
 # Updates all module files
-updateall() {
+update_files() {
+  # Define important variables
   commondir="/data/adb/modules/RTKS/"
   updatedir="/data/adb/modules_update/RTKS/"
   branch="$(grep_prop dbranch "$modpath"module.prop)"
 
+  # Check current module directory
   if [[ -d "$commondir" ]]; then
     modpath="/data/adb/modules/RTKS/"
   elif [[ -d "$updatedir" ]]; then
     modpath="/data/adb/modules_update/RTKS/"
   fi
 
+  # Check which branch to use
   if [[ "$branch" == stable ]]; then
     dbranch=stable
   elif [[ "$branch" == beta ]]; then
@@ -379,7 +418,7 @@ updateall() {
   else
     dbranch=stable
   fi
-
+  
   echo ""
   echo "$G[*] - Downloading the latest script(s) / application from GitHub...$N"
   echo ""
@@ -395,29 +434,94 @@ updateall() {
   wget -qO "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RDToast.apk?raw=true"
 
   echo ""
-  echo "$G[*] - Uninstalling old (if u have) and installing new version of the main application..$N."
+  echo "$G[*] Uninstalling old version (if exists) and installing new version of the main application...$N"
   echo ""
   if [[ "$(pm list package org.rtks.raiden)" ]]; then
-    pm uninstall -k --user 0 org.rtks.raiden
-  elif [ "$(pm list package com.raidentweaks)" ]; then
-    pm uninstall -k --user 0 com.raidentweaks
+    # Uninstalling org.rtks.raiden if it exists
+    uninstall_app org.rtks.raiden
+  elif [[ "$(pm list package com.raidentweaks)" ]]; then
+    # Uninstalling com.raidentweaks if it exists
+    uninstall_app com.raidentweaks
   fi
 
-  pm install /data/local/tmp/RaidenTweaks.apk
+  # Installing new version of RaidenTweaks.apk
+  install_app /data/local/tmp/RaidenTweaks.apk
 
   echo ""
-  echo "$G[*] - Uninstalling old (if u have) and installing new version of the toast application...$N"
-  if [ "$(pm list package bellavita.toast)" ]; then
-    echo ""
-    pm uninstall -k --user 0 bellavita.toast
+  echo "$G[*] Uninstalling old version (if exists) and installing new version of the toast application...$N"
+  if [[ "$(pm list package bellavita.toast)" ]]; then
+  # Uninstalling bellavita.toast if it exists
+  uninstall_app bellavita.toast
   fi
 
-  pm install /data/local/tmp/RDToast.apk
-  echo ""
+  # Installing new version of RDToast.apk
+  install_app /data/local/tmp/RDToast.apk
 
   echo "$G[*] - Setting permissions...$N"
   chmod 755 ${modpath}system/bin/*
   echo "$G[*] - Done, now the device will be rebooted!$N"
   sleep 5
   reboot system
+}
+
+# Clear ram advanced
+# Look for applications that are running and force stop them
+clear_ram_advanced() {
+  # File path of the configuration file
+  check_internal_storage
+  config_file="${internal_storage}packages.cfg"
+
+  # Download file if not present 
+  if [[ ! -f "$config_file" ]]; then
+    wget -O "${config_file}" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/packages.cfg"
+  fi
+  
+  # Save actual ram usage
+  echo "${used_percentage}%" > "/data/local/tmp/temp_ram_usage.txt"
+  
+  # Read the list of package names to keep from the configuration file
+  keep_list=()
+  awk -v RS= -v IGNORECASE=1 '/### Important packages/{print $0}' "${config_file}" | grep -v '### Important packages' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' > tmp_file
+  while IFS= read -r keep_pkg; do
+    keep_list+=( "$keep_pkg" )
+  done < tmp_file
+  rm tmp_file
+
+  # Loop through the list of running packages and force stop any that are not in the keep list
+  while IFS= read -r pkg_nm; do
+    keep_pkg=false
+    for keep_item in "${keep_list[@]}"; do
+      if [[ "$pkg_nm" == "$keep_item" ]]; then
+        keep_pkg=true
+        break
+      fi
+    done
+    if ! $keep_pkg; then
+      echo "${Y}[*] Killing package: ${B}$pkg_nm${N}"
+      am force-stop "$pkg_nm"
+      sleep 0.3
+    fi
+  done <<< "$(pm list packages -e -3 | grep package | cut -f 2 -d ":")"
+  
+  # Save new ram usage
+  echo "${used_percentage}%" > /data/local/tmp/temp_ram_usage_after.txt
+}
+
+# Timeout function
+# Will set value of $timeout to 150 if empty and will execute sleep
+timeout_func() {
+  if [[ -z "$timeout" ]]; then
+    timeout=150
+  fi
+  sleep "$timeout"
+}
+
+# Function to install an application
+install_app() {
+  pm install "$1" > /dev/null 2>&1
+}
+
+# Function to uninstall an application
+uninstall_app() {
+  pm uninstall -k --user 0 "$1" > /dev/null 2>&1
 }

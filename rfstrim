@@ -1,9 +1,21 @@
 #!/system/bin/sh
+# raidenTweaks™ is a simple kernel tweaker.
+# Copyright (C) 2021~2024  Raiden Ishigami <contact.raidenishi69@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
 
 fstrim -v /system
 fstrim -v /data
 fstrim -v /cache
 fstrim -v /persist
 
-# always return success, even if any command fail
-exit 0
+# Always return last command exit status
+exit

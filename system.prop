@@ -1,10 +1,23 @@
-# Raiden Tweaks support prop
+# raidenTweaks™ is a simple kernel tweaker.
+# Copyright (C) 2021~2024  Raiden Ishigami <contact.raidenishi69@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+
+# raidenTweaks support prop
 raiden.tweaks.support=1
 
 # Low ram support
 ro.config.low_ram=
 
-# Raiden Unlocker
+# raidenUnlocker
 ro.product.model
 ro.product.odm.model
 ro.product.system.model
@@ -26,7 +39,7 @@ persist.device_config.runtime_native.usap_refill_threshold=5
 dalvik.vm.dex2oat64.enabled
 arm64.memtag.process.system_server
 
-# Raiden Tweaks profile
+# raidenTweaks profile
 persist.raidentweaks.mode=
 
 # Disable LMK debugging

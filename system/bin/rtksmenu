@@ -368,7 +368,7 @@ main_menu() {
   case $option in
     AUT) automatic_profile ;;
     BAT) battery_profile ;;
-    BAL) battery_profile ;;
+    BAL) balanced_profile ;;
     PER) performance_profile ;;
     GAM) gaming_profile ;;
     THE) thermal_profile ;;

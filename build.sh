@@ -116,7 +116,7 @@ exec_time=$((exit - init))
   if [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "test" ]]; then
     telegram_send_message "_*raidenTweaks \| New Test Release!*_ %0A%0A*Developer:* _@raidenkk_ %0A*Release filename:* _$rname-$cdnm-$year$month$day$hour$minute.zip_ %0A*Release date:* _${bddate} ${hour}:${minute}:${seconds}_ %0A*MD5:* _${md5}_ %0A*Size:* _${size}_ %0A*Download:* _[transfer.sh](${download_link})_ %0A%0A*Join:* _@raidenprjkts_"
   elif [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "rel" ]]; then
-    telegram_send_message "_*raidenTweaks \| New Test Release!*_ %0A%0A*Developer:* _@raidenkk_ %0A*Release filename:* _$rname-$cdnm-$year$month$day$hour$minute.zip_ %0A*Release date:* _${bddate} ${hour}:${minute}:${seconds}_ %0A*MD5:* _${md5}_ %0A*Size:* _${size}_ %0A*Download:* _[transfer.sh](${download_link})_ %0A%0A*Join:* _@raidenprjkts_"
+    telegram_send_message "_*raidenTweaks \| New Release!*_ %0A%0A*Developer:* _@raidenkk_ %0A*Release filename:* _$rname-$cdnm-$year$month$day$hour$minute.zip_ %0A*Release date:* _${bddate} ${hour}:${minute}:${seconds}_ %0A*MD5:* _${md5}_ %0A*Size:* _${size}_ %0A*Download:* _[transfer.sh](${download_link})_ %0A%0A*Join:* _@raidenprjkts_"
   fi
   exit 0
 } || {

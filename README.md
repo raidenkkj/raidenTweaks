@@ -1,8 +1,8 @@
-# What is Raiden Tweaks™?
+# What is raidenTweaks™?
 
 ![raidentweaks-banner](https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/images/raidentweaks-banner.png?raw=true)
 
-**Raiden Tweaks™** is a kernel manager with several profiles applicable to each type of user, its main focus is to improve your user experience.
+**raidenTweaks™** is a kernel manager with several profiles applicable to each type of user, its main focus is to improve your user experience.
 
 # FAQ
 
@@ -46,7 +46,7 @@ Does this module work perfectly on all kernels?
 
 # Installation guide 
 
-* Download the module [here](https://fir3.net/sXSL)!
+* Download the module [here](https://www.pling.com/p/1597979)!
 
 * Go to your Magisk, enter the module menu and click in "install from storage"
 

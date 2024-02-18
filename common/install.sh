@@ -625,7 +625,7 @@ elif [[ "$(pm list package com.raidentweaks)" ]]; then
 fi
 
 # Installing new version of RaidenTweaks.apk
-install_app /data/local/tmp/RaidenTweaks.apk
+install_app /data/local/tmp/raidenTweaks.apk
 
 # Blank line for better readability
 ui_print ""
@@ -639,7 +639,7 @@ if [[ "$(pm list package bellavita.toast)" ]]; then
 fi
 
 # Installing new version of RDToast.apk
-install_app /data/local/tmp/RDToast.apk
+install_app /data/local/tmp/raidenToast.apk
 
 # Displaying credits and contributors
 ui_print ""

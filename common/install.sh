@@ -22,19 +22,27 @@ modpath="/data/adb/modules_update/RTKS/"
 }
 
 # Define variables
-STABLE_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable"
-BETA_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/beta"
-TESTS_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/tests"
+STABLE_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable"
+BETA_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/beta"
+TESTS_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/tests"
 RAIDENTWEAKS_FILES="system/bin/raidentweaks system/bin/raidenauto system/bin/rtksmenu system/bin/lmkmenu system/bin/unlockermenu cleaner fstrim mod-util.sh"
 SERVICE_SH="${modpath}service.sh"
 
-# Define functions
+# Update url for branches
 update_urls() {
   for file in $RAIDENTWEAKS_FILES; do
     sed -i "s#${1}/$file#${2}/$file#" "$SERVICE_SH"
   done
 }
 
+# Check internal storage
+check_internal_storage() {
+  if [[ -d "/storage/emulated/0/" ]]; then
+    internal_storage="/storage/emulated/0/"
+  elif [[ -d "/sdcard/" ]]; then
+    internal_storage="/sdcard/"
+  fi
+}
 # List of modules to check and disable
 MODULES="FDE:FDE.AI
 ktweak:KTweak
@@ -520,12 +528,7 @@ ui_print ""
 sed -i -e "/unlocker=/s/=.*/=${UNTEXT}/" "${modpath}module.prop"
 sleep 1
 
-# Prompt the user to make a selection
-ui_print "[*] Please select an option:"
-ui_print ""
-
 # Provide information/idea on how branches are 
-ui_print ""
 ui_print "[*] Each branch has its own unique features. For example,"
 ui_print "      the 'tests' branch is intended for testing."
 ui_print ""
@@ -585,30 +588,32 @@ sleep 3
 
 done
 
+# Check internal storage and set var
+check_internal_storage
+
 ui_print "[*] Downloading the latest script(s) / application from Github..."
 ui_print ""
-wget -O "${modpath}system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/raidentweaks"
-wget -O "${modpath}system/bin/raidenauto" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/raidenauto"
-wget -O "${modpath}system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/rtksmenu"
-wget -O "${modpath}system/bin/lmkmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/lmkmenu"
-wget -O "${modpath}system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/cleaner"
-wget -O "${modpath}system/bin/unlockermenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/system/bin/unlockermenu"
-wget -O "${modpath}system/bin/rfstrim" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/rfstrim"
-wget -O "${modpath}mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/mod-util.sh"
-wget -O "${storage}raidenTweaks.conf" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/raidenTweaks.conf"
-wget -O "${storage}raidenTweaks.conf" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/packages.cfg"
+wget -O "${modpath}system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/system/bin/raidentweaks"
+wget -O "${modpath}system/bin/raidenauto" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/system/bin/raidenauto"
+wget -O "${modpath}system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/system/bin/rtksmenu"
+wget -O "${modpath}system/bin/lmkmenu" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/system/bin/lmkmenu"
+wget -O "${modpath}system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/cleaner"
+wget -O "${modpath}system/bin/unlockermenu" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/system/bin/unlockermenu"
+wget -O "${modpath}system/bin/rfstrim" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/rfstrim"
+wget -O "${modpath}mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/mod-util.sh"
+wget -O "${internal_storage}packages.cfg" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/packages.cfg"
 
-# Removing RaidenTweaks.apk if it exists
-if [[ -f "/data/local/tmp/RaidenTweaks.apk" ]]; then
-  rm -rf "/data/local/tmp/RaidenTweaks.apk"
+# Removing raidenTweaks.apk if it exists
+if [[ -f "/data/local/tmp/raidenTweaks.apk" ]]; then
+  rm -rf "/data/local/tmp/raidenTweaks.apk"
 fi
-wget -O "/data/local/tmp/RaidenTweaks.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RaidenTweaks.apk?raw=true"
+wget -O "/data/local/tmp/raidenTweaks.apk" "https://github.com/raidenkkj/raidenTweaks/blob/stable/raidenTweaks.apk?raw=true"
 
-# Removing RDToast.apk if it exists
-if [[ -f "/data/local/tmp/RDToast.apk" ]]; then
-  rm -rf "/data/local/tmp/RDToast.apk"
+# Removing raidenToast.apk if it exists
+if [[ -f "/data/local/tmp/raidenToast.apk" ]]; then
+  rm -rf "/data/local/tmp/raidenToast.apk"
 fi
-wget -O "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RDToast.apk?raw=true"
+wget -O "/data/local/tmp/raidenToast.apk" "https://github.com/raidenkkj/raidenTweaks/blob/stable/raidenToast.apk?raw=true"
 
 # Permissions 
 set_perm_recursive "${modpath}system/bin" 0 0 0777 0755
@@ -624,7 +629,7 @@ elif [[ "$(pm list package com.raidentweaks)" ]]; then
   uninstall_app com.raidentweaks
 fi
 
-# Installing new version of RaidenTweaks.apk
+# Installing new version of raidenTweaks.apk
 install_app /data/local/tmp/raidenTweaks.apk
 
 # Blank line for better readability
@@ -638,7 +643,7 @@ if [[ "$(pm list package bellavita.toast)" ]]; then
   uninstall_app bellavita.toast
 fi
 
-# Installing new version of RDToast.apk
+# Installing new version of raidenToast.apk
 install_app /data/local/tmp/raidenToast.apk
 
 # Displaying credits and contributors

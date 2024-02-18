@@ -181,9 +181,9 @@ loadBar=' '			# Load UI
 FIRST_TIME=true
 
 # Variables for branches
-STABLE_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable"
-BETA_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/beta"
-TESTS_URL="https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/tests"
+STABLE_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable"
+BETA_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/beta"
+TESTS_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/tests"
 RAIDENTWEAKS_FILES="system/bin/raidentweaks system/bin/raidenauto system/bin/rtksmenu system/bin/lmkmenu system/bin/unlockermenu cleaner fstrim mod-util.sh"
 SERVICE_SH="${modpath}service.sh"
 
@@ -422,16 +422,16 @@ update_files() {
   echo ""
   echo "$G[*] - Downloading the latest script(s) / application from GitHub...$N"
   echo ""
-  wget -qO "${modpath}system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/raidentweaks"
-  wget -qO "${modpath}system/bin/raidenauto" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/raidenauto"
-  wget -qO "${modpath}system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/rtksmenu"
-  wget -qO "${modpath}system/bin/lmkmenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/lmkmenu"
-  wget -qO "${modpath}system/bin/unlockermenu" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/system/bin/unlockermenu"
-  wget -qO "${modpath}system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/cleaner"
-  wget -qO "${modpath}system/bin/rfstrim" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/rfstrim"
-  wget -qO "${modpath}mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/$dbranch/mod-util.sh"
-  wget -qO "/data/local/tmp/RaidenTweaks.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RaidenTweaks.apk?raw=true"
-  wget -qO "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/Raiden-Tweaks/blob/stable/RDToast.apk?raw=true"
+  wget -qO "${modpath}system/bin/raidentweaks" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/system/bin/raidentweaks"
+  wget -qO "${modpath}system/bin/raidenauto" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/system/bin/raidenauto"
+  wget -qO "${modpath}system/bin/rtksmenu" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/system/bin/rtksmenu"
+  wget -qO "${modpath}system/bin/lmkmenu" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/system/bin/lmkmenu"
+  wget -qO "${modpath}system/bin/unlockermenu" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/system/bin/unlockermenu"
+  wget -qO "${modpath}system/bin/cleaner" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/cleaner"
+  wget -qO "${modpath}system/bin/rfstrim" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/rfstrim"
+  wget -qO "${modpath}mod-util.sh" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/$dbranch/mod-util.sh"
+  wget -qO "/data/local/tmp/RaidenTweaks.apk" "https://github.com/raidenkkj/raidenTweaks/blob/stable/RaidenTweaks.apk?raw=true"
+  wget -qO "/data/local/tmp/RDToast.apk" "https://github.com/raidenkkj/raidenTweaks/blob/stable/RDToast.apk?raw=true"
 
   echo ""
   echo "$G[*] Uninstalling old version (if exists) and installing new version of the main application...$N"
@@ -473,7 +473,7 @@ clear_ram_advanced() {
 
   # Download file if not present 
   if [[ ! -f "$config_file" ]]; then
-    wget -O "${config_file}" "https://raw.githubusercontent.com/raidenkkj/Raiden-Tweaks/stable/packages.cfg"
+    wget -O "${config_file}" "https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable/packages.cfg"
   fi
   
   # Save actual ram usage

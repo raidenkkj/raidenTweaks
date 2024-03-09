@@ -128,110 +128,108 @@ ui_print ""
 sleep 2
 
 # Display message about module
-ui_print ""
 ui_print "This module provides different profiles that"
 ui_print "you can choose to optimize your device's"
 ui_print "performance and battery life."
 ui_print ""
 sleep 3
 
-# Display message about fstrim and prompt user for input
-sleep 0.5
-ui_print "[*] Do you want to fstrim the partitions? (Recommended)"
-sleep 2
-ui_print ""
-ui_print "[*] Volume up = Switch option"
-ui_print "[*] Volume down = Select option"
-sleep 1
-ui_print ""
-ui_print " 1. Yes"
-sleep 0.5
-ui_print " 2. No"
-ui_print ""
-sleep 0.5
+# Check if the busybox binary is available
+if [[ -e "$(find /system/xbin /sbin /system/bin -name busybox 2>/dev/null)" ]]; then
+  # Display message about fstrim and prompt user for input
+  sleep 0.5
+  ui_print "[*] Do you want to fstrim the partitions? (Recommended)"
+  sleep 2
+  ui_print ""
+  ui_print "[*] Volume up = Switch option"
+  ui_print "[*] Volume down = Select option"
+  sleep 1
+  ui_print ""
+  ui_print " 1. Yes"
+  sleep 0.5
+  ui_print " 2. No"
+  ui_print ""
+  sleep 0.5
 
-# Prompt the user to make a selection
-ui_print "[*] Select an option:"
-ui_print ""
-
-# Set the default option to 1
-FSTEXT=1
-
-# Loop until user selects an option
-while true; do
-  ui_print "  ${FSTEXT}"
-  if ${VKSEL}; then
-    FSTEXT=$((FSTEXT + 1))
-  else
-    break
-  fi
-  if [[ ${FSTEXT} -gt 2 ]]; then
-    FSTEXT=1
-  fi
-done
-
-case "$FSTEXT" in
-  1)
-    FSTEXT="Yes"
-    ;;
-  2)
-    FSTEXT="No"
-    ;;
-esac
-
-# Print the selected option to the user
-ui_print ""
-ui_print "[*] Selected: $FSTEXT "
-ui_print ""
-
-if [[ $FSTEXT == "Yes" ]]; then
-  if [[ -x "$(command -v fstrim)" ]]; then
-  # Fstrim is installed, proceed with trimming
-  ui_print "[*] Wait, process in progress..."
+  # Prompt the user to make a selection
+  ui_print "[*] Select an option:"
   ui_print ""
 
-  # Disable fstrim verbosity and store the exit status
-  fstrim -v /system >/dev/null 2>&1
-  SYSTEM_EXIT=$?
-  fstrim -v /data >/dev/null 2>&1
-  DATA_EXIT=$?
-  fstrim -v /cache >/dev/null 2>&1
-  CACHE_EXIT=$?
-  fstrim -v /product >/dev/null 2>&1
-  PRODUCT_EXIT=$?
+  # Set the default option to 1
+  FSTEXT=1
 
-  # Check for any errors during the fstrim process and report them to the user
-  ERROR=0
-  if [[ $SYSTEM_EXIT -ne 0 ]]; then
-    ui_print "[!] Error trimming /system partition"
-    ERROR=$((ERROR+1))
-  fi
-  if [[ $DATA_EXIT -ne 0 ]]; then
-    ui_print "[!] Error trimming /data partition"
-    ERROR=$((ERROR+1))
-  fi
-  if [[ $CACHE_EXIT -ne 0 ]]; then
-    ui_print "[!] Error trimming /cache partition"
-    ERROR=$((ERROR+1))
-  fi
-  if [[ $PRODUCT_EXIT -ne 0 ]]; then
-    ui_print "[!] Error trimming /product partition"
-    ERROR=$((ERROR+1))
-  fi
+  # Loop until user selects an option
+  while true; do
+    ui_print "  ${FSTEXT}"
+    if ${VKSEL}; then
+      FSTEXT=$((FSTEXT + 1))
+    else
+      break
+    fi
+    if [[ ${FSTEXT} -gt 2 ]]; then
+      FSTEXT=1
+    fi
+  done
 
-  if [[ $ERROR -eq 0 ]]; then
+  case "$FSTEXT" in
+    1)
+      FSTEXT="Yes"
+      ;;
+    2)
+      FSTEXT="No"
+      ;;
+  esac
+
+  # Print the selected option to the user
+  ui_print ""
+  ui_print "[*] Selected: $FSTEXT "
+  ui_print ""
+
+  if [[ $FSTEXT == "Yes" ]]; then
+    # Fstrim is installed, proceed with trimming
+    ui_print "[*] Wait, process in progress..."
     ui_print ""
-    ui_print "[*] Fstrim successfully executed!"
-    ui_print ""
-  else
-    ui_print "[!] Fstrim completed with $ERROR errors"
-    ui_print ""
+
+    # Disable fstrim verbosity and store the exit status
+    fstrim -v /system >/dev/null 2>&1
+    SYSTEM_EXIT=$?
+    fstrim -v /data >/dev/null 2>&1
+    DATA_EXIT=$?
+    fstrim -v /cache >/dev/null 2>&1
+    CACHE_EXIT=$?
+    fstrim -v /product >/dev/null 2>&1
+    PRODUCT_EXIT=$?
+
+    # Check for any errors during the fstrim process and report them to the user
+    ERROR=0
+    if [[ $SYSTEM_EXIT -ne 0 ]]; then
+      ui_print "[!] Error trimming /system partition"
+      ERROR=$((ERROR+1))
+    fi
+    if [[ $DATA_EXIT -ne 0 ]]; then
+      ui_print "[!] Error trimming /data partition"
+      ERROR=$((ERROR+1))
+    fi
+    if [[ $CACHE_EXIT -ne 0 ]]; then
+      ui_print "[!] Error trimming /cache partition"
+      ERROR=$((ERROR+1))
+    fi
+    if [[ $PRODUCT_EXIT -ne 0 ]]; then
+      ui_print "[!] Error trimming /product partition"
+      ERROR=$((ERROR+1))
+    fi
+
+    if [[ $ERROR -eq 0 ]]; then
+      ui_print ""
+      ui_print "[*] Fstrim successfully executed!"
+      ui_print ""
+    else
+      ui_print "[!] Fstrim completed with $ERROR errors"
+      ui_print ""
+    fi
   fi
-  else
-    # Fstrim is not installed, show error message and suggest installing busybox
-    ui_print "[!] Error: fstrim is not available. Please install busybox."
-    ui_print ""
-  fi
+else
+  ui_print "[!] Busybox binary not found, we recommend installing it."
 fi
 
 # Display message about profile selection
@@ -265,7 +263,7 @@ while true; do
   else
     break
   fi
-  if [[ ${PRFTEXT} -gt 2 ]]; then
+  if [[ ${PRFTEXT} -gt 7 ]]; then
     PRFTEXT=1
   fi
 done

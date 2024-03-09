@@ -33,6 +33,7 @@ minute=$(date +%M)
 seconds=$(date +%S)
 bddate=$(date +%Y-%m-%d)
 outdir=$HOME/storage/downloads/builds
+telegram_sent=false
 
 # Function to send a message to Telegram group
 telegram_send_message() {
@@ -44,6 +45,18 @@ telegram_send_message() {
     -d text="$message" \
     -d parse_mode="MarkdownV2" > /dev/null 2>&1
 }
+
+# Function to handle the interrupt signal (Ctrl+C)
+handle_interrupt() {
+  if [ "$telegram_sent" = false ]; then
+    telegram_send_message "_Build execution was interrupted by the developer._"
+    telegram_sent=true
+  fi
+  exit 1
+}
+
+# Register the signal handler for SIGINT (Ctrl+C)
+trap handle_interrupt SIGINT
 
 # Function to upload file to transfer.sh
 upload() {
@@ -59,7 +72,7 @@ echo "${bold}"
 read -r -p ${boldgreen}'Codename: '${blue} cdnm
 read -r -p ${boldgreen}'Version: '${blue} vers
 read -r -p ${boldgreen}'Version code: '${blue} vcode
-read -r -p ${boldgreen}'Release type (test or rel): '${blue} release_type
+read -r -p ${boldgreen}'Release type (test, rel or pling): '${blue} release_type
 
 init=$(date +%s)
 
@@ -78,6 +91,8 @@ echo ""
 if [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "test" ]]; then
   telegram_send_message "_Test build starting for_ *_$rname-$cdnm-$year$month$day$hour$minute..._*"
 elif [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "rel" ]]; then
+  telegram_send_message "_Build starting for_ *_$rname-$cdnm-$year$month$day$hour$minute..._*"
+elif [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "pling" ]]; then
   telegram_send_message "_Build starting for_ *_$rname-$cdnm-$year$month$day$hour$minute..._*"
 fi
 
@@ -117,6 +132,8 @@ exec_time=$((exit - init))
     telegram_send_message "_*raidenTweaks \| New Test Release!*_ %0A%0A*Developer:* _@raidenkk_ %0A*Release filename:* _$rname-$cdnm-$year$month$day$hour$minute.zip_ %0A*Release date:* _${bddate} ${hour}:${minute}:${seconds}_ %0A*MD5:* _${md5}_ %0A*Size:* _${size}_ %0A*Download:* _[transfer.sh](${download_link})_ %0A%0A*Join:* _@raidenprjkts_"
   elif [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "rel" ]]; then
     telegram_send_message "_*raidenTweaks \| New Release!*_ %0A%0A*Developer:* _@raidenkk_ %0A*Release filename:* _$rname-$cdnm-$year$month$day$hour$minute.zip_ %0A*Release date:* _${bddate} ${hour}:${minute}:${seconds}_ %0A*MD5:* _${md5}_ %0A*Size:* _${size}_ %0A*Download:* _[transfer.sh](${download_link})_ %0A%0A*Join:* _@raidenprjkts_"
+    elif [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "pling" ]]; then
+    telegram_send_message "_*raidenTweaks \| New Release!*_ %0A%0A*Developer:* _@raidenkk_ %0A*Release filename:* _$rname-$cdnm-$year$month$day$hour$minute.zip_ %0A*Release date:* _${bddate} ${hour}:${minute}:${seconds}_ %0A*MD5:* _${md5}_ %0A*Size:* _${size}_ %0A*Download:* _[transfer.sh](https://www.pling.com/p/1597979/)_ %0A%0A*Join:* _@raidenprjkts_"
   fi
   exit 0
 } || {
@@ -125,6 +142,8 @@ exec_time=$((exit - init))
   if [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "test" ]]; then
     telegram_send_message "_Build failed in "$((exec_time / 60))" minutes and $exec_time seconds!_"
   elif [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "rel" ]]; then
+    telegram_send_message "_Build failed in "$((exec_time / 60))" minutes and $exec_time seconds!_"
+  elif [[ "$(echo "$release_type" | tr '[:upper:]' '[:lower:]')" == "pling" ]]; then
     telegram_send_message "_Build failed in "$((exec_time / 60))" minutes and $exec_time seconds!_"
   fi
   exit 1

@@ -21,6 +21,9 @@ modpath="/data/adb/modules_update/RTKS/"
   sed -i '/arm64.memtag.process.system_server/s/.*/arm64.memtag.process.system_server=off/' "${modpath}system.prop"
 }
 
+# Check busybox binary
+busybox_path=$(find /system/xbin /sbin /system/bin -name busybox 2>/dev/null | grep -v 'No such file or directory')
+
 # Define variables
 STABLE_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/stable"
 BETA_URL="https://raw.githubusercontent.com/raidenkkj/raidenTweaks/beta"
@@ -43,6 +46,7 @@ check_internal_storage() {
     internal_storage="/sdcard/"
   fi
 }
+
 # List of modules to check and disable
 MODULES="FDE:FDE.AI
 ktweak:KTweak
@@ -135,7 +139,10 @@ ui_print ""
 sleep 3
 
 # Check if the busybox binary is available
-if [[ -e "$(find /system/xbin /sbin /system/bin -name busybox 2>/dev/null)" ]]; then
+if [[ -n "$busybox_path" ]]; then
+  # Display message saying that busybox was found in $busybox_path
+  ui_print "[*] Busybox binary found in: $busybox_path"
+  ui_print ""
   # Display message about fstrim and prompt user for input
   sleep 0.5
   ui_print "[*] Do you want to fstrim the partitions? (Recommended)"
@@ -182,7 +189,7 @@ if [[ -e "$(find /system/xbin /sbin /system/bin -name busybox 2>/dev/null)" ]]; 
 
   # Print the selected option to the user
   ui_print ""
-  ui_print "[*] Selected: $FSTEXT "
+  ui_print "[*] Selected option: $FSTEXT "
   ui_print ""
 
   if [[ $FSTEXT == "Yes" ]]; then
@@ -230,6 +237,7 @@ if [[ -e "$(find /system/xbin /sbin /system/bin -name busybox 2>/dev/null)" ]]; 
   fi
 else
   ui_print "[!] Busybox binary not found, we recommend installing it."
+  ui_print ""
 fi
 
 # Display message about profile selection
@@ -300,7 +308,7 @@ esac
 
 # Print the selected profile to the user
 ui_print ""
-ui_print "[*] Selected: $PRFTEXT "
+ui_print "[*] Selected option: $PRFTEXT "
 ui_print ""
 sleep 3
 
@@ -580,7 +588,7 @@ case "$TEXTBRANCH" in
 esac
 
 ui_print ""
-ui_print "[*] Selected: $TEXTBRANCH "
+ui_print "[*] Selected option: $TEXTBRANCH "
 ui_print ""
 sleep 3
 

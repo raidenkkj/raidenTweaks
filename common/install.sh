@@ -212,18 +212,26 @@ if [[ -n "$busybox_path" ]]; then
     if [[ $SYSTEM_EXIT -ne 0 ]]; then
       ui_print "[!] Error trimming /system partition"
       ERROR=$((ERROR+1))
+    else
+      ui_print "[*] Successfully trimmed /system partition"
     fi
     if [[ $DATA_EXIT -ne 0 ]]; then
       ui_print "[!] Error trimming /data partition"
       ERROR=$((ERROR+1))
+    else
+      ui_print "[*] Successfully trimmed /data partition"
     fi
     if [[ $CACHE_EXIT -ne 0 ]]; then
       ui_print "[!] Error trimming /cache partition"
       ERROR=$((ERROR+1))
+    else
+      ui_print "[*] Successfully trimmed /cache partition"
     fi
     if [[ $PRODUCT_EXIT -ne 0 ]]; then
       ui_print "[!] Error trimming /product partition"
       ERROR=$((ERROR+1))
+    else
+      ui_print "[*] Successfully trimmed /product partition"
     fi
 
     if [[ $ERROR -eq 0 ]]; then
@@ -235,7 +243,7 @@ if [[ -n "$busybox_path" ]]; then
       ui_print ""
     fi
   fi
-else
+ else
   ui_print "[!] Busybox binary not found, we recommend installing it."
   ui_print ""
 fi
